@@ -164,4 +164,4 @@ The helpdesk assistant becomes a workflow: every ticket is classified, answered 
 by named steps whose state you can inspect. Right now every ticket takes the same path; 08.2
 adds conditional edges so a hardware ticket and an access ticket can take different ones.
 
-**Next:** 08.2 · Conditional edges and routing (planned)
+**Next:** 08.2 · Conditional edges and routing to specialists (planned)

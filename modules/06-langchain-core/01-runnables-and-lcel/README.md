@@ -155,4 +155,4 @@ problems as lesson 01.1: check `LLM_API_KEY` and `LLM_MODEL`.
 The helpdesk assistant's two jobs from module 01, replying and triaging, are now two small chains
 you can compose, batch and stream. Next the assistant gains memory of the conversation.
 
-**Next:** 06.2 · Conversation memory with message history (planned)
+**Next:** 06.2 · Prompt templates and output parsers (planned)

@@ -33,7 +33,12 @@ def test_run_whole_lesson(run):
 
 
 def test_planned_lesson_is_explained(run):
-    result = run([*LABKIT, "02.2"])
+    from labkit.catalog import load_catalog
+
+    planned = [item for module in load_catalog() for item in module.lessons if item.status == "planned"]
+    if not planned:
+        return  # every lesson is written
+    result = run([*LABKIT, planned[0].id])
     assert result.returncode == 3
     assert "planned but not written yet" in result.stdout
 

@@ -133,4 +133,4 @@ Tracing is how the helpdesk assistant stays affordable and fast: when replies ge
 bill grows, the span tree says whether classification, retrieval or the reply is to blame.
 The next lessons in this module judge answer quality; traces give them something to judge.
 
-**Next:** 10.2 · Evaluating outputs (planned)
+**Next:** 10.2 · Evaluation datasets and heuristic evaluators (planned)

@@ -11,10 +11,10 @@ The same ideas as modules 01-04, expressed with LangChain.
 | Lesson | Title | Status |
 |---|---|---|
 | 06.1 | [Runnables and LCEL: prompt | model | parser](01-runnables-and-lcel/README.md) | ✅ ready |
-| 06.2 | Prompt templates and output parsers | ⬜ planned |
-| 06.3 | Conversation memory across turns and sessions | ⬜ planned |
-| 06.4 | Loaders, splitters and retrievers: RAG with LangChain | ⬜ planned |
-| 06.5 | Capstone: the helpdesk RAG chain | ⬜ planned |
+| 06.2 | [Prompt templates and output parsers](02-prompt-templates-and-output-parsers/README.md) | ✅ ready |
+| 06.3 | [Conversation memory across turns and sessions](03-conversation-memory-across-turns-and-sessions/README.md) | ✅ ready |
+| 06.4 | [Loaders, splitters and retrievers: RAG with LangChain](04-loaders-splitters-and-retrievers/README.md) | ✅ ready |
+| 06.5 | [Capstone: the helpdesk RAG chain](05-capstone-the-helpdesk-rag-chain/README.md) | ✅ ready |
 
 <!-- lessons:end -->
 

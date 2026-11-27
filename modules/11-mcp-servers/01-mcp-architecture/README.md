@@ -159,4 +159,4 @@ The helpdesk's ticket lookup is now a reusable server. Any host, ours or a deskt
 can use `lookup_ticket` without copying code. Later lessons build richer servers and plug in
 existing ones.
 
-**Next:** 11.2 · Building custom MCP servers (planned)
+**Next:** 11.2 · A minimal server: tools, resources and prompts (planned)

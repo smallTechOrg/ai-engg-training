@@ -172,4 +172,4 @@ This is honest and instructive: out of the box, with its default settings, Presi
 
 Larkspur Labs' helpdesk assistant reads ticket bodies written by anyone in the company, and soon will read web pages and emails. Every one of those is untrusted text. This lesson puts the first rails around it; 18.2 and 18.3 meet the frameworks that formalise them, and 18.4 red-teams the result.
 
-**Next:** 18.2 · NeMo Guardrails (planned)
+**Next:** 18.2 · Input and output rails (planned)

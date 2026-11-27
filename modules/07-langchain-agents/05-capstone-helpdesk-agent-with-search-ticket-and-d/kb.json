@@ -1,0 +1,7 @@
+[
+  {"id": "KB-01", "title": "Reset a VPN token", "text": "VPN token reset: verify the caller's identity on a video call, then reset the token in the identity portal. Takes 10 minutes."},
+  {"id": "KB-02", "title": "Printer offline", "text": "Printer offline: power cycle the printer, check the switch port, then update firmware to 4.3. Firmware 4.2 drops off the network after 30 days."},
+  {"id": "KB-03", "title": "Laptop will not charge", "text": "Laptop not charging: try a second charger, check the charging port, and book a hardware check if the battery drains while plugged in."},
+  {"id": "KB-04", "title": "Request access to a shared drive", "text": "Shared drive access: the request needs approval from the drive owner. The helpdesk grants access within one working day of approval."},
+  {"id": "KB-05", "title": "Wi-Fi drops in meeting rooms", "text": "Wi-Fi drops: note the room and time, forget and rejoin the network, and report the access point label printed on the ceiling unit."}
+]

@@ -163,4 +163,4 @@ The helpdesk assistant can now answer policy questions from documents, and you c
 is right about what it retrieved. It has a measured weak spot: it always retrieves, once, whether or
 not that is wise.
 
-**Next:** 15.2 · Agentic RAG: deciding when and what to retrieve (planned)
+**Next:** 15.2 · Agentic, self- and corrective RAG (planned)

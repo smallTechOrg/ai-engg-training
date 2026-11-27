@@ -9,10 +9,10 @@ Tool calling and the agent loop in plain Python, so frameworks hold no mystery.
 | Lesson | Title | Status |
 |---|---|---|
 | 02.1 | [Function calling: letting the model ask for a tool](01-function-calling/README.md) | ✅ ready |
-| 02.2 | The agent loop: reason, act, observe | ⬜ planned |
-| 02.3 | Conversation memory and context management | ⬜ planned |
-| 02.4 | Tool failures, retries and iteration limits | ⬜ planned |
-| 02.5 | Capstone: helpdesk agent that looks up tickets and resets passwords | ⬜ planned |
+| 02.2 | [The agent loop: reason, act, observe](02-the-agent-loop/README.md) | ✅ ready |
+| 02.3 | [Conversation memory and context management](03-conversation-memory-and-context-management/README.md) | ✅ ready |
+| 02.4 | [Tool failures, retries and iteration limits](04-tool-failures-retries-and-iteration-limits/README.md) | ✅ ready |
+| 02.5 | [Capstone: helpdesk agent that looks up tickets and resets passwords](05-capstone-helpdesk-agent-that-looks-up-tickets-an/README.md) | ✅ ready |
 
 <!-- lessons:end -->
 

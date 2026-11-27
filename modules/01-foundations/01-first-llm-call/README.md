@@ -134,4 +134,4 @@ The helpdesk assistant can now answer a single ticket in one shot. It has no mem
 earlier messages, cannot look anything up and cannot take any action. The rest of module
 01 improves what one call can do; module 02 gives it tools.
 
-**Next:** 01.2 · Messages, roles and multi-turn conversation (planned)
+**Next:** 01.2 · Messages, roles and multi-turn conversation

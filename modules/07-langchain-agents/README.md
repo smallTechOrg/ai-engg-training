@@ -11,10 +11,10 @@ Agents that choose and call tools, built with LangChain.
 | Lesson | Title | Status |
 |---|---|---|
 | 07.1 | [Custom tools and input schemas](01-custom-tools-and-input-schemas/README.md) | ✅ ready |
-| 07.2 | ReAct and plan-and-execute agents | ⬜ planned |
-| 07.3 | Agents over SQL data | ⬜ planned |
-| 07.4 | Structured final answers and streaming intermediate steps | ⬜ planned |
-| 07.5 | Capstone: helpdesk agent with search, ticket and database tools | ⬜ planned |
+| 07.2 | [ReAct and plan-and-execute agents](02-react-and-plan-and-execute-agents/README.md) | ✅ ready |
+| 07.3 | [Agents over SQL data](03-agents-over-sql-data/README.md) | ✅ ready |
+| 07.4 | [Structured final answers and streaming intermediate steps](04-structured-final-answers-and-streaming-intermedi/README.md) | ✅ ready |
+| 07.5 | [Capstone: helpdesk agent with search, ticket and database tools](05-capstone-helpdesk-agent-with-search-ticket-and-d/README.md) | ✅ ready |
 
 <!-- lessons:end -->
 

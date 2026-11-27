@@ -259,4 +259,4 @@ company knowledge base, and by the end it is served, monitored and guarded. Befo
 that, it needs solid ground: a reproducible environment, safe secrets, clean version
 control and the ability to handle many tickets at once. That is the rest of module 00.
 
-**Next:** 00.2 · Environments and dependencies: uv, venv, pip, pyenv, conda (planned)
+**Next:** 00.2 · Environments and dependencies: uv, venv, pip, pyenv, conda

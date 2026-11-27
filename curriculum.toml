@@ -122,28 +122,28 @@ services = []
   id = "02.2"
   slug = "02-the-agent-loop"
   title = "The agent loop: reason, act, observe"
-  status = "planned"
+  status = "ready"
   needs = ["chat", "tools"]
 
   [[module.lesson]]
   id = "02.3"
   slug = "03-conversation-memory-and-context-management"
   title = "Conversation memory and context management"
-  status = "planned"
+  status = "ready"
   needs = ["chat"]
 
   [[module.lesson]]
   id = "02.4"
   slug = "04-tool-failures-retries-and-iteration-limits"
   title = "Tool failures, retries and iteration limits"
-  status = "planned"
+  status = "ready"
   needs = ["chat", "tools"]
 
   [[module.lesson]]
   id = "02.5"
   slug = "05-capstone-helpdesk-agent-that-looks-up-tickets-an"
   title = "Capstone: helpdesk agent that looks up tickets and resets passwords"
-  status = "planned"
+  status = "ready"
   needs = ["chat", "tools"]
 
 [[module]]
@@ -165,28 +165,28 @@ services = []
   id = "03.2"
   slug = "02-chunking-strategies"
   title = "Chunking strategies"
-  status = "planned"
+  status = "ready"
   needs = ["embeddings"]
 
   [[module.lesson]]
   id = "03.3"
   slug = "03-vector-stores"
   title = "Vector stores: ChromaDB and FAISS"
-  status = "planned"
+  status = "ready"
   needs = ["embeddings"]
 
   [[module.lesson]]
   id = "03.4"
   slug = "04-hybrid-search"
   title = "Hybrid search: keywords plus vectors"
-  status = "planned"
+  status = "ready"
   needs = ["embeddings"]
 
   [[module.lesson]]
   id = "03.5"
   slug = "05-capstone-semantic-search-over-the-helpdesk-knowl"
   title = "Capstone: semantic search over the helpdesk knowledge base"
-  status = "planned"
+  status = "ready"
   needs = ["embeddings"]
 
 [[module]]
@@ -208,21 +208,21 @@ services = []
   id = "04.2"
   slug = "02-grounding-citations-and-saying-i-don-t-know"
   title = "Grounding, citations and saying 'I don't know'"
-  status = "planned"
+  status = "ready"
   needs = ["chat", "embeddings"]
 
   [[module.lesson]]
   id = "04.3"
   slug = "03-measuring-retrieval-and-answer-quality"
   title = "Measuring retrieval and answer quality"
-  status = "planned"
+  status = "ready"
   needs = ["chat", "embeddings"]
 
   [[module.lesson]]
   id = "04.4"
   slug = "04-capstone-helpdesk-answers-grounded-in-the-knowle"
   title = "Capstone: helpdesk answers grounded in the knowledge base"
-  status = "planned"
+  status = "ready"
   needs = ["chat", "embeddings"]
 
 [[module]]
@@ -244,28 +244,28 @@ services = []
   id = "05.2"
   slug = "02-streaming-responses-with-server-sent-events"
   title = "Streaming responses with Server-Sent Events"
-  status = "planned"
+  status = "ready"
   needs = ["chat", "stream"]
 
   [[module.lesson]]
   id = "05.3"
   slug = "03-a-chat-ui-in-streamlit"
   title = "A chat UI in Streamlit"
-  status = "planned"
+  status = "ready"
   needs = ["chat", "stream"]
 
   [[module.lesson]]
   id = "05.4"
   slug = "04-a-demo-ui-in-gradio-choosing-between-the-two"
   title = "A demo UI in Gradio; choosing between the two"
-  status = "planned"
+  status = "ready"
   needs = ["chat"]
 
   [[module.lesson]]
   id = "05.5"
   slug = "05-capstone-helpdesk-assistant-as-an-api-with-a-cha"
   title = "Capstone: helpdesk assistant as an API with a chat front-end"
-  status = "planned"
+  status = "ready"
   needs = ["chat", "stream"]
 
 [[module]]
@@ -273,7 +273,7 @@ id = "06"
 slug = "06-langchain-core"
 title = "LangChain core: chains, memory, RAG"
 summary = "The same ideas as modules 01-04, expressed with LangChain."
-extras = ["langchain"]
+extras = ["langchain", "langgraph"]
 services = []
 
   [[module.lesson]]
@@ -287,28 +287,28 @@ services = []
   id = "06.2"
   slug = "02-prompt-templates-and-output-parsers"
   title = "Prompt templates and output parsers"
-  status = "planned"
+  status = "ready"
   needs = ["chat", "json"]
 
   [[module.lesson]]
   id = "06.3"
   slug = "03-conversation-memory-across-turns-and-sessions"
   title = "Conversation memory across turns and sessions"
-  status = "planned"
+  status = "ready"
   needs = ["chat"]
 
   [[module.lesson]]
   id = "06.4"
   slug = "04-loaders-splitters-and-retrievers"
   title = "Loaders, splitters and retrievers: RAG with LangChain"
-  status = "planned"
+  status = "ready"
   needs = ["chat", "embeddings"]
 
   [[module.lesson]]
   id = "06.5"
   slug = "05-capstone-the-helpdesk-rag-chain"
   title = "Capstone: the helpdesk RAG chain"
-  status = "planned"
+  status = "ready"
   needs = ["chat", "embeddings"]
 
 [[module]]
@@ -330,28 +330,28 @@ services = []
   id = "07.2"
   slug = "02-react-and-plan-and-execute-agents"
   title = "ReAct and plan-and-execute agents"
-  status = "planned"
+  status = "ready"
   needs = ["chat", "tools"]
 
   [[module.lesson]]
   id = "07.3"
   slug = "03-agents-over-sql-data"
   title = "Agents over SQL data"
-  status = "planned"
+  status = "ready"
   needs = ["chat", "tools"]
 
   [[module.lesson]]
   id = "07.4"
   slug = "04-structured-final-answers-and-streaming-intermedi"
   title = "Structured final answers and streaming intermediate steps"
-  status = "planned"
+  status = "ready"
   needs = ["chat", "tools", "stream"]
 
   [[module.lesson]]
   id = "07.5"
   slug = "05-capstone-helpdesk-agent-with-search-ticket-and-d"
   title = "Capstone: helpdesk agent with search, ticket and database tools"
-  status = "planned"
+  status = "ready"
   needs = ["chat", "tools"]
 
 [[module]]

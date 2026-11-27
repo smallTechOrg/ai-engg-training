@@ -176,4 +176,4 @@ The helpdesk assistant is no longer a script: it is a service with a contract. A
 send HTTP can ask it for a reply or a triage and gets validated JSON back. Lesson 05.2 will stream
 replies through the API, and 05.3 puts a web UI in front of it.
 
-**Next:** 05.2 · Streaming responses from FastAPI (planned)
+**Next:** 05.2 · Streaming responses with Server-Sent Events (planned)

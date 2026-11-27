@@ -1,0 +1,16 @@
+[
+  {"id": "q1", "question": "How many years until my laptop is swapped for a new one?", "gold": ["laptops#1"], "must_contain": ["4"]},
+  {"id": "q2", "question": "My laptop died last month, what now?", "gold": ["laptops#2"], "must_contain": ["hardware"]},
+  {"id": "q3", "question": "How soon must the old machine go back to IT after I get its replacement?", "gold": ["laptops#3"], "must_contain": ["14"]},
+  {"id": "q4", "question": "How many characters must a password have?", "gold": ["passwords#1"], "must_contain": ["14"]},
+  {"id": "q5", "question": "I locked myself out by typing the wrong password too often.", "gold": ["passwords#3"], "must_contain": ["30"]},
+  {"id": "q6", "question": "Printer shows offline, what do I try?", "gold": ["printers#2"], "must_contain": ["off"]},
+  {"id": "q7", "question": "Can I print in colour on floor 4?", "gold": ["printers#3"], "must_contain": ["floor 2"]},
+  {"id": "q8", "question": "Who has to sign off on a 300 pound yearly software subscription?", "gold": ["software#2"], "must_contain": ["finance"]},
+  {"id": "q9", "question": "Working from home, how do I get to the wiki?", "gold": ["vpn#1"], "must_contain": ["vpn"]},
+  {"id": "q10", "question": "My VPN session keeps ending after half a day.", "gold": ["vpn#2"], "must_contain": ["12"]},
+  {"id": "q11", "question": "How do guests get online in the office?", "gold": ["wifi#2"], "must_contain": ["larkspurguest"]},
+  {"id": "q12", "question": "Wireless keeps dropping in meeting room 3.", "gold": ["wifi#3"], "must_contain": ["network ticket"]},
+  {"id": "q13", "question": "What is the company's parental leave policy?", "gold": [], "must_contain": []},
+  {"id": "q14", "question": "How do I book a meeting room for next Tuesday?", "gold": [], "must_contain": []}
+]

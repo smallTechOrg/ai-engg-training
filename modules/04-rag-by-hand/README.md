@@ -11,9 +11,9 @@ Retrieval-augmented generation built from parts you already understand.
 | Lesson | Title | Status |
 |---|---|---|
 | 04.1 | [The RAG pipeline: retrieve, augment, generate](01-the-rag-pipeline/README.md) | ✅ ready |
-| 04.2 | Grounding, citations and saying 'I don't know' | ⬜ planned |
-| 04.3 | Measuring retrieval and answer quality | ⬜ planned |
-| 04.4 | Capstone: helpdesk answers grounded in the knowledge base | ⬜ planned |
+| 04.2 | [Grounding, citations and saying 'I don't know'](02-grounding-citations-and-saying-i-don-t-know/README.md) | ✅ ready |
+| 04.3 | [Measuring retrieval and answer quality](03-measuring-retrieval-and-answer-quality/README.md) | ✅ ready |
+| 04.4 | [Capstone: helpdesk answers grounded in the knowledge base](04-capstone-helpdesk-answers-grounded-in-the-knowle/README.md) | ✅ ready |
 
 <!-- lessons:end -->
 

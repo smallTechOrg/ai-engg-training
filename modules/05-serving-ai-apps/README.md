@@ -11,10 +11,10 @@ Put a model behind an API and a simple user interface.
 | Lesson | Title | Status |
 |---|---|---|
 | 05.1 | [REST and FastAPI basics with Pydantic models](01-rest-and-fastapi-basics-with-pydantic-models/README.md) | ✅ ready |
-| 05.2 | Streaming responses with Server-Sent Events | ⬜ planned |
-| 05.3 | A chat UI in Streamlit | ⬜ planned |
-| 05.4 | A demo UI in Gradio; choosing between the two | ⬜ planned |
-| 05.5 | Capstone: helpdesk assistant as an API with a chat front-end | ⬜ planned |
+| 05.2 | [Streaming responses with Server-Sent Events](02-streaming-responses-with-server-sent-events/README.md) | ✅ ready |
+| 05.3 | [A chat UI in Streamlit](03-a-chat-ui-in-streamlit/README.md) | ✅ ready |
+| 05.4 | [A demo UI in Gradio; choosing between the two](04-a-demo-ui-in-gradio-choosing-between-the-two/README.md) | ✅ ready |
+| 05.5 | [Capstone: helpdesk assistant as an API with a chat front-end](05-capstone-helpdesk-assistant-as-an-api-with-a-cha/README.md) | ✅ ready |
 
 <!-- lessons:end -->
 

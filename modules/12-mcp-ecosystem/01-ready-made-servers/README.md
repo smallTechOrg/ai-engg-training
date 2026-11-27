@@ -138,4 +138,4 @@ The helpdesk team now answers "how many open network tickets?" from a database w
 writing a query or a tool function, and gets a written summary. The same pattern, a published
 server plus a host that exposes only what is safe, is how most real MCP integrations start.
 
-**Next:** 12.2 · More ecosystem servers (planned)
+**Next:** 12.2 · Chaining several servers in one session (planned)

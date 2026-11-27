@@ -2,7 +2,7 @@
 
 <!-- Generated from curriculum.toml by `./run map`. Do not edit by hand. -->
 
-21 modules, 99 lessons, 30 ready. Each lesson shows a concept on its own, then applies it to the running scenario: **IT helpdesk assistant**.
+21 modules, 99 lessons, 53 ready. Each lesson shows a concept on its own, then applies it to the running scenario: **IT helpdesk assistant**.
 
 | Status | Meaning |
 |---|---|
@@ -16,12 +16,12 @@
 |---|---|---|
 | 00 | [Setup and Python for AI work](modules/00-setup/README.md) | 5 / 5 |
 | 01 | [Foundations: talking to an LLM](modules/01-foundations/README.md) | 7 / 7 |
-| 02 | [Tools and agents by hand](modules/02-tools-and-agents-by-hand/README.md) | 1 / 5 |
-| 03 | [Embeddings and semantic search](modules/03-embeddings-and-search/README.md) | 1 / 5 |
-| 04 | [RAG by hand](modules/04-rag-by-hand/README.md) | 1 / 4 |
-| 05 | [Serving AI apps: FastAPI, Streamlit, Gradio](modules/05-serving-ai-apps/README.md) | 1 / 5 |
-| 06 | [LangChain core: chains, memory, RAG](modules/06-langchain-core/README.md) | 1 / 5 |
-| 07 | [LangChain agents and tool use](modules/07-langchain-agents/README.md) | 1 / 5 |
+| 02 | [Tools and agents by hand](modules/02-tools-and-agents-by-hand/README.md) | 5 / 5 |
+| 03 | [Embeddings and semantic search](modules/03-embeddings-and-search/README.md) | 5 / 5 |
+| 04 | [RAG by hand](modules/04-rag-by-hand/README.md) | 4 / 4 |
+| 05 | [Serving AI apps: FastAPI, Streamlit, Gradio](modules/05-serving-ai-apps/README.md) | 5 / 5 |
+| 06 | [LangChain core: chains, memory, RAG](modules/06-langchain-core/README.md) | 5 / 5 |
+| 07 | [LangChain agents and tool use](modules/07-langchain-agents/README.md) | 5 / 5 |
 | 08 | [LangGraph: stateful workflows and routing](modules/08-langgraph-workflows/README.md) | 1 / 4 |
 | 09 | [LangGraph: cycles, human-in-the-loop, persistence](modules/09-langgraph-cycles-hitl/README.md) | 1 / 5 |
 | 10 | [Tracing, evaluation and testing](modules/10-tracing-and-evaluation/README.md) | 1 / 4 |
@@ -69,10 +69,10 @@ Tool calling and the agent loop in plain Python, so frameworks hold no mystery.
 | Lesson | Title | Status | Model needs |
 |---|---|---|---|
 | 02.1 | [Function calling: letting the model ask for a tool](modules/02-tools-and-agents-by-hand/01-function-calling/README.md) | ✅ ready | chat, tools |
-| 02.2 | The agent loop: reason, act, observe | ⬜ planned | chat, tools |
-| 02.3 | Conversation memory and context management | ⬜ planned | chat |
-| 02.4 | Tool failures, retries and iteration limits | ⬜ planned | chat, tools |
-| 02.5 | Capstone: helpdesk agent that looks up tickets and resets passwords | ⬜ planned | chat, tools |
+| 02.2 | [The agent loop: reason, act, observe](modules/02-tools-and-agents-by-hand/02-the-agent-loop/README.md) | ✅ ready | chat, tools |
+| 02.3 | [Conversation memory and context management](modules/02-tools-and-agents-by-hand/03-conversation-memory-and-context-management/README.md) | ✅ ready | chat |
+| 02.4 | [Tool failures, retries and iteration limits](modules/02-tools-and-agents-by-hand/04-tool-failures-retries-and-iteration-limits/README.md) | ✅ ready | chat, tools |
+| 02.5 | [Capstone: helpdesk agent that looks up tickets and resets passwords](modules/02-tools-and-agents-by-hand/05-capstone-helpdesk-agent-that-looks-up-tickets-an/README.md) | ✅ ready | chat, tools |
 
 ## 03 · Embeddings and semantic search
 
@@ -83,10 +83,10 @@ Optional packages: `rag`
 | Lesson | Title | Status | Model needs |
 |---|---|---|---|
 | 03.1 | [What embeddings are: similarity by hand](modules/03-embeddings-and-search/01-what-embeddings-are/README.md) | ✅ ready | embeddings |
-| 03.2 | Chunking strategies | ⬜ planned | embeddings |
-| 03.3 | Vector stores: ChromaDB and FAISS | ⬜ planned | embeddings |
-| 03.4 | Hybrid search: keywords plus vectors | ⬜ planned | embeddings |
-| 03.5 | Capstone: semantic search over the helpdesk knowledge base | ⬜ planned | embeddings |
+| 03.2 | [Chunking strategies](modules/03-embeddings-and-search/02-chunking-strategies/README.md) | ✅ ready | embeddings |
+| 03.3 | [Vector stores: ChromaDB and FAISS](modules/03-embeddings-and-search/03-vector-stores/README.md) | ✅ ready | embeddings |
+| 03.4 | [Hybrid search: keywords plus vectors](modules/03-embeddings-and-search/04-hybrid-search/README.md) | ✅ ready | embeddings |
+| 03.5 | [Capstone: semantic search over the helpdesk knowledge base](modules/03-embeddings-and-search/05-capstone-semantic-search-over-the-helpdesk-knowl/README.md) | ✅ ready | embeddings |
 
 ## 04 · RAG by hand
 
@@ -97,9 +97,9 @@ Optional packages: `rag`
 | Lesson | Title | Status | Model needs |
 |---|---|---|---|
 | 04.1 | [The RAG pipeline: retrieve, augment, generate](modules/04-rag-by-hand/01-the-rag-pipeline/README.md) | ✅ ready | chat, embeddings |
-| 04.2 | Grounding, citations and saying 'I don't know' | ⬜ planned | chat, embeddings |
-| 04.3 | Measuring retrieval and answer quality | ⬜ planned | chat, embeddings |
-| 04.4 | Capstone: helpdesk answers grounded in the knowledge base | ⬜ planned | chat, embeddings |
+| 04.2 | [Grounding, citations and saying 'I don't know'](modules/04-rag-by-hand/02-grounding-citations-and-saying-i-don-t-know/README.md) | ✅ ready | chat, embeddings |
+| 04.3 | [Measuring retrieval and answer quality](modules/04-rag-by-hand/03-measuring-retrieval-and-answer-quality/README.md) | ✅ ready | chat, embeddings |
+| 04.4 | [Capstone: helpdesk answers grounded in the knowledge base](modules/04-rag-by-hand/04-capstone-helpdesk-answers-grounded-in-the-knowle/README.md) | ✅ ready | chat, embeddings |
 
 ## 05 · Serving AI apps: FastAPI, Streamlit, Gradio
 
@@ -110,24 +110,24 @@ Optional packages: `apps`
 | Lesson | Title | Status | Model needs |
 |---|---|---|---|
 | 05.1 | [REST and FastAPI basics with Pydantic models](modules/05-serving-ai-apps/01-rest-and-fastapi-basics-with-pydantic-models/README.md) | ✅ ready | chat |
-| 05.2 | Streaming responses with Server-Sent Events | ⬜ planned | chat, stream |
-| 05.3 | A chat UI in Streamlit | ⬜ planned | chat, stream |
-| 05.4 | A demo UI in Gradio; choosing between the two | ⬜ planned | chat |
-| 05.5 | Capstone: helpdesk assistant as an API with a chat front-end | ⬜ planned | chat, stream |
+| 05.2 | [Streaming responses with Server-Sent Events](modules/05-serving-ai-apps/02-streaming-responses-with-server-sent-events/README.md) | ✅ ready | chat, stream |
+| 05.3 | [A chat UI in Streamlit](modules/05-serving-ai-apps/03-a-chat-ui-in-streamlit/README.md) | ✅ ready | chat, stream |
+| 05.4 | [A demo UI in Gradio; choosing between the two](modules/05-serving-ai-apps/04-a-demo-ui-in-gradio-choosing-between-the-two/README.md) | ✅ ready | chat |
+| 05.5 | [Capstone: helpdesk assistant as an API with a chat front-end](modules/05-serving-ai-apps/05-capstone-helpdesk-assistant-as-an-api-with-a-cha/README.md) | ✅ ready | chat, stream |
 
 ## 06 · LangChain core: chains, memory, RAG
 
 The same ideas as modules 01-04, expressed with LangChain.
 
-Optional packages: `langchain`
+Optional packages: `langchain`, `langgraph`
 
 | Lesson | Title | Status | Model needs |
 |---|---|---|---|
 | 06.1 | [Runnables and LCEL: prompt | model | parser](modules/06-langchain-core/01-runnables-and-lcel/README.md) | ✅ ready | chat |
-| 06.2 | Prompt templates and output parsers | ⬜ planned | chat, json |
-| 06.3 | Conversation memory across turns and sessions | ⬜ planned | chat |
-| 06.4 | Loaders, splitters and retrievers: RAG with LangChain | ⬜ planned | chat, embeddings |
-| 06.5 | Capstone: the helpdesk RAG chain | ⬜ planned | chat, embeddings |
+| 06.2 | [Prompt templates and output parsers](modules/06-langchain-core/02-prompt-templates-and-output-parsers/README.md) | ✅ ready | chat, json |
+| 06.3 | [Conversation memory across turns and sessions](modules/06-langchain-core/03-conversation-memory-across-turns-and-sessions/README.md) | ✅ ready | chat |
+| 06.4 | [Loaders, splitters and retrievers: RAG with LangChain](modules/06-langchain-core/04-loaders-splitters-and-retrievers/README.md) | ✅ ready | chat, embeddings |
+| 06.5 | [Capstone: the helpdesk RAG chain](modules/06-langchain-core/05-capstone-the-helpdesk-rag-chain/README.md) | ✅ ready | chat, embeddings |
 
 ## 07 · LangChain agents and tool use
 
@@ -138,10 +138,10 @@ Optional packages: `langchain`
 | Lesson | Title | Status | Model needs |
 |---|---|---|---|
 | 07.1 | [Custom tools and input schemas](modules/07-langchain-agents/01-custom-tools-and-input-schemas/README.md) | ✅ ready | chat, tools |
-| 07.2 | ReAct and plan-and-execute agents | ⬜ planned | chat, tools |
-| 07.3 | Agents over SQL data | ⬜ planned | chat, tools |
-| 07.4 | Structured final answers and streaming intermediate steps | ⬜ planned | chat, tools, stream |
-| 07.5 | Capstone: helpdesk agent with search, ticket and database tools | ⬜ planned | chat, tools |
+| 07.2 | [ReAct and plan-and-execute agents](modules/07-langchain-agents/02-react-and-plan-and-execute-agents/README.md) | ✅ ready | chat, tools |
+| 07.3 | [Agents over SQL data](modules/07-langchain-agents/03-agents-over-sql-data/README.md) | ✅ ready | chat, tools |
+| 07.4 | [Structured final answers and streaming intermediate steps](modules/07-langchain-agents/04-structured-final-answers-and-streaming-intermedi/README.md) | ✅ ready | chat, tools, stream |
+| 07.5 | [Capstone: helpdesk agent with search, ticket and database tools](modules/07-langchain-agents/05-capstone-helpdesk-agent-with-search-ticket-and-d/README.md) | ✅ ready | chat, tools |
 
 ## 08 · LangGraph: stateful workflows and routing
 

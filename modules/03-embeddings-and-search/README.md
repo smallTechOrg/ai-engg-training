@@ -11,10 +11,10 @@ Turn text into vectors and search by meaning.
 | Lesson | Title | Status |
 |---|---|---|
 | 03.1 | [What embeddings are: similarity by hand](01-what-embeddings-are/README.md) | ✅ ready |
-| 03.2 | Chunking strategies | ⬜ planned |
-| 03.3 | Vector stores: ChromaDB and FAISS | ⬜ planned |
-| 03.4 | Hybrid search: keywords plus vectors | ⬜ planned |
-| 03.5 | Capstone: semantic search over the helpdesk knowledge base | ⬜ planned |
+| 03.2 | [Chunking strategies](02-chunking-strategies/README.md) | ✅ ready |
+| 03.3 | [Vector stores: ChromaDB and FAISS](03-vector-stores/README.md) | ✅ ready |
+| 03.4 | [Hybrid search: keywords plus vectors](04-hybrid-search/README.md) | ✅ ready |
+| 03.5 | [Capstone: semantic search over the helpdesk knowledge base](05-capstone-semantic-search-over-the-helpdesk-knowl/README.md) | ✅ ready |
 
 <!-- lessons:end -->
 
