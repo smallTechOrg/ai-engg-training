@@ -1,0 +1,28 @@
+[project]
+name = "labkit"
+version = "0.1.0"
+description = "Shared plumbing for the AI engineering training lessons: client, lesson output, launcher, doctor."
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "openai>=3.0",
+    "python-dotenv>=1.0",
+    "rich>=13.7",
+]
+
+[project.scripts]
+labkit = "labkit.cli:main"
+
+[dependency-groups]
+dev = ["pytest>=8"]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/labkit"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"

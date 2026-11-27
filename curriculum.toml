@@ -1,0 +1,865 @@
+# Single source of truth for the curriculum. CURRICULUM.md is generated from this
+# file: run `./run map` after editing. Status: ready | draft | planned.
+
+scenario = "IT helpdesk assistant"
+
+[[module]]
+id = "00"
+slug = "00-setup"
+title = "Setup and Python for AI work"
+summary = "Get a reproducible environment and the Python habits AI work needs."
+extras = []
+services = []
+
+  [[module.lesson]]
+  id = "00.1"
+  slug = "01-the-ai-engineering-landscape-and-this-repo"
+  title = "The AI engineering landscape and this repo"
+  status = "planned"
+  needs = []
+
+  [[module.lesson]]
+  id = "00.2"
+  slug = "02-environments-and-dependencies"
+  title = "Environments and dependencies: uv, venv, pip, pyenv, conda"
+  status = "planned"
+  needs = []
+
+  [[module.lesson]]
+  id = "00.3"
+  slug = "03-secrets-and-configuration-with-env"
+  title = "Secrets and configuration with .env"
+  status = "planned"
+  needs = []
+
+  [[module.lesson]]
+  id = "00.4"
+  slug = "04-git-and-github-essentials-for-ai-projects"
+  title = "Git and GitHub essentials for AI projects"
+  status = "planned"
+  needs = []
+
+  [[module.lesson]]
+  id = "00.5"
+  slug = "05-async-python"
+  title = "Async Python: concurrent LLM calls"
+  status = "planned"
+  needs = ["chat"]
+
+[[module]]
+id = "01"
+slug = "01-foundations"
+title = "Foundations: talking to an LLM"
+summary = "Everything a single model call can do, before any tool or framework."
+extras = []
+services = []
+
+  [[module.lesson]]
+  id = "01.1"
+  slug = "01-first-llm-call"
+  title = "Your first LLM call"
+  status = "ready"
+  needs = ["chat", "stream"]
+
+  [[module.lesson]]
+  id = "01.2"
+  slug = "02-messages-roles-and-multi-turn-conversation"
+  title = "Messages, roles and multi-turn conversation"
+  status = "planned"
+  needs = ["chat"]
+
+  [[module.lesson]]
+  id = "01.3"
+  slug = "03-streaming-and-sampling-parameters"
+  title = "Streaming and sampling parameters"
+  status = "planned"
+  needs = ["chat", "stream"]
+
+  [[module.lesson]]
+  id = "01.4"
+  slug = "04-tokens-context-windows-and-cost"
+  title = "Tokens, context windows and cost"
+  status = "planned"
+  needs = ["chat"]
+
+  [[module.lesson]]
+  id = "01.5"
+  slug = "05-prompt-engineering"
+  title = "Prompt engineering: zero-shot, few-shot, chain-of-thought"
+  status = "planned"
+  needs = ["chat"]
+
+  [[module.lesson]]
+  id = "01.6"
+  slug = "06-structured-output"
+  title = "Structured output: JSON mode and schemas"
+  status = "planned"
+  needs = ["chat", "json"]
+
+  [[module.lesson]]
+  id = "01.7"
+  slug = "07-capstone-helpdesk-ticket-triage-with-one-call"
+  title = "Capstone: helpdesk ticket triage with one call"
+  status = "planned"
+  needs = ["chat", "json"]
+
+[[module]]
+id = "02"
+slug = "02-tools-and-agents-by-hand"
+title = "Tools and agents by hand"
+summary = "Tool calling and the agent loop in plain Python, so frameworks hold no mystery."
+extras = []
+services = []
+
+  [[module.lesson]]
+  id = "02.1"
+  slug = "01-function-calling"
+  title = "Function calling: letting the model ask for a tool"
+  status = "planned"
+  needs = ["chat", "tools"]
+
+  [[module.lesson]]
+  id = "02.2"
+  slug = "02-the-agent-loop"
+  title = "The agent loop: reason, act, observe"
+  status = "planned"
+  needs = ["chat", "tools"]
+
+  [[module.lesson]]
+  id = "02.3"
+  slug = "03-conversation-memory-and-context-management"
+  title = "Conversation memory and context management"
+  status = "planned"
+  needs = ["chat"]
+
+  [[module.lesson]]
+  id = "02.4"
+  slug = "04-tool-failures-retries-and-iteration-limits"
+  title = "Tool failures, retries and iteration limits"
+  status = "planned"
+  needs = ["chat", "tools"]
+
+  [[module.lesson]]
+  id = "02.5"
+  slug = "05-capstone-helpdesk-agent-that-looks-up-tickets-an"
+  title = "Capstone: helpdesk agent that looks up tickets and resets passwords"
+  status = "planned"
+  needs = ["chat", "tools"]
+
+[[module]]
+id = "03"
+slug = "03-embeddings-and-search"
+title = "Embeddings and semantic search"
+summary = "Turn text into vectors and search by meaning."
+extras = ["rag"]
+services = []
+
+  [[module.lesson]]
+  id = "03.1"
+  slug = "01-what-embeddings-are"
+  title = "What embeddings are: similarity by hand"
+  status = "planned"
+  needs = ["embeddings"]
+
+  [[module.lesson]]
+  id = "03.2"
+  slug = "02-chunking-strategies"
+  title = "Chunking strategies"
+  status = "planned"
+  needs = ["embeddings"]
+
+  [[module.lesson]]
+  id = "03.3"
+  slug = "03-vector-stores"
+  title = "Vector stores: ChromaDB and FAISS"
+  status = "planned"
+  needs = ["embeddings"]
+
+  [[module.lesson]]
+  id = "03.4"
+  slug = "04-hybrid-search"
+  title = "Hybrid search: keywords plus vectors"
+  status = "planned"
+  needs = ["embeddings"]
+
+  [[module.lesson]]
+  id = "03.5"
+  slug = "05-capstone-semantic-search-over-the-helpdesk-knowl"
+  title = "Capstone: semantic search over the helpdesk knowledge base"
+  status = "planned"
+  needs = ["embeddings"]
+
+[[module]]
+id = "04"
+slug = "04-rag-by-hand"
+title = "RAG by hand"
+summary = "Retrieval-augmented generation built from parts you already understand."
+extras = ["rag"]
+services = []
+
+  [[module.lesson]]
+  id = "04.1"
+  slug = "01-the-rag-pipeline"
+  title = "The RAG pipeline: retrieve, augment, generate"
+  status = "planned"
+  needs = ["chat", "embeddings"]
+
+  [[module.lesson]]
+  id = "04.2"
+  slug = "02-grounding-citations-and-saying-i-don-t-know"
+  title = "Grounding, citations and saying 'I don't know'"
+  status = "planned"
+  needs = ["chat", "embeddings"]
+
+  [[module.lesson]]
+  id = "04.3"
+  slug = "03-measuring-retrieval-and-answer-quality"
+  title = "Measuring retrieval and answer quality"
+  status = "planned"
+  needs = ["chat", "embeddings"]
+
+  [[module.lesson]]
+  id = "04.4"
+  slug = "04-capstone-helpdesk-answers-grounded-in-the-knowle"
+  title = "Capstone: helpdesk answers grounded in the knowledge base"
+  status = "planned"
+  needs = ["chat", "embeddings"]
+
+[[module]]
+id = "05"
+slug = "05-serving-ai-apps"
+title = "Serving AI apps: FastAPI, Streamlit, Gradio"
+summary = "Put a model behind an API and a simple user interface."
+extras = ["apps"]
+services = []
+
+  [[module.lesson]]
+  id = "05.1"
+  slug = "01-rest-and-fastapi-basics-with-pydantic-models"
+  title = "REST and FastAPI basics with Pydantic models"
+  status = "planned"
+  needs = ["chat"]
+
+  [[module.lesson]]
+  id = "05.2"
+  slug = "02-streaming-responses-with-server-sent-events"
+  title = "Streaming responses with Server-Sent Events"
+  status = "planned"
+  needs = ["chat", "stream"]
+
+  [[module.lesson]]
+  id = "05.3"
+  slug = "03-a-chat-ui-in-streamlit"
+  title = "A chat UI in Streamlit"
+  status = "planned"
+  needs = ["chat", "stream"]
+
+  [[module.lesson]]
+  id = "05.4"
+  slug = "04-a-demo-ui-in-gradio-choosing-between-the-two"
+  title = "A demo UI in Gradio; choosing between the two"
+  status = "planned"
+  needs = ["chat"]
+
+  [[module.lesson]]
+  id = "05.5"
+  slug = "05-capstone-helpdesk-assistant-as-an-api-with-a-cha"
+  title = "Capstone: helpdesk assistant as an API with a chat front-end"
+  status = "planned"
+  needs = ["chat", "stream"]
+
+[[module]]
+id = "06"
+slug = "06-langchain-core"
+title = "LangChain core: chains, memory, RAG"
+summary = "The same ideas as modules 01-04, expressed with LangChain."
+extras = ["langchain"]
+services = []
+
+  [[module.lesson]]
+  id = "06.1"
+  slug = "01-runnables-and-lcel"
+  title = "Runnables and LCEL: prompt | model | parser"
+  status = "planned"
+  needs = ["chat"]
+
+  [[module.lesson]]
+  id = "06.2"
+  slug = "02-prompt-templates-and-output-parsers"
+  title = "Prompt templates and output parsers"
+  status = "planned"
+  needs = ["chat", "json"]
+
+  [[module.lesson]]
+  id = "06.3"
+  slug = "03-conversation-memory-across-turns-and-sessions"
+  title = "Conversation memory across turns and sessions"
+  status = "planned"
+  needs = ["chat"]
+
+  [[module.lesson]]
+  id = "06.4"
+  slug = "04-loaders-splitters-and-retrievers"
+  title = "Loaders, splitters and retrievers: RAG with LangChain"
+  status = "planned"
+  needs = ["chat", "embeddings"]
+
+  [[module.lesson]]
+  id = "06.5"
+  slug = "05-capstone-the-helpdesk-rag-chain"
+  title = "Capstone: the helpdesk RAG chain"
+  status = "planned"
+  needs = ["chat", "embeddings"]
+
+[[module]]
+id = "07"
+slug = "07-langchain-agents"
+title = "LangChain agents and tool use"
+summary = "Agents that choose and call tools, built with LangChain."
+extras = ["langchain"]
+services = []
+
+  [[module.lesson]]
+  id = "07.1"
+  slug = "01-custom-tools-and-input-schemas"
+  title = "Custom tools and input schemas"
+  status = "planned"
+  needs = ["chat", "tools"]
+
+  [[module.lesson]]
+  id = "07.2"
+  slug = "02-react-and-plan-and-execute-agents"
+  title = "ReAct and plan-and-execute agents"
+  status = "planned"
+  needs = ["chat", "tools"]
+
+  [[module.lesson]]
+  id = "07.3"
+  slug = "03-agents-over-sql-data"
+  title = "Agents over SQL data"
+  status = "planned"
+  needs = ["chat", "tools"]
+
+  [[module.lesson]]
+  id = "07.4"
+  slug = "04-structured-final-answers-and-streaming-intermedi"
+  title = "Structured final answers and streaming intermediate steps"
+  status = "planned"
+  needs = ["chat", "tools", "stream"]
+
+  [[module.lesson]]
+  id = "07.5"
+  slug = "05-capstone-helpdesk-agent-with-search-ticket-and-d"
+  title = "Capstone: helpdesk agent with search, ticket and database tools"
+  status = "planned"
+  needs = ["chat", "tools"]
+
+[[module]]
+id = "08"
+slug = "08-langgraph-workflows"
+title = "LangGraph: stateful workflows and routing"
+summary = "Model a workflow as a graph with explicit state."
+extras = ["langgraph"]
+services = []
+
+  [[module.lesson]]
+  id = "08.1"
+  slug = "01-why-graphs"
+  title = "Why graphs: state, nodes and edges"
+  status = "planned"
+  needs = ["chat"]
+
+  [[module.lesson]]
+  id = "08.2"
+  slug = "02-conditional-edges-and-routing-to-specialists"
+  title = "Conditional edges and routing to specialists"
+  status = "planned"
+  needs = ["chat"]
+
+  [[module.lesson]]
+  id = "08.3"
+  slug = "03-streaming-visualising-and-testing-a-graph"
+  title = "Streaming, visualising and testing a graph"
+  status = "planned"
+  needs = ["chat", "stream"]
+
+  [[module.lesson]]
+  id = "08.4"
+  slug = "04-capstone-helpdesk-router-with-specialist-nodes"
+  title = "Capstone: helpdesk router with specialist nodes"
+  status = "planned"
+  needs = ["chat"]
+
+[[module]]
+id = "09"
+slug = "09-langgraph-cycles-hitl"
+title = "LangGraph: cycles, human-in-the-loop, persistence"
+summary = "Loops, approvals and workflows that survive a restart."
+extras = ["langgraph"]
+services = ["REDIS_URL"]
+
+  [[module.lesson]]
+  id = "09.1"
+  slug = "01-cycles-and-self-correction-loops"
+  title = "Cycles and self-correction loops"
+  status = "planned"
+  needs = ["chat"]
+
+  [[module.lesson]]
+  id = "09.2"
+  slug = "02-human-in-the-loop"
+  title = "Human-in-the-loop: interrupt, approve, resume"
+  status = "planned"
+  needs = ["chat"]
+
+  [[module.lesson]]
+  id = "09.3"
+  slug = "03-checkpointers"
+  title = "Checkpointers: SQLite and Redis persistence"
+  status = "planned"
+  needs = ["chat"]
+
+  [[module.lesson]]
+  id = "09.4"
+  slug = "04-parallel-workers-and-sub-graphs"
+  title = "Parallel workers and sub-graphs"
+  status = "planned"
+  needs = ["chat"]
+
+  [[module.lesson]]
+  id = "09.5"
+  slug = "05-capstone-helpdesk-change-request-with-an-approva"
+  title = "Capstone: helpdesk change request with an approval gate"
+  status = "planned"
+  needs = ["chat"]
+
+[[module]]
+id = "10"
+slug = "10-tracing-and-evaluation"
+title = "Tracing, evaluation and testing"
+summary = "See what an LLM application did and measure whether it is good."
+extras = ["langchain"]
+services = ["LANGSMITH_API_KEY"]
+
+  [[module.lesson]]
+  id = "10.1"
+  slug = "01-tracing-runs"
+  title = "Tracing runs: spans, latency and token cost"
+  status = "planned"
+  needs = ["chat"]
+
+  [[module.lesson]]
+  id = "10.2"
+  slug = "02-evaluation-datasets-and-heuristic-evaluators"
+  title = "Evaluation datasets and heuristic evaluators"
+  status = "planned"
+  needs = ["chat"]
+
+  [[module.lesson]]
+  id = "10.3"
+  slug = "03-llm-as-judge-and-regression-testing-of-prompts"
+  title = "LLM-as-judge and regression testing of prompts"
+  status = "planned"
+  needs = ["chat"]
+
+  [[module.lesson]]
+  id = "10.4"
+  slug = "04-capstone-an-evaluation-suite-for-the-helpdesk-as"
+  title = "Capstone: an evaluation suite for the helpdesk assistant"
+  status = "planned"
+  needs = ["chat"]
+
+[[module]]
+id = "11"
+slug = "11-mcp-servers"
+title = "MCP: architecture and custom servers"
+summary = "The Model Context Protocol and how to write a server."
+extras = ["mcp"]
+services = []
+
+  [[module.lesson]]
+  id = "11.1"
+  slug = "01-mcp-architecture"
+  title = "MCP architecture: hosts, clients, servers, primitives"
+  status = "planned"
+  needs = []
+
+  [[module.lesson]]
+  id = "11.2"
+  slug = "02-a-minimal-server"
+  title = "A minimal server: tools, resources and prompts"
+  status = "planned"
+  needs = []
+
+  [[module.lesson]]
+  id = "11.3"
+  slug = "03-writing-an-mcp-client-discovery-and-negotiation"
+  title = "Writing an MCP client; discovery and negotiation"
+  status = "planned"
+  needs = ["chat", "tools"]
+
+  [[module.lesson]]
+  id = "11.4"
+  slug = "04-security-validation-and-debugging-with-the-inspe"
+  title = "Security, validation and debugging with the Inspector"
+  status = "planned"
+  needs = []
+
+  [[module.lesson]]
+  id = "11.5"
+  slug = "05-capstone-a-helpdesk-mcp-server-for-tickets-and-a"
+  title = "Capstone: a helpdesk MCP server for tickets and assets"
+  status = "planned"
+  needs = ["chat", "tools"]
+
+[[module]]
+id = "12"
+slug = "12-mcp-ecosystem"
+title = "MCP: ecosystem integrations"
+summary = "Use existing MCP servers and plug them into agent frameworks."
+extras = ["mcp", "langgraph"]
+services = []
+
+  [[module.lesson]]
+  id = "12.1"
+  slug = "01-ready-made-servers"
+  title = "Ready-made servers: SQLite and filesystem"
+  status = "planned"
+  needs = ["chat", "tools"]
+
+  [[module.lesson]]
+  id = "12.2"
+  slug = "02-chaining-several-servers-in-one-session"
+  title = "Chaining several servers in one session"
+  status = "planned"
+  needs = ["chat", "tools"]
+
+  [[module.lesson]]
+  id = "12.3"
+  slug = "03-mcp-tools-inside-langchain-langgraph-and-crewai"
+  title = "MCP tools inside LangChain, LangGraph and CrewAI"
+  status = "planned"
+  needs = ["chat", "tools"]
+
+  [[module.lesson]]
+  id = "12.4"
+  slug = "04-capstone-query-to-report-pipeline-for-the-helpde"
+  title = "Capstone: query-to-report pipeline for the helpdesk"
+  status = "planned"
+  needs = ["chat", "tools"]
+
+[[module]]
+id = "13"
+slug = "13-deep-agents"
+title = "Deep agents: reflection, planning, long-term memory"
+summary = "Agents that critique their work, plan ahead and remember."
+extras = ["langgraph", "rag"]
+services = []
+
+  [[module.lesson]]
+  id = "13.1"
+  slug = "01-reflection"
+  title = "Reflection: generate, critique, revise"
+  status = "planned"
+  needs = ["chat"]
+
+  [[module.lesson]]
+  id = "13.2"
+  slug = "02-planning-and-replanning"
+  title = "Planning and replanning"
+  status = "planned"
+  needs = ["chat", "tools"]
+
+  [[module.lesson]]
+  id = "13.3"
+  slug = "03-long-term-memory"
+  title = "Long-term memory: episodic, semantic, procedural"
+  status = "planned"
+  needs = ["chat", "embeddings"]
+
+  [[module.lesson]]
+  id = "13.4"
+  slug = "04-capstone-a-helpdesk-agent-that-learns-from-resol"
+  title = "Capstone: a helpdesk agent that learns from resolved tickets"
+  status = "planned"
+  needs = ["chat", "tools", "embeddings"]
+
+[[module]]
+id = "14"
+slug = "14-crewai"
+title = "CrewAI: multi-agent orchestration"
+summary = "Role-based agents working as a team."
+extras = ["crewai"]
+services = []
+
+  [[module.lesson]]
+  id = "14.1"
+  slug = "01-agents-tasks-crews-and-processes"
+  title = "Agents, tasks, crews and processes"
+  status = "planned"
+  needs = ["chat"]
+
+  [[module.lesson]]
+  id = "14.2"
+  slug = "02-sequential-and-hierarchical-processes-delegation"
+  title = "Sequential and hierarchical processes; delegation"
+  status = "planned"
+  needs = ["chat", "tools"]
+
+  [[module.lesson]]
+  id = "14.3"
+  slug = "03-tools-mcp-and-langgraph-alongside-a-crew"
+  title = "Tools, MCP and LangGraph alongside a crew"
+  status = "planned"
+  needs = ["chat", "tools"]
+
+  [[module.lesson]]
+  id = "14.4"
+  slug = "04-capstone-a-helpdesk-incident-response-crew"
+  title = "Capstone: a helpdesk incident-response crew"
+  status = "planned"
+  needs = ["chat", "tools"]
+
+[[module]]
+id = "15"
+slug = "15-agentic-rag"
+title = "Agentic RAG and GraphRAG"
+summary = "Retrieval that decides, checks and corrects itself."
+extras = ["rag", "langgraph"]
+services = []
+
+  [[module.lesson]]
+  id = "15.1"
+  slug = "01-rag-failure-modes-and-how-to-diagnose-them"
+  title = "RAG failure modes and how to diagnose them"
+  status = "planned"
+  needs = ["chat", "embeddings"]
+
+  [[module.lesson]]
+  id = "15.2"
+  slug = "02-agentic-self-and-corrective-rag"
+  title = "Agentic, self- and corrective RAG"
+  status = "planned"
+  needs = ["chat", "tools", "embeddings"]
+
+  [[module.lesson]]
+  id = "15.3"
+  slug = "03-re-ranking-hyde-and-query-expansion"
+  title = "Re-ranking, HyDE and query expansion"
+  status = "planned"
+  needs = ["chat", "embeddings"]
+
+  [[module.lesson]]
+  id = "15.4"
+  slug = "04-graphrag"
+  title = "GraphRAG: knowledge graphs and multi-hop questions"
+  status = "planned"
+  needs = ["chat", "embeddings"]
+
+  [[module.lesson]]
+  id = "15.5"
+  slug = "05-capstone-benchmark-agentic-against-plain-rag-on"
+  title = "Capstone: benchmark agentic against plain RAG on helpdesk questions"
+  status = "planned"
+  needs = ["chat", "embeddings"]
+
+[[module]]
+id = "16"
+slug = "16-containers-and-deployment"
+title = "Containers and deployment"
+summary = "Package an agent and ship it."
+extras = ["apps"]
+services = ["DOCKER", "REDIS_URL"]
+
+  [[module.lesson]]
+  id = "16.1"
+  slug = "01-docker-fundamentals-and-a-production-dockerfile"
+  title = "Docker fundamentals and a production Dockerfile"
+  status = "planned"
+  needs = []
+
+  [[module.lesson]]
+  id = "16.2"
+  slug = "02-docker-compose"
+  title = "Docker Compose: API, vector store, Redis, worker"
+  status = "planned"
+  needs = ["chat"]
+
+  [[module.lesson]]
+  id = "16.3"
+  slug = "03-health-checks-configuration-and-secrets"
+  title = "Health checks, configuration and secrets"
+  status = "planned"
+  needs = []
+
+  [[module.lesson]]
+  id = "16.4"
+  slug = "04-ci-cd-and-rollout-strategies"
+  title = "CI/CD and rollout strategies"
+  status = "planned"
+  needs = []
+
+  [[module.lesson]]
+  id = "16.5"
+  slug = "05-capstone-the-helpdesk-stack-in-containers"
+  title = "Capstone: the helpdesk stack in containers"
+  status = "planned"
+  needs = ["chat"]
+
+[[module]]
+id = "17"
+slug = "17-monitoring-and-fine-tuning"
+title = "Monitoring, evaluation and fine-tuning"
+summary = "Operate an agent: traces, metrics, dashboards, and when to fine-tune."
+extras = ["observability"]
+services = ["OTEL_EXPORTER_OTLP_ENDPOINT", "PROMETHEUS_URL", "GRAFANA_URL"]
+
+  [[module.lesson]]
+  id = "17.1"
+  slug = "01-logs-metrics-and-traces-with-opentelemetry"
+  title = "Logs, metrics and traces with OpenTelemetry"
+  status = "planned"
+  needs = ["chat"]
+
+  [[module.lesson]]
+  id = "17.2"
+  slug = "02-prometheus-metrics-and-grafana-dashboards"
+  title = "Prometheus metrics and Grafana dashboards"
+  status = "planned"
+  needs = ["chat"]
+
+  [[module.lesson]]
+  id = "17.3"
+  slug = "03-cost-tracking-budgets-and-service-level-objectiv"
+  title = "Cost tracking, budgets and service-level objectives"
+  status = "planned"
+  needs = ["chat"]
+
+  [[module.lesson]]
+  id = "17.4"
+  slug = "04-fine-tuning"
+  title = "Fine-tuning: when it is warranted; LoRA and QLoRA"
+  status = "planned"
+  needs = []
+
+  [[module.lesson]]
+  id = "17.5"
+  slug = "05-capstone-a-monitored-helpdesk-assistant"
+  title = "Capstone: a monitored helpdesk assistant"
+  status = "planned"
+  needs = ["chat"]
+
+[[module]]
+id = "18"
+slug = "18-guardrails"
+title = "Guardrails and safety"
+summary = "Defend an LLM application against misuse and mistakes."
+extras = ["guardrails"]
+services = []
+
+  [[module.lesson]]
+  id = "18.1"
+  slug = "01-the-risk-landscape-and-prompt-injection"
+  title = "The risk landscape and prompt injection"
+  status = "planned"
+  needs = ["chat"]
+
+  [[module.lesson]]
+  id = "18.2"
+  slug = "02-input-and-output-rails"
+  title = "Input and output rails"
+  status = "planned"
+  needs = ["chat"]
+
+  [[module.lesson]]
+  id = "18.3"
+  slug = "03-validators-and-detecting-personal-data"
+  title = "Validators and detecting personal data"
+  status = "planned"
+  needs = ["chat"]
+
+  [[module.lesson]]
+  id = "18.4"
+  slug = "04-red-teaming-a-safety-stack"
+  title = "Red-teaming a safety stack"
+  status = "planned"
+  needs = ["chat"]
+
+  [[module.lesson]]
+  id = "18.5"
+  slug = "05-capstone-a-guarded-helpdesk-assistant"
+  title = "Capstone: a guarded helpdesk assistant"
+  status = "planned"
+  needs = ["chat"]
+
+[[module]]
+id = "19"
+slug = "19-workflow-automation-n8n"
+title = "Workflow automation with n8n"
+summary = "Visual workflows that trigger, call and connect agents."
+extras = []
+services = ["N8N_URL"]
+
+  [[module.lesson]]
+  id = "19.1"
+  slug = "01-n8n-concepts"
+  title = "n8n concepts: workflows, nodes, triggers, credentials"
+  status = "planned"
+  needs = []
+
+  [[module.lesson]]
+  id = "19.2"
+  slug = "02-webhooks-http-requests-and-model-nodes"
+  title = "Webhooks, HTTP requests and model nodes"
+  status = "planned"
+  needs = ["chat"]
+
+  [[module.lesson]]
+  id = "19.3"
+  slug = "03-error-handling-schedules-and-expressions"
+  title = "Error handling, schedules and expressions"
+  status = "planned"
+  needs = []
+
+  [[module.lesson]]
+  id = "19.4"
+  slug = "04-capstone-a-helpdesk-ticket-workflow-calling-an-a"
+  title = "Capstone: a helpdesk ticket workflow calling an agent"
+  status = "planned"
+  needs = ["chat"]
+
+[[module]]
+id = "20"
+slug = "20-capstone"
+title = "Capstone"
+summary = "Design, build, deploy and present a complete agentic system."
+extras = ["all"]
+services = []
+
+  [[module.lesson]]
+  id = "20.1"
+  slug = "01-choosing-a-problem-and-designing-the-architectur"
+  title = "Choosing a problem and designing the architecture"
+  status = "planned"
+  needs = []
+
+  [[module.lesson]]
+  id = "20.2"
+  slug = "02-building-the-core"
+  title = "Building the core: retrieval, graph, tools, guardrails"
+  status = "planned"
+  needs = ["chat", "tools", "embeddings"]
+
+  [[module.lesson]]
+  id = "20.3"
+  slug = "03-deploying-monitoring-and-securing"
+  title = "Deploying, monitoring and securing"
+  status = "planned"
+  needs = ["chat"]
+
+  [[module.lesson]]
+  id = "20.4"
+  slug = "04-documenting-and-demonstrating"
+  title = "Documenting and demonstrating"
+  status = "planned"
+  needs = []
