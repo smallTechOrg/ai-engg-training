@@ -2,7 +2,7 @@
 
 <!-- Generated from curriculum.toml by `./run map`. Do not edit by hand. -->
 
-21 modules, 99 lessons, 53 ready. Each lesson shows a concept on its own, then applies it to the running scenario: **IT helpdesk assistant**.
+21 modules, 99 lessons, 73 ready. Each lesson shows a concept on its own, then applies it to the running scenario: **IT helpdesk assistant**.
 
 | Status | Meaning |
 |---|---|
@@ -22,12 +22,12 @@
 | 05 | [Serving AI apps: FastAPI, Streamlit, Gradio](modules/05-serving-ai-apps/README.md) | 5 / 5 |
 | 06 | [LangChain core: chains, memory, RAG](modules/06-langchain-core/README.md) | 5 / 5 |
 | 07 | [LangChain agents and tool use](modules/07-langchain-agents/README.md) | 5 / 5 |
-| 08 | [LangGraph: stateful workflows and routing](modules/08-langgraph-workflows/README.md) | 1 / 4 |
-| 09 | [LangGraph: cycles, human-in-the-loop, persistence](modules/09-langgraph-cycles-hitl/README.md) | 1 / 5 |
-| 10 | [Tracing, evaluation and testing](modules/10-tracing-and-evaluation/README.md) | 1 / 4 |
-| 11 | [MCP: architecture and custom servers](modules/11-mcp-servers/README.md) | 1 / 5 |
-| 12 | [MCP: ecosystem integrations](modules/12-mcp-ecosystem/README.md) | 1 / 4 |
-| 13 | [Deep agents: reflection, planning, long-term memory](modules/13-deep-agents/README.md) | 1 / 4 |
+| 08 | [LangGraph: stateful workflows and routing](modules/08-langgraph-workflows/README.md) | 4 / 4 |
+| 09 | [LangGraph: cycles, human-in-the-loop, persistence](modules/09-langgraph-cycles-hitl/README.md) | 5 / 5 |
+| 10 | [Tracing, evaluation and testing](modules/10-tracing-and-evaluation/README.md) | 4 / 4 |
+| 11 | [MCP: architecture and custom servers](modules/11-mcp-servers/README.md) | 5 / 5 |
+| 12 | [MCP: ecosystem integrations](modules/12-mcp-ecosystem/README.md) | 4 / 4 |
+| 13 | [Deep agents: reflection, planning, long-term memory](modules/13-deep-agents/README.md) | 4 / 4 |
 | 14 | [CrewAI: multi-agent orchestration](modules/14-crewai/README.md) | 1 / 4 |
 | 15 | [Agentic RAG and GraphRAG](modules/15-agentic-rag/README.md) | 1 / 5 |
 | 16 | [Containers and deployment](modules/16-containers-and-deployment/README.md) | 1 / 5 |
@@ -152,9 +152,9 @@ Optional packages: `langgraph`
 | Lesson | Title | Status | Model needs |
 |---|---|---|---|
 | 08.1 | [Why graphs: state, nodes and edges](modules/08-langgraph-workflows/01-why-graphs/README.md) | ✅ ready | chat |
-| 08.2 | Conditional edges and routing to specialists | ⬜ planned | chat |
-| 08.3 | Streaming, visualising and testing a graph | ⬜ planned | chat, stream |
-| 08.4 | Capstone: helpdesk router with specialist nodes | ⬜ planned | chat |
+| 08.2 | [Conditional edges and routing to specialists](modules/08-langgraph-workflows/02-conditional-edges-and-routing-to-specialists/README.md) | ✅ ready | chat |
+| 08.3 | [Streaming, visualising and testing a graph](modules/08-langgraph-workflows/03-streaming-visualising-and-testing-a-graph/README.md) | ✅ ready | chat, stream |
+| 08.4 | [Capstone: helpdesk router with specialist nodes](modules/08-langgraph-workflows/04-capstone-helpdesk-router-with-specialist-nodes/README.md) | ✅ ready | chat |
 
 ## 09 · LangGraph: cycles, human-in-the-loop, persistence
 
@@ -165,10 +165,10 @@ Optional packages: `langgraph` · Services: `REDIS_URL`
 | Lesson | Title | Status | Model needs |
 |---|---|---|---|
 | 09.1 | [Cycles and self-correction loops](modules/09-langgraph-cycles-hitl/01-cycles-and-self-correction-loops/README.md) | ✅ ready | chat |
-| 09.2 | Human-in-the-loop: interrupt, approve, resume | ⬜ planned | chat |
-| 09.3 | Checkpointers: SQLite and Redis persistence | ⬜ planned | chat |
-| 09.4 | Parallel workers and sub-graphs | ⬜ planned | chat |
-| 09.5 | Capstone: helpdesk change request with an approval gate | ⬜ planned | chat |
+| 09.2 | [Human-in-the-loop: interrupt, approve, resume](modules/09-langgraph-cycles-hitl/02-human-in-the-loop/README.md) | ✅ ready | chat |
+| 09.3 | [Checkpointers: SQLite and Redis persistence](modules/09-langgraph-cycles-hitl/03-checkpointers/README.md) | ✅ ready | chat |
+| 09.4 | [Parallel workers and sub-graphs](modules/09-langgraph-cycles-hitl/04-parallel-workers-and-sub-graphs/README.md) | ✅ ready | chat |
+| 09.5 | [Capstone: helpdesk change request with an approval gate](modules/09-langgraph-cycles-hitl/05-capstone-helpdesk-change-request-with-an-approva/README.md) | ✅ ready | chat |
 
 ## 10 · Tracing, evaluation and testing
 
@@ -179,9 +179,9 @@ Optional packages: `langchain` · Services: `LANGSMITH_API_KEY`
 | Lesson | Title | Status | Model needs |
 |---|---|---|---|
 | 10.1 | [Tracing runs: spans, latency and token cost](modules/10-tracing-and-evaluation/01-tracing-runs/README.md) | ✅ ready | chat |
-| 10.2 | Evaluation datasets and heuristic evaluators | ⬜ planned | chat |
-| 10.3 | LLM-as-judge and regression testing of prompts | ⬜ planned | chat |
-| 10.4 | Capstone: an evaluation suite for the helpdesk assistant | ⬜ planned | chat |
+| 10.2 | [Evaluation datasets and heuristic evaluators](modules/10-tracing-and-evaluation/02-evaluation-datasets-and-heuristic-evaluators/README.md) | ✅ ready | chat |
+| 10.3 | [LLM-as-judge and regression testing of prompts](modules/10-tracing-and-evaluation/03-llm-as-judge-and-regression-testing-of-prompts/README.md) | ✅ ready | chat |
+| 10.4 | [Capstone: an evaluation suite for the helpdesk assistant](modules/10-tracing-and-evaluation/04-capstone-an-evaluation-suite-for-the-helpdesk-as/README.md) | ✅ ready | chat |
 
 ## 11 · MCP: architecture and custom servers
 
@@ -192,23 +192,23 @@ Optional packages: `mcp`
 | Lesson | Title | Status | Model needs |
 |---|---|---|---|
 | 11.1 | [MCP architecture: hosts, clients, servers, primitives](modules/11-mcp-servers/01-mcp-architecture/README.md) | ✅ ready | - |
-| 11.2 | A minimal server: tools, resources and prompts | ⬜ planned | - |
-| 11.3 | Writing an MCP client; discovery and negotiation | ⬜ planned | chat, tools |
-| 11.4 | Security, validation and debugging with the Inspector | ⬜ planned | - |
-| 11.5 | Capstone: a helpdesk MCP server for tickets and assets | ⬜ planned | chat, tools |
+| 11.2 | [A minimal server: tools, resources and prompts](modules/11-mcp-servers/02-a-minimal-server/README.md) | ✅ ready | - |
+| 11.3 | [Writing an MCP client; discovery and negotiation](modules/11-mcp-servers/03-writing-an-mcp-client-discovery-and-negotiation/README.md) | ✅ ready | chat, tools |
+| 11.4 | [Security, validation and debugging with the Inspector](modules/11-mcp-servers/04-security-validation-and-debugging-with-the-inspe/README.md) | ✅ ready | - |
+| 11.5 | [Capstone: a helpdesk MCP server for tickets and assets](modules/11-mcp-servers/05-capstone-a-helpdesk-mcp-server-for-tickets-and-a/README.md) | ✅ ready | chat, tools |
 
 ## 12 · MCP: ecosystem integrations
 
 Use existing MCP servers and plug them into agent frameworks.
 
-Optional packages: `mcp`, `langgraph`
+Optional packages: `mcp`, `langchain`, `langgraph`, `crewai`
 
 | Lesson | Title | Status | Model needs |
 |---|---|---|---|
 | 12.1 | [Ready-made servers: SQLite and filesystem](modules/12-mcp-ecosystem/01-ready-made-servers/README.md) | ✅ ready | chat, tools |
-| 12.2 | Chaining several servers in one session | ⬜ planned | chat, tools |
-| 12.3 | MCP tools inside LangChain, LangGraph and CrewAI | ⬜ planned | chat, tools |
-| 12.4 | Capstone: query-to-report pipeline for the helpdesk | ⬜ planned | chat, tools |
+| 12.2 | [Chaining several servers in one session](modules/12-mcp-ecosystem/02-chaining-several-servers-in-one-session/README.md) | ✅ ready | chat, tools |
+| 12.3 | [MCP tools inside LangChain, LangGraph and CrewAI](modules/12-mcp-ecosystem/03-mcp-tools-inside-langchain-langgraph-and-crewai/README.md) | ✅ ready | chat, tools |
+| 12.4 | [Capstone: query-to-report pipeline for the helpdesk](modules/12-mcp-ecosystem/04-capstone-query-to-report-pipeline-for-the-helpde/README.md) | ✅ ready | chat, tools |
 
 ## 13 · Deep agents: reflection, planning, long-term memory
 
@@ -219,9 +219,9 @@ Optional packages: `langgraph`, `rag`
 | Lesson | Title | Status | Model needs |
 |---|---|---|---|
 | 13.1 | [Reflection: generate, critique, revise](modules/13-deep-agents/01-reflection/README.md) | ✅ ready | chat |
-| 13.2 | Planning and replanning | ⬜ planned | chat, tools |
-| 13.3 | Long-term memory: episodic, semantic, procedural | ⬜ planned | chat, embeddings |
-| 13.4 | Capstone: a helpdesk agent that learns from resolved tickets | ⬜ planned | chat, tools, embeddings |
+| 13.2 | [Planning and replanning](modules/13-deep-agents/02-planning-and-replanning/README.md) | ✅ ready | chat, tools |
+| 13.3 | [Long-term memory: episodic, semantic, procedural](modules/13-deep-agents/03-long-term-memory/README.md) | ✅ ready | chat, embeddings |
+| 13.4 | [Capstone: a helpdesk agent that learns from resolved tickets](modules/13-deep-agents/04-capstone-a-helpdesk-agent-that-learns-from-resol/README.md) | ✅ ready | chat, tools, embeddings |
 
 ## 14 · CrewAI: multi-agent orchestration
 

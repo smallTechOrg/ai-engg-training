@@ -31,7 +31,7 @@ SERVICES: dict[str, Service] = {
     s.env: s
     for s in (
         Service("DOCKER", "Docker", "", "Install Docker Desktop (macOS, Windows) or Docker Engine (Linux): https://docs.docker.com/get-docker/", "docker"),
-        Service("REDIS_URL", "Redis", "redis://localhost:6379/0", "docker run --rm -p 6379:6379 redis:7"),
+        Service("REDIS_URL", "Redis", "redis://localhost:6379/0", "docker run --rm -p 6379:6379 redis/redis-stack-server:latest   (plain redis:7 lacks the modules the LangGraph Redis checkpointer needs)"),
         Service("OTEL_EXPORTER_OTLP_ENDPOINT", "OpenTelemetry collector / Jaeger", "http://localhost:4318", "docker run --rm -p 16686:16686 -p 4318:4318 jaegertracing/all-in-one:latest   (UI: http://localhost:16686)"),
         Service("PROMETHEUS_URL", "Prometheus", "http://localhost:9090", "docker run --rm -p 9090:9090 prom/prometheus"),
         Service("GRAFANA_URL", "Grafana", "http://localhost:3000", "docker run --rm -p 3000:3000 grafana/grafana"),

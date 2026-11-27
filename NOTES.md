@@ -95,3 +95,20 @@ Each entry: symptom -> what was done -> durable lesson.
     Enter-for-next-lesson flow in infra modules. -> Skipped scripts are reported and the
     lesson continues; a lone skipped script still exits 3. -> Lesson: distinguish "cannot
     run here" from "broke".
+
+18. **Module-level briefs scale.** Giving each writer a whole module with a shared brief and a
+    task list (exact folders, topics, hard-won API facts) produced 43 lessons across two
+    batches with few defects; my verification helper (static checks plus stub runs) caught
+    nothing but false alarms. -> Keep the brief as the single place for lessons learned.
+    -> Lesson: invest in the brief and a mechanical verifier; review the diffs that matter.
+
+19. **Writers surfaced real gaps the brief could not know.** Redis checkpointer needs the
+    redis-stack image and its own package; module 06 needed LangGraph; module 12 uses four
+    extras. -> Fixed the shared service hint, the langgraph extra and module extras.
+    -> Lesson: each module's `extras` in curriculum.toml must be re-derived from what the
+    finished lessons import, not from the plan.
+
+20. **Heuristic checks cry wolf.** "double counting" and "eval(" flags were all benign
+    (`ast.literal_eval`, correct quiet-then-final recording). -> Verified by reading the
+    code and comparing visible calls with the run summary. -> Lesson: a flagging heuristic
+    needs a cheap second look, not blind trust either way.

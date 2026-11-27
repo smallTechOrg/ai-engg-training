@@ -13,9 +13,9 @@ See what an LLM application did and measure whether it is good.
 | Lesson | Title | Status |
 |---|---|---|
 | 10.1 | [Tracing runs: spans, latency and token cost](01-tracing-runs/README.md) | ✅ ready |
-| 10.2 | Evaluation datasets and heuristic evaluators | ⬜ planned |
-| 10.3 | LLM-as-judge and regression testing of prompts | ⬜ planned |
-| 10.4 | Capstone: an evaluation suite for the helpdesk assistant | ⬜ planned |
+| 10.2 | [Evaluation datasets and heuristic evaluators](02-evaluation-datasets-and-heuristic-evaluators/README.md) | ✅ ready |
+| 10.3 | [LLM-as-judge and regression testing of prompts](03-llm-as-judge-and-regression-testing-of-prompts/README.md) | ✅ ready |
+| 10.4 | [Capstone: an evaluation suite for the helpdesk assistant](04-capstone-an-evaluation-suite-for-the-helpdesk-as/README.md) | ✅ ready |
 
 <!-- lessons:end -->
 

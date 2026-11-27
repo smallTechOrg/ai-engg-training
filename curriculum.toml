@@ -373,21 +373,21 @@ services = []
   id = "08.2"
   slug = "02-conditional-edges-and-routing-to-specialists"
   title = "Conditional edges and routing to specialists"
-  status = "planned"
+  status = "ready"
   needs = ["chat"]
 
   [[module.lesson]]
   id = "08.3"
   slug = "03-streaming-visualising-and-testing-a-graph"
   title = "Streaming, visualising and testing a graph"
-  status = "planned"
+  status = "ready"
   needs = ["chat", "stream"]
 
   [[module.lesson]]
   id = "08.4"
   slug = "04-capstone-helpdesk-router-with-specialist-nodes"
   title = "Capstone: helpdesk router with specialist nodes"
-  status = "planned"
+  status = "ready"
   needs = ["chat"]
 
 [[module]]
@@ -409,28 +409,28 @@ services = ["REDIS_URL"]
   id = "09.2"
   slug = "02-human-in-the-loop"
   title = "Human-in-the-loop: interrupt, approve, resume"
-  status = "planned"
+  status = "ready"
   needs = ["chat"]
 
   [[module.lesson]]
   id = "09.3"
   slug = "03-checkpointers"
   title = "Checkpointers: SQLite and Redis persistence"
-  status = "planned"
+  status = "ready"
   needs = ["chat"]
 
   [[module.lesson]]
   id = "09.4"
   slug = "04-parallel-workers-and-sub-graphs"
   title = "Parallel workers and sub-graphs"
-  status = "planned"
+  status = "ready"
   needs = ["chat"]
 
   [[module.lesson]]
   id = "09.5"
   slug = "05-capstone-helpdesk-change-request-with-an-approva"
   title = "Capstone: helpdesk change request with an approval gate"
-  status = "planned"
+  status = "ready"
   needs = ["chat"]
 
 [[module]]
@@ -452,21 +452,21 @@ services = ["LANGSMITH_API_KEY"]
   id = "10.2"
   slug = "02-evaluation-datasets-and-heuristic-evaluators"
   title = "Evaluation datasets and heuristic evaluators"
-  status = "planned"
+  status = "ready"
   needs = ["chat"]
 
   [[module.lesson]]
   id = "10.3"
   slug = "03-llm-as-judge-and-regression-testing-of-prompts"
   title = "LLM-as-judge and regression testing of prompts"
-  status = "planned"
+  status = "ready"
   needs = ["chat"]
 
   [[module.lesson]]
   id = "10.4"
   slug = "04-capstone-an-evaluation-suite-for-the-helpdesk-as"
   title = "Capstone: an evaluation suite for the helpdesk assistant"
-  status = "planned"
+  status = "ready"
   needs = ["chat"]
 
 [[module]]
@@ -488,28 +488,28 @@ services = []
   id = "11.2"
   slug = "02-a-minimal-server"
   title = "A minimal server: tools, resources and prompts"
-  status = "planned"
+  status = "ready"
   needs = []
 
   [[module.lesson]]
   id = "11.3"
   slug = "03-writing-an-mcp-client-discovery-and-negotiation"
   title = "Writing an MCP client; discovery and negotiation"
-  status = "planned"
+  status = "ready"
   needs = ["chat", "tools"]
 
   [[module.lesson]]
   id = "11.4"
   slug = "04-security-validation-and-debugging-with-the-inspe"
   title = "Security, validation and debugging with the Inspector"
-  status = "planned"
+  status = "ready"
   needs = []
 
   [[module.lesson]]
   id = "11.5"
   slug = "05-capstone-a-helpdesk-mcp-server-for-tickets-and-a"
   title = "Capstone: a helpdesk MCP server for tickets and assets"
-  status = "planned"
+  status = "ready"
   needs = ["chat", "tools"]
 
 [[module]]
@@ -517,7 +517,7 @@ id = "12"
 slug = "12-mcp-ecosystem"
 title = "MCP: ecosystem integrations"
 summary = "Use existing MCP servers and plug them into agent frameworks."
-extras = ["mcp", "langgraph"]
+extras = ["mcp", "langchain", "langgraph", "crewai"]
 services = []
 
   [[module.lesson]]
@@ -531,21 +531,21 @@ services = []
   id = "12.2"
   slug = "02-chaining-several-servers-in-one-session"
   title = "Chaining several servers in one session"
-  status = "planned"
+  status = "ready"
   needs = ["chat", "tools"]
 
   [[module.lesson]]
   id = "12.3"
   slug = "03-mcp-tools-inside-langchain-langgraph-and-crewai"
   title = "MCP tools inside LangChain, LangGraph and CrewAI"
-  status = "planned"
+  status = "ready"
   needs = ["chat", "tools"]
 
   [[module.lesson]]
   id = "12.4"
   slug = "04-capstone-query-to-report-pipeline-for-the-helpde"
   title = "Capstone: query-to-report pipeline for the helpdesk"
-  status = "planned"
+  status = "ready"
   needs = ["chat", "tools"]
 
 [[module]]
@@ -567,21 +567,21 @@ services = []
   id = "13.2"
   slug = "02-planning-and-replanning"
   title = "Planning and replanning"
-  status = "planned"
+  status = "ready"
   needs = ["chat", "tools"]
 
   [[module.lesson]]
   id = "13.3"
   slug = "03-long-term-memory"
   title = "Long-term memory: episodic, semantic, procedural"
-  status = "planned"
+  status = "ready"
   needs = ["chat", "embeddings"]
 
   [[module.lesson]]
   id = "13.4"
   slug = "04-capstone-a-helpdesk-agent-that-learns-from-resol"
   title = "Capstone: a helpdesk agent that learns from resolved tickets"
-  status = "planned"
+  status = "ready"
   needs = ["chat", "tools", "embeddings"]
 
 [[module]]

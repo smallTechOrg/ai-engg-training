@@ -1,0 +1,10 @@
+[
+  {"id": "G-01", "ticket": "The VPN disconnects every ten minutes when I work from home and I have to log in again each time.", "expected_category": "network", "must_mention": ["vpn"], "max_words": 60},
+  {"id": "G-02", "ticket": "My laptop battery looks swollen and the trackpad is lifting off the case.", "expected_category": "hardware", "must_mention": ["battery", "stop"], "max_words": 60},
+  {"id": "G-03", "ticket": "Outlook says my password is wrong but I changed it yesterday. I think my account is locked.", "expected_category": "access", "must_mention": ["password"], "max_words": 60},
+  {"id": "G-04", "ticket": "Since the update the spreadsheet app crashes whenever I open a file that has macros.", "expected_category": "software", "must_mention": ["macro"], "max_words": 60},
+  {"id": "G-05", "ticket": "I need access to the shared Recruiting folder. My new manager approved it by email.", "expected_category": "access", "must_mention": ["folder", "approv"], "max_words": 60},
+  {"id": "G-06", "ticket": "The fourth-floor printer produces blank pages for everyone.", "expected_category": "hardware", "must_mention": ["printer"], "max_words": 60},
+  {"id": "G-07", "ticket": "The Wi-Fi in meeting room 3B drops every few minutes for everyone in the room.", "expected_category": "network", "must_mention": ["wi-fi", "room"], "max_words": 60},
+  {"id": "G-08", "ticket": "Who do I ask about a parking permit for the new car park?", "expected_category": "other", "must_mention": ["parking"], "max_words": 60}
+]

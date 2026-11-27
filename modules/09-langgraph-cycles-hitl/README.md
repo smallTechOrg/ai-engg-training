@@ -13,10 +13,10 @@ Loops, approvals and workflows that survive a restart.
 | Lesson | Title | Status |
 |---|---|---|
 | 09.1 | [Cycles and self-correction loops](01-cycles-and-self-correction-loops/README.md) | ✅ ready |
-| 09.2 | Human-in-the-loop: interrupt, approve, resume | ⬜ planned |
-| 09.3 | Checkpointers: SQLite and Redis persistence | ⬜ planned |
-| 09.4 | Parallel workers and sub-graphs | ⬜ planned |
-| 09.5 | Capstone: helpdesk change request with an approval gate | ⬜ planned |
+| 09.2 | [Human-in-the-loop: interrupt, approve, resume](02-human-in-the-loop/README.md) | ✅ ready |
+| 09.3 | [Checkpointers: SQLite and Redis persistence](03-checkpointers/README.md) | ✅ ready |
+| 09.4 | [Parallel workers and sub-graphs](04-parallel-workers-and-sub-graphs/README.md) | ✅ ready |
+| 09.5 | [Capstone: helpdesk change request with an approval gate](05-capstone-helpdesk-change-request-with-an-approva/README.md) | ✅ ready |
 
 <!-- lessons:end -->
 

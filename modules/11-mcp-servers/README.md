@@ -11,10 +11,10 @@ The Model Context Protocol and how to write a server.
 | Lesson | Title | Status |
 |---|---|---|
 | 11.1 | [MCP architecture: hosts, clients, servers, primitives](01-mcp-architecture/README.md) | ✅ ready |
-| 11.2 | A minimal server: tools, resources and prompts | ⬜ planned |
-| 11.3 | Writing an MCP client; discovery and negotiation | ⬜ planned |
-| 11.4 | Security, validation and debugging with the Inspector | ⬜ planned |
-| 11.5 | Capstone: a helpdesk MCP server for tickets and assets | ⬜ planned |
+| 11.2 | [A minimal server: tools, resources and prompts](02-a-minimal-server/README.md) | ✅ ready |
+| 11.3 | [Writing an MCP client; discovery and negotiation](03-writing-an-mcp-client-discovery-and-negotiation/README.md) | ✅ ready |
+| 11.4 | [Security, validation and debugging with the Inspector](04-security-validation-and-debugging-with-the-inspe/README.md) | ✅ ready |
+| 11.5 | [Capstone: a helpdesk MCP server for tickets and assets](05-capstone-a-helpdesk-mcp-server-for-tickets-and-a/README.md) | ✅ ready |
 
 <!-- lessons:end -->
 

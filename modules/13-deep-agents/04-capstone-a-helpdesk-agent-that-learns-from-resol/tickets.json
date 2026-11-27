@@ -1,0 +1,18 @@
+{
+  "history": [
+    {"id": "LL-4101", "problem": "Locked out minutes after changing my password; mail on my phone still open.", "fix": "The phone's mail app kept retrying the old password. Removed the account from the phone, unlocked, re-added it."},
+    {"id": "LL-4102", "problem": "Account keeps locking every few minutes since the password reset.", "fix": "A tablet had the old password saved in its mail app. Cleared it on the tablet, unlocked."},
+    {"id": "LL-4103", "problem": "Third floor printer offline for everyone, jobs pile up in the queue.", "fix": "The print spooler had hung on printsrv02. Restarted the spooler and printed a test page."},
+    {"id": "LL-4104", "problem": "VPN disconnects every ten minutes when I work from a hotel.", "fix": "The hotel wifi throttles UDP. Switched the VPN client protocol to TCP."},
+    {"id": "LL-4105", "problem": "Outlook says disconnected every Monday morning and cannot send.", "fix": "Mailbox was over quota after weekend newsletters. Archived old mail so the quota cleared."},
+    {"id": "LL-4106", "problem": "Teams cannot find my camera after a Windows update.", "fix": "The update reset camera privacy permission. Turned camera access back on in Windows privacy settings."},
+    {"id": "LL-4107", "problem": "Second monitor flickers every few seconds.", "fix": "Faulty HDMI cable. Replaced the cable."},
+    {"id": "LL-4108", "problem": "Guest wifi shows connected but no internet on my new laptop.", "fix": "The laptop had no guest-network certificate. Installed the certificate from the portal and reconnected."}
+  ],
+  "incoming": [
+    {"id": "LL-5001", "text": "My account got locked again right after I changed my password. The only thing still logged in is the mail app on my phone.", "expected_keyword": "phone"},
+    {"id": "LL-5002", "text": "Nobody on the third floor can print today; the queue shows jobs stuck.", "expected_keyword": "spooler"},
+    {"id": "LL-5003", "text": "The VPN keeps dropping every few minutes while I work from the airport lounge wifi.", "expected_keyword": "tcp"},
+    {"id": "LL-5004", "text": "Please install a design tool called Figma on my laptop.", "expected_keyword": null}
+  ]
+}

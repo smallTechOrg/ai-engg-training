@@ -1,0 +1,11 @@
+{
+  "floors": {
+    "exact_match": 0.85,
+    "max_length": 0.85,
+    "keywords": 0.7,
+    "judge_no_invented_actions": 0.7,
+    "judge_actionable": 0.7,
+    "judge_tone": 0.7
+  },
+  "max_drop_from_baseline": 0.13
+}
