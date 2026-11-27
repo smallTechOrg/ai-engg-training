@@ -12,7 +12,7 @@ Operate an agent: traces, metrics, dashboards, and when to fine-tune.
 
 | Lesson | Title | Status |
 |---|---|---|
-| 17.1 | Logs, metrics and traces with OpenTelemetry | ⬜ planned |
+| 17.1 | [Logs, metrics and traces with OpenTelemetry](01-logs-metrics-and-traces-with-opentelemetry/README.md) | ✅ ready |
 | 17.2 | Prometheus metrics and Grafana dashboards | ⬜ planned |
 | 17.3 | Cost tracking, budgets and service-level objectives | ⬜ planned |
 | 17.4 | Fine-tuning: when it is warranted; LoRA and QLoRA | ⬜ planned |

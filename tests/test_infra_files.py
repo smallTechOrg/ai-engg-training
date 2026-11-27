@@ -33,7 +33,7 @@ def test_compose_file_is_sound(path):
         for port in service.get("ports", []):
             assert str(port).startswith("127.0.0.1:"), f"{name}: bind ports to 127.0.0.1 ({port})"
         environment = service.get("environment", {})
-        pairs = environment.items() if isinstance(environment, dict) else (item.split("=", 1) + [""] for item in environment)
+        pairs = environment.items() if isinstance(environment, dict) else [(item.split("=", 1) + [""])[:2] for item in environment]
         for key, value in pairs:
             literal = str(value or "").strip()
             if SECRET_NAME.search(str(key)) and literal and not literal.startswith("${"):
@@ -62,4 +62,4 @@ def test_n8n_workflow_export_is_consistent(path):
             for link in branch:
                 assert link["node"] in names, f"{source} connects to a missing node {link['node']}"
     text = path.read_text(encoding="utf-8")
-    assert not re.search(r"(sk-|lsv2_|Bearer\s+[A-Za-z0-9]{12,})", text), "no keys in an exported workflow"
+    assert not re.search(r"(\bsk-[A-Za-z0-9]{16,}|\blsv2_[A-Za-z0-9]{8,}|Bearer\s+[A-Za-z0-9]{12,})", text), "no keys in an exported workflow"

@@ -675,7 +675,7 @@ services = ["DOCKER", "REDIS_URL"]
   id = "16.1"
   slug = "01-docker-fundamentals-and-a-production-dockerfile"
   title = "Docker fundamentals and a production Dockerfile"
-  status = "planned"
+  status = "ready"
   needs = []
 
   [[module.lesson]]
@@ -718,7 +718,7 @@ services = ["OTEL_EXPORTER_OTLP_ENDPOINT", "PROMETHEUS_URL", "GRAFANA_URL"]
   id = "17.1"
   slug = "01-logs-metrics-and-traces-with-opentelemetry"
   title = "Logs, metrics and traces with OpenTelemetry"
-  status = "planned"
+  status = "ready"
   needs = ["chat"]
 
   [[module.lesson]]
@@ -761,7 +761,7 @@ services = []
   id = "18.1"
   slug = "01-the-risk-landscape-and-prompt-injection"
   title = "The risk landscape and prompt injection"
-  status = "planned"
+  status = "ready"
   needs = ["chat"]
 
   [[module.lesson]]
@@ -804,7 +804,7 @@ services = ["N8N_URL"]
   id = "19.1"
   slug = "01-n8n-concepts"
   title = "n8n concepts: workflows, nodes, triggers, credentials"
-  status = "planned"
+  status = "ready"
   needs = []
 
   [[module.lesson]]

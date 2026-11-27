@@ -1,0 +1,99 @@
+{
+  "name": "Larkspur helpdesk ticket",
+  "nodes": [
+    {
+      "id": "b1c0a1a0-0001-4000-8000-000000000001",
+      "name": "Ticket Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [0, 0],
+      "webhookId": "b1c0a1a0-0001-4000-8000-0000000000aa",
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "helpdesk-ticket",
+        "responseMode": "responseNode",
+        "options": {}
+      }
+    },
+    {
+      "id": "b1c0a1a0-0002-4000-8000-000000000002",
+      "name": "Ask the model",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [240, 0],
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 2000,
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "REPLACE_IN_UI",
+          "name": "LLM endpoint key"
+        }
+      },
+      "parameters": {
+        "method": "POST",
+        "url": "https://your-provider.example/v1/chat/completions",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ { model: 'your-model-name', messages: [ { role: 'system', content: 'You are the Larkspur Labs IT helpdesk assistant. Reply in two sentences.' }, { role: 'user', content: $json.body.ticket } ] } }}",
+        "options": {
+          "timeout": 30000
+        }
+      }
+    },
+    {
+      "id": "b1c0a1a0-0003-4000-8000-000000000003",
+      "name": "Shape the reply",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [480, 0],
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "a0000000-0000-4000-8000-000000000001",
+              "name": "reply",
+              "value": "={{ $json.choices[0].message.content }}",
+              "type": "string"
+            },
+            {
+              "id": "a0000000-0000-4000-8000-000000000002",
+              "name": "ticket",
+              "value": "={{ $('Ticket Webhook').item.json.body.ticket }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "b1c0a1a0-0004-4000-8000-000000000004",
+      "name": "Respond to caller",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [720, 0],
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ $json }}",
+        "options": {}
+      }
+    }
+  ],
+  "connections": {
+    "Ticket Webhook": {
+      "main": [[{ "node": "Ask the model", "type": "main", "index": 0 }]]
+    },
+    "Ask the model": {
+      "main": [[{ "node": "Shape the reply", "type": "main", "index": 0 }]]
+    },
+    "Shape the reply": {
+      "main": [[{ "node": "Respond to caller", "type": "main", "index": 0 }]]
+    }
+  },
+  "pinData": {},
+  "settings": { "executionOrder": "v1" },
+  "active": false
+}

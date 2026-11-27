@@ -92,3 +92,12 @@ def test_whole_lesson_records_progress_but_one_script_does_not(run, tmp_path):
     assert not progress.exists()
     run([*LABKIT, "01.1"])
     assert '"01.1"' in progress.read_text(encoding="utf-8")
+
+
+def test_a_script_that_needs_a_missing_service_is_skipped_not_fatal(run, tmp_path):
+    alone = run([*LABKIT, "19.1/3"])
+    assert alone.returncode == 3 and "N8N_URL" in alone.stdout
+    whole = run([*LABKIT, "19.1"])
+    assert whole.returncode == 0, whole.stdout + whole.stderr
+    assert "Skipped (needs something not set up): 03_call_the_webhook.py" in whole.stdout
+    assert '"19.1"' in (tmp_path / ".labkit" / "progress.json").read_text(encoding="utf-8")

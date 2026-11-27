@@ -12,7 +12,7 @@ Package an agent and ship it.
 
 | Lesson | Title | Status |
 |---|---|---|
-| 16.1 | Docker fundamentals and a production Dockerfile | ⬜ planned |
+| 16.1 | [Docker fundamentals and a production Dockerfile](01-docker-fundamentals-and-a-production-dockerfile/README.md) | ✅ ready |
 | 16.2 | Docker Compose: API, vector store, Redis, worker | ⬜ planned |
 | 16.3 | Health checks, configuration and secrets | ⬜ planned |
 | 16.4 | CI/CD and rollout strategies | ⬜ planned |

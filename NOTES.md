@@ -78,3 +78,20 @@ Each entry: symptom -> what was done -> durable lesson.
     the user switched models; the user said that was not needed. -> Default now: let running
     workers finish, switch only new ones. -> Lesson: a model switch is about future spend,
     not a reason to discard in-flight work.
+
+15. **Infrastructure lessons cannot be run on the build machine.** No Docker here, so
+    compose files, the Dockerfile and the n8n export were never executed. -> Lessons teach
+    the concept offline first; service-dependent scripts call `labkit.services.require()`
+    and exit 3 with the start command; READMEs say plainly what was not run; CI checks the
+    files' structure and safety (pinned images, loopback ports, no secrets, non-root,
+    healthcheck, consistent n8n graph). -> Lesson: when something cannot be run, say so
+    and test what can be tested; never paste invented output as real.
+
+16. **A test caught itself.** My own secret-pattern regex flagged the word "helpdesk-ticket"
+    (contains "sk-"). -> Anchored it to word boundaries and realistic key lengths.
+    -> Lesson: secret scanners need boundaries, or they cry wolf and get ignored.
+
+17. **Whole-lesson runs treated "needs a service" as failure.** That would stop the
+    Enter-for-next-lesson flow in infra modules. -> Skipped scripts are reported and the
+    lesson continues; a lone skipped script still exits 3. -> Lesson: distinguish "cannot
+    run here" from "broke".

@@ -10,7 +10,7 @@ Visual workflows that trigger, call and connect agents.
 
 | Lesson | Title | Status |
 |---|---|---|
-| 19.1 | n8n concepts: workflows, nodes, triggers, credentials | ⬜ planned |
+| 19.1 | [n8n concepts: workflows, nodes, triggers, credentials](01-n8n-concepts/README.md) | ✅ ready |
 | 19.2 | Webhooks, HTTP requests and model nodes | ⬜ planned |
 | 19.3 | Error handling, schedules and expressions | ⬜ planned |
 | 19.4 | Capstone: a helpdesk ticket workflow calling an agent | ⬜ planned |

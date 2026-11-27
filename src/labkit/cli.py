@@ -144,6 +144,7 @@ def run_lesson(item: LessonInfo, script_number: int | None, extra: list[str]) ->
             return EXIT_FAILED
         scripts = [scripts[script_number - 1]]
     whole = script_number is None
+    skipped: list = []
     for index, script in enumerate(scripts):
         if index and interactive():
             try:
@@ -154,8 +155,16 @@ def run_lesson(item: LessonInfo, script_number: int | None, extra: list[str]) ->
                 return 0
         console.print(f"\n[dim]$ python {script.relative_to(repo_root()).as_posix()} {' '.join(extra)}[/dim]")
         code = subprocess.run([sys.executable, str(script), *extra], cwd=repo_root()).returncode
+        if code == EXIT_SKIPPED:  # the script explained a missing service or package and stopped cleanly
+            skipped.append(script)
+            continue
         if code:
             return code
+    if skipped and len(skipped) == len(scripts):
+        return EXIT_SKIPPED  # nothing ran: let the caller know
+    if skipped:
+        names = ", ".join(script.name for script in skipped)
+        console.print(f"\n[yellow]Skipped (needs something not set up): {escape(names)}[/yellow] [dim]Check ./run doctor.[/dim]")
     if whole:
         save_progress(item)
     return 0

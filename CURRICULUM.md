@@ -2,7 +2,7 @@
 
 <!-- Generated from curriculum.toml by `./run map`. Do not edit by hand. -->
 
-21 modules, 99 lessons, 26 ready. Each lesson shows a concept on its own, then applies it to the running scenario: **IT helpdesk assistant**.
+21 modules, 99 lessons, 30 ready. Each lesson shows a concept on its own, then applies it to the running scenario: **IT helpdesk assistant**.
 
 | Status | Meaning |
 |---|---|
@@ -30,10 +30,10 @@
 | 13 | [Deep agents: reflection, planning, long-term memory](modules/13-deep-agents/README.md) | 1 / 4 |
 | 14 | [CrewAI: multi-agent orchestration](modules/14-crewai/README.md) | 1 / 4 |
 | 15 | [Agentic RAG and GraphRAG](modules/15-agentic-rag/README.md) | 1 / 5 |
-| 16 | [Containers and deployment](modules/16-containers-and-deployment/README.md) | 0 / 5 |
-| 17 | [Monitoring, evaluation and fine-tuning](modules/17-monitoring-and-fine-tuning/README.md) | 0 / 5 |
-| 18 | [Guardrails and safety](modules/18-guardrails/README.md) | 0 / 5 |
-| 19 | [Workflow automation with n8n](modules/19-workflow-automation-n8n/README.md) | 0 / 4 |
+| 16 | [Containers and deployment](modules/16-containers-and-deployment/README.md) | 1 / 5 |
+| 17 | [Monitoring, evaluation and fine-tuning](modules/17-monitoring-and-fine-tuning/README.md) | 1 / 5 |
+| 18 | [Guardrails and safety](modules/18-guardrails/README.md) | 1 / 5 |
+| 19 | [Workflow automation with n8n](modules/19-workflow-automation-n8n/README.md) | 1 / 4 |
 | 20 | [Capstone](modules/20-capstone/README.md) | 0 / 4 |
 
 ## 00 · Setup and Python for AI work
@@ -258,7 +258,7 @@ Optional packages: `apps` · Services: `DOCKER`, `REDIS_URL`
 
 | Lesson | Title | Status | Model needs |
 |---|---|---|---|
-| 16.1 | Docker fundamentals and a production Dockerfile | ⬜ planned | - |
+| 16.1 | [Docker fundamentals and a production Dockerfile](modules/16-containers-and-deployment/01-docker-fundamentals-and-a-production-dockerfile/README.md) | ✅ ready | - |
 | 16.2 | Docker Compose: API, vector store, Redis, worker | ⬜ planned | chat |
 | 16.3 | Health checks, configuration and secrets | ⬜ planned | - |
 | 16.4 | CI/CD and rollout strategies | ⬜ planned | - |
@@ -272,7 +272,7 @@ Optional packages: `observability` · Services: `OTEL_EXPORTER_OTLP_ENDPOINT`, `
 
 | Lesson | Title | Status | Model needs |
 |---|---|---|---|
-| 17.1 | Logs, metrics and traces with OpenTelemetry | ⬜ planned | chat |
+| 17.1 | [Logs, metrics and traces with OpenTelemetry](modules/17-monitoring-and-fine-tuning/01-logs-metrics-and-traces-with-opentelemetry/README.md) | ✅ ready | chat |
 | 17.2 | Prometheus metrics and Grafana dashboards | ⬜ planned | chat |
 | 17.3 | Cost tracking, budgets and service-level objectives | ⬜ planned | chat |
 | 17.4 | Fine-tuning: when it is warranted; LoRA and QLoRA | ⬜ planned | - |
@@ -286,7 +286,7 @@ Optional packages: `guardrails`
 
 | Lesson | Title | Status | Model needs |
 |---|---|---|---|
-| 18.1 | The risk landscape and prompt injection | ⬜ planned | chat |
+| 18.1 | [The risk landscape and prompt injection](modules/18-guardrails/01-the-risk-landscape-and-prompt-injection/README.md) | ✅ ready | chat |
 | 18.2 | Input and output rails | ⬜ planned | chat |
 | 18.3 | Validators and detecting personal data | ⬜ planned | chat |
 | 18.4 | Red-teaming a safety stack | ⬜ planned | chat |
@@ -300,7 +300,7 @@ Services: `N8N_URL`
 
 | Lesson | Title | Status | Model needs |
 |---|---|---|---|
-| 19.1 | n8n concepts: workflows, nodes, triggers, credentials | ⬜ planned | - |
+| 19.1 | [n8n concepts: workflows, nodes, triggers, credentials](modules/19-workflow-automation-n8n/01-n8n-concepts/README.md) | ✅ ready | - |
 | 19.2 | Webhooks, HTTP requests and model nodes | ⬜ planned | chat |
 | 19.3 | Error handling, schedules and expressions | ⬜ planned | - |
 | 19.4 | Capstone: a helpdesk ticket workflow calling an agent | ⬜ planned | chat |

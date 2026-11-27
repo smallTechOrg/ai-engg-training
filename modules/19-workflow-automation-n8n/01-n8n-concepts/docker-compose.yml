@@ -1,0 +1,21 @@
+# n8n for lesson 19.1. Start:  docker compose up -d     Stop:  docker compose down
+# Needs N8N_ENCRYPTION_KEY in your shell or in a .env file next to this file (see README).
+services:
+  n8n:
+    image: docker.n8n.io/n8nio/n8n:2.49.7
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:5678:5678"
+    environment:
+      - N8N_ENCRYPTION_KEY=${N8N_ENCRYPTION_KEY}
+      - N8N_HOST=localhost
+      - N8N_PORT=5678
+      - N8N_PROTOCOL=http
+      - WEBHOOK_URL=http://localhost:5678/
+      - GENERIC_TIMEZONE=UTC
+      - TZ=UTC
+    volumes:
+      - n8n_data:/home/node/.n8n
+
+volumes:
+  n8n_data:

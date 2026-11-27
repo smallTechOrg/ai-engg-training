@@ -10,7 +10,7 @@ Defend an LLM application against misuse and mistakes.
 
 | Lesson | Title | Status |
 |---|---|---|
-| 18.1 | The risk landscape and prompt injection | ⬜ planned |
+| 18.1 | [The risk landscape and prompt injection](01-the-risk-landscape-and-prompt-injection/README.md) | ✅ ready |
 | 18.2 | Input and output rails | ⬜ planned |
 | 18.3 | Validators and detecting personal data | ⬜ planned |
 | 18.4 | Red-teaming a safety stack | ⬜ planned |
