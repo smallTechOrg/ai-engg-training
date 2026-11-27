@@ -2,7 +2,7 @@
 
 A model call is mostly waiting: your program sends a request and then does nothing for a
 second or more. asyncio lets one program wait for many things at the same time. This
-script uses pretend calls (asyncio.sleep) so you can see the mechanism with no model and
+script uses pretend calls (asyncio.sleep), so you can see how it works with no model and
 no cost: three waits one after another, then the same three together.
 
 Run it:   ./run 00.5/1          (Windows: run 00.5/1)
@@ -54,7 +54,7 @@ async def main(ctx):
             "speed-up": f"{sequential / concurrent:.1f}x" if concurrent else "n/a",
         },
     )
-    ctx.note("Nothing ran in parallel on several CPU cores. One thread simply stopped waiting idly.")
+    ctx.note("Nothing ran in parallel on several CPU cores. One thread just stopped sitting idle while it waited.")
     ctx.note("That is why asyncio suits model calls (waiting) and does nothing for heavy computation.")
 
 

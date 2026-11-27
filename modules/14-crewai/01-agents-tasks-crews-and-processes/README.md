@@ -4,7 +4,7 @@
 
 ## What you will learn
 
-- The four CrewAI nouns: **Agent** (role, goal, backstory), **Task** (description, expected output), **Crew** and **Process**.
+- The four building blocks of CrewAI (a framework for running several agents as a team): Agent (role, goal, backstory), Task (description, expected output), Crew and Process.
 - How to point CrewAI at any OpenAI-compatible endpoint.
 - How one task's output reaches the next task (`context=`).
 - How a plain Python function becomes an agent's tool (`@tool`).
@@ -12,11 +12,11 @@
 
 ## The idea
 
-An **Agent** is a persona: its `role`, `goal` and `backstory` are assembled into the system prompt.
-A **Task** is a unit of work with an `expected_output` that tells the agent what "done" looks like.
-A **Crew** holds agents and tasks, and a **Process** decides how they run. `Process.sequential`
-runs tasks in order. A task can list earlier tasks in `context=[...]` and their outputs are added
-to its prompt. That text is the only memory shared between agents.
+An Agent is a persona. CrewAI builds its system prompt from the agent's `role`, `goal` and `backstory`.
+A Task is one piece of work, with an `expected_output` that tells the agent what "done" looks like.
+A Crew holds the agents and tasks, and a Process decides how they run. `Process.sequential`
+runs the tasks in order. A task can list earlier tasks in `context=[...]`, and their outputs are added
+to its prompt. That text is the only memory the agents share.
 
 ```mermaid
 flowchart LR
@@ -27,17 +27,17 @@ flowchart LR
     A3 --> R[CrewOutput: raw, tasks_output, token_usage]
 ```
 
-By hand (modules 01 and 02) each agent would be one chat call with a system message, a hand-off
-would be you pasting one reply into the next messages list, and a tool would be the loop you wrote
-in 02.1. CrewAI writes that scaffolding for you. In return it wraps every task in a ReAct-style
-prompt, so **one task can cost several model calls**. All three scripts print `result.token_usage`
-so you can see this.
+If you built this by hand, as in modules 01 and 02, each agent would be one chat call with a system
+message. A hand-off would be you pasting one reply into the next messages list. A tool would be the loop
+you wrote in 02.1. CrewAI writes that code for you. In return, it wraps every task in a ReAct-style prompt
+(think, act, observe, repeat), so one task can cost several model calls. All three scripts print
+`result.token_usage` so you can see this.
 
 ## Scripts
 
-Run all three with `./run 14.1` (Windows: `run 14.1`), or one at a time. Telemetry is switched off
-in each script (`CREWAI_DISABLE_TELEMETRY`, `OTEL_SDK_DISABLED`, and `CREWAI_TESTING` to stop the first-run
-trace prompt).
+Run all three with `./run 14.1` (Windows: `run 14.1`), or one at a time. Each script switches off
+telemetry (usage data CrewAI would otherwise send) with `CREWAI_DISABLE_TELEMETRY` and `OTEL_SDK_DISABLED`.
+It also sets `CREWAI_TESTING` to stop the first-run trace prompt.
 
 ### 1. `01_one_agent_one_task.py`: a crew of one
 
@@ -45,8 +45,8 @@ trace prompt).
 ./run 14.1/1
 ```
 
-One agent, one task with an `expected_output`, one crew. Prints what the agent and task are, runs
-`crew.kickoff()`, then prints `result.raw` and `result.token_usage`.
+The script builds one agent, one task with an `expected_output`, and one crew. It prints the agent and
+task, runs `crew.kickoff()`, then prints `result.raw` and `result.token_usage`.
 
 **Expected output** (trimmed; the reply will differ):
 
@@ -68,8 +68,8 @@ tokens: 235 in + 94 out = 329
 ./run 14.1/2
 ```
 
-Two agents and two tasks. The second task has `context=[triage_task]`, so the triage text is in its
-prompt. Prints each task's output from `result.tasks_output`.
+This script has two agents and two tasks. The second task has `context=[triage_task]`, so the triage
+text goes into its prompt. The script prints each task's output from `result.tasks_output`.
 
 **Expected output** (trimmed):
 
@@ -82,7 +82,7 @@ result.token_usage
 { "total_tokens": 1306, "prompt_tokens": 1040, "completion_tokens": 266, "successful_requests": 4 }
 ```
 
-Two tasks, four requests: that is the ReAct wrapper at work.
+Two tasks made four requests. That is the ReAct wrapper at work.
 
 ### 3. `03_helpdesk_crew_with_a_tool.py`: the three-agent helpdesk crew
 
@@ -90,9 +90,9 @@ Two tasks, four requests: that is the ReAct wrapper at work.
 ./run 14.1/3
 ```
 
-The scenario. A triager, a researcher with a `search_kb` tool over an invented in-script knowledge
-base, and a responder. The tool prints each call. **This script makes about a dozen model
-requests**, so it is the slowest and most expensive of the three.
+This is the helpdesk scenario. There is a triager, a researcher, and a responder. The researcher has a
+`search_kb` tool over a made-up knowledge base defined in the script. The tool prints each call. This
+script makes about a dozen model requests, so it is the slowest and most expensive of the three.
 
 **Expected output** (trimmed):
 
@@ -109,13 +109,13 @@ result.token_usage
 { "total_tokens": 5166, "prompt_tokens": 3753, "completion_tokens": 1413, "successful_requests": 12 }
 ```
 
-The run summary at the end counts the crew's usage as one entry, because CrewAI reports it as a
-total rather than call by call. Use `successful_requests` for the real number of calls.
+The run summary at the end counts the crew's usage as one entry, because CrewAI reports a total
+instead of call by call. Use `successful_requests` for the real number of calls.
 
 ## Try this
 
 1. In script 1, delete the `expected_output` sentence about "four sentences". How does the reply change?
-2. Change the agent's `backstory` to something unhelpful and compare. How much of the persona is the model, how much the prompt?
+2. Change the agent's `backstory` to something unhelpful and compare. How much of the persona comes from the model, and how much from the prompt?
 3. In script 2, remove `context=[triage_task]`. Does the responder still mention the deadline? Why or why not?
 4. Swap the order of the two tasks in the crew's `tasks` list. What breaks?
 5. In script 3, change the ticket to a VPN problem. Does the researcher pick `vpn`? Add a topic to `KB`.
@@ -124,14 +124,14 @@ total rather than call by call. Use `successful_requests` for the real number of
 ## If it does not work
 
 Run `./run doctor`. Install the extra with `uv sync --extra crewai`. If CrewAI says it needs LiteLLM, the
-`LLM(...)` call is missing `provider="openai"`: CrewAI 1.6 only routes straight to the OpenAI SDK for
-model names it knows, and the explicit `provider=` works for any name. If a script seems to hang, it is
-waiting on the model: CrewAI makes many small calls, so slow endpoints feel slower here.
+`LLM(...)` call is missing `provider="openai"`. CrewAI 1.6 only sends calls straight to the OpenAI SDK for
+model names it knows, and an explicit `provider=` works for any name. If a script seems to hang, it is
+waiting on the model. CrewAI makes many small calls, so a slow endpoint feels even slower here.
 
 ## In the running scenario
 
-The helpdesk now has a small team: triage, research and reply as three roles. It is also noticeably
-more expensive than one well-written call from module 01, which is worth remembering when you decide
-whether a problem needs a crew at all.
+The helpdesk now has a small team, with triage, research and reply as three roles. It also costs
+noticeably more than one well-written call from module 01. Remember that when you decide whether a
+problem needs a crew at all.
 
 **Next:** 14.2 · Sequential and hierarchical processes; delegation (planned)

@@ -1,8 +1,9 @@
 """05.5/2  The chat front end wired to the service
 
-chat_page.py (Streamlit) has no model code: it talks HTTP to helpdesk_service.py. Here the "HTTP"
-is in-process: AppTest runs the page, and the page's httpx client is FastAPI's TestClient. We also
-log every request the page makes, to show exactly what crossed the boundary.
+chat_page.py (Streamlit) has no model code. It talks HTTP to helpdesk_service.py. Here that
+"HTTP" stays in-process: AppTest runs the page, and the page's httpx client is FastAPI's
+TestClient. We also log every request the page makes, so you see exactly what passed between
+the page and the service.
 
 Run it:   ./run 05.5/2          (Windows: run 05.5/2)
 """
@@ -56,7 +57,7 @@ def main(ctx):
         at.sidebar.button[0].click().run()
         ctx.show_data("Result shown in the sidebar", [j.value for j in at.sidebar.json])
         ctx.show_data("Requests the page made", requests_seen)
-        ctx.note("The page never saw an API key or a model name: all of that lives behind the service.")
+        ctx.note("The page never saw an API key or a model name. All of that stays behind the service.")
 
         ctx.step("The service goes down")
         import httpx

@@ -1,12 +1,12 @@
 """14.3/1  An MCP server as a crew's toolbox (with a thin bridge)
 
-14.1 gave an agent a Python function with @tool. A crew can also use tools that live on an MCP
-server (module 11). CrewAI has a built-in way, Agent(mcps=[MCPServerStdio(...)]), but with the
-mcp 2.x package installed here it builds an EMPTY argument schema (it reads the old camelCase
-`inputSchema`, while mcp 2.x calls the field `input_schema`). The model then sees a tool with no
-parameters and guesses. This script shows that, then fixes it with a bridge of about 15 lines:
-read the server's tool list yourself and wrap each tool as a CrewAI BaseTool whose args_schema
-is built from the server's real JSON schema.
+In 14.1 you gave an agent a Python function with @tool. A crew can also use tools that live on an
+MCP server (module 11). CrewAI has a built-in way, Agent(mcps=[MCPServerStdio(...)]). But with the
+mcp 2.x package installed here, it builds an EMPTY argument schema. It reads the old camelCase
+`inputSchema`, while mcp 2.x calls the field `input_schema`. The model then sees a tool with no
+parameters and guesses. This script shows the problem, then fixes it with a bridge of about 15
+lines: read the server's tool list yourself, and wrap each tool as a CrewAI BaseTool whose
+args_schema is built from the server's real JSON schema.
 
 Run it:   ./run 14.3/1          (Windows: run 14.3/1)
 """
@@ -109,7 +109,7 @@ def main(ctx):
     for name, args, text in calls:
         ctx.show_tool_call(name, args, text)
     if not calls:
-        ctx.note("The agent did not call the MCP tool this run. Read the answer for guessing.")
+        ctx.note("The agent did not call the MCP tool this run. Check the answer for guesses.")
     ctx.show_data("Answer", result.raw)
 
     usage = result.token_usage

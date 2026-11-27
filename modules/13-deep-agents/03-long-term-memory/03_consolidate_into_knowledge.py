@@ -1,15 +1,15 @@
 """13.3/3  Consolidation: turn many episodes into facts and a procedure
 
-Episodic memory grows by one row per ticket. After a while recall returns five near-identical
-lockout stories and the prompt fills with repetition. People solve this by "sleeping on it":
+Episodic memory grows by one row per ticket. After a while, recall returns five near-identical
+lockout stories and the prompt fills up with repetition. People handle this by "sleeping on it":
 the details fade and what is left is knowledge. Agents do the same with a CONSOLIDATION step:
 
-  1. take the episodes that belong together;
-  2. ask the model to summarise them into semantic facts and a procedural recipe (as JSON);
-  3. store those as new memories that point back at their source tickets;
-  4. archive (not delete) the source episodes so default recall skips them.
+  1. Take the episodes that belong together.
+  2. Ask the model to summarise them into semantic facts and a procedural recipe (as JSON).
+  3. Store those as new memories that point back at their source tickets.
+  4. Archive (do not delete) the source episodes, so normal recall skips them.
 
-We compare recall for a new ticket before and after, and count how much text the prompt needs.
+The script compares recall for a new ticket before and after, and counts how much text the prompt needs.
 
 Run it:   ./run 13.3/3          (Windows: run 13.3/3)
 """
@@ -89,7 +89,7 @@ def main(ctx):
             entries = [("semantic", e) for e in data.get("facts", [])] + [("procedural", e) for e in data.get("procedures", [])]
         except (ValueError, AttributeError):
             entries = []
-            ctx.note("The consolidation reply was not usable JSON. Nothing is archived; the raw episodes stay as they are.")
+            ctx.note("The consolidation reply was not usable JSON. Nothing is archived and the episodes stay as they are.")
         known = {e[0] for e in EPISODES}
         stored, archived = 0, set()
         for n, (kind, entry) in enumerate(entries, 1):
@@ -114,8 +114,8 @@ def main(ctx):
         ctx.show_data("Top 3 (score, id, kind)", [[round(s, 2), i, k] for s, i, k, _ in after])
         after_words = sum(len(t.split()) for *_, t in after)
         ctx.show_data("Words of memory in the prompt", {"before": before_words, "after": after_words})
-        ctx.note("The word count may not drop: with a fixed top-3, the slots freed by archiving are filled by the next-best (often unrelated) memory. The gain is that the three slots now hold a general fact and a procedure instead of one story three times; pair consolidation with a relevance floor (13.3/2) to stop weak matches filling the rest.")
-        ctx.note("Consolidation trades detail for signal. The archived episodes are still there when someone needs the exact story; and a bad summary is fixable because its sources are recorded.")
+        ctx.note("The word count may not drop. With a fixed top-3, the next-best memory (often unrelated) fills the slots that archiving freed. The gain is that the slots now hold a general fact and a procedure instead of one story three times. Add a relevance floor (13.3/2) so weak matches do not fill the rest.")
+        ctx.note("Consolidation gives up detail to get a clearer signal. The archived episodes are still there if someone needs the exact story, and you can fix a bad summary because its sources are recorded.")
 
         ctx.step("Answer using the consolidated memory")
         memory_text = "\n".join(f"- ({kind}) {text}" for _, _, kind, text in after)

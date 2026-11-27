@@ -1,7 +1,8 @@
 """17.1/3  Export the same trace to Jaeger over OTLP HTTP
 
-The traced helpdesk call from script 1, but spans go to a real backend through the OTLP HTTP exporter.
-Needs OTEL_EXPORTER_OTLP_ENDPOINT in .env pointing at Jaeger (or any OTLP collector), e.g. http://localhost:4318.
+This is the traced helpdesk call from script 1, but the spans go to a real backend (Jaeger, a trace
+viewer) through the OTLP HTTP exporter. Set OTEL_EXPORTER_OTLP_ENDPOINT in .env to Jaeger or any OTLP
+collector, for example http://localhost:4318.
 Start one with:  docker compose up -d   (from this lesson's folder). Exits with code 3 when it is not reachable.
 
 Run it:   ./run 17.1/3          (Windows: run 17.1/3)
@@ -32,9 +33,9 @@ def main(ctx):
     ctx.note(f"OTLP endpoint: {endpoint}")
 
     ctx.step("Create a tracer that exports over OTLP HTTP")
-    ctx.note("The service.name resource attribute is how Jaeger names your app in its drop-down.")
+    ctx.note("Jaeger uses the service.name resource attribute as your app's name in its drop-down.")
     provider = TracerProvider(resource=Resource.create({"service.name": "larkspur-helpdesk"}))
-    # The HTTP exporter posts to <endpoint>/v1/traces. The env var holds the base URL only.
+    # The HTTP exporter posts to <endpoint>/v1/traces, so the env var holds only the base URL.
     exporter = OTLPSpanExporter(endpoint=endpoint.rstrip("/") + "/v1/traces", timeout=5)
     provider.add_span_processor(BatchSpanProcessor(exporter))
     tracer = provider.get_tracer("larkspur.helpdesk")
@@ -67,12 +68,12 @@ def main(ctx):
     ok = provider.force_flush(timeout_millis=8000)
     provider.shutdown()
     if not ok:
-        ctx.note("The exporter could not deliver the spans in time. Check the endpoint (is port 4318 the OTLP HTTP port?). Nothing was lost locally, but Jaeger has no trace.")
+        ctx.note("The exporter could not deliver the spans in time. Check the endpoint: is 4318 the OTLP HTTP port? Nothing is lost locally, but Jaeger has no trace.")
         raise SystemExit(1)
 
     ctx.step("Look at it in Jaeger")
     ctx.note(f"Open {JAEGER_UI} (or your cloud Jaeger), pick service 'larkspur-helpdesk', click Find Traces.")
-    ctx.note("The waterfall shows handle_ticket as a wide bar with classify and reply nested under it, one after the other. The gap between them is your own code; the bar lengths are the model calls. Click a span to see llm.model, llm.tokens.in and ticket.category.")
+    ctx.note("The waterfall shows handle_ticket as a wide bar, with classify and reply under it, one after the other. The bar lengths are the model calls and the gap between them is your own code. Click a span to see llm.model, llm.tokens.in and ticket.category.")
 
 
 if __name__ == "__main__":

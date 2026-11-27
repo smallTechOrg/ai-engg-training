@@ -1,10 +1,10 @@
 """09.4/1  Fan out and fan in with Send (no model)
 
-Two ways to run work in parallel in LangGraph:
-1. Static: one node has several outgoing edges; all targets run in the same step.
+LangGraph has two ways to run work in parallel:
+1. Static: one node has several outgoing edges, and all the targets run in the same step.
 2. Dynamic (map-reduce): a conditional edge returns a list of `Send(node, payload)`, one per
-   item. The number of workers is decided at run time. Each worker returns a partial
-   result and a REDUCER on the state key (here `operator.add`) merges them.
+   item, so the number of workers is decided while the graph runs. Each worker returns part
+   of the result, and a REDUCER on the state key (here `operator.add`) merges the parts.
 
 Run it:   ./run 09.4/1          (Windows: run 09.4/1)
 """
@@ -23,7 +23,7 @@ TICKETS = ["LL-3001 printer jam", "LL-3002 vpn drops", "LL-3003 new laptop", "LL
 
 class State(TypedDict):
     tickets: list[str]
-    results: Annotated[list[str], operator.add]  # the reducer: lists from parallel workers are concatenated
+    results: Annotated[list[str], operator.add]  # the reducer: lists from parallel workers are joined end to end
 
 
 class WorkerInput(TypedDict):
@@ -56,7 +56,7 @@ def main(ctx):
         return [Send("worker", {"ticket": t}) for t in state["tickets"]]
 
     def worker(payload: WorkerInput) -> dict:
-        time.sleep(0.2)  # pretend to do slow work; workers run concurrently
+        time.sleep(0.2)  # pretend to do slow work; the workers run at the same time
         return {"results": [f"{payload['ticket'].split()[0]}: handled"]}
 
     def collect(state: State) -> dict:
@@ -79,10 +79,10 @@ def main(ctx):
 
     ctx.step("Zero items")
     ctx.note(f"no tickets -> results = {graph.invoke({'tickets': [], 'results': []})['results']}")
-    ctx.note("Careful: with an empty Send list nothing runs, so 'collect' never runs either.")
+    ctx.note("Watch out: with an empty Send list no worker runs, so 'collect' never runs either.")
 
     ctx.step("Why the reducer matters")
-    ctx.note("Without Annotated[..., operator.add] four workers writing 'results' in one step would raise InvalidUpdateError.")
+    ctx.note("Without Annotated[..., operator.add], four workers writing 'results' in one step raise InvalidUpdateError.")
 
 
 if __name__ == "__main__":

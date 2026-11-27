@@ -4,17 +4,17 @@
 
 ## What you will learn
 
-- How the pieces of module 05 fit together: a FastAPI service with validated models and dependency injection (05.1), streaming over SSE (05.2), and a Streamlit chat page (05.3) that talks to it.
-- Why the front end should hold **no model code**: keys, prompts and model names stay behind the API.
+- How the pieces of module 05 fit together. A FastAPI service with checked models and dependency injection (05.1) streams over SSE (05.2), and a Streamlit chat page (05.3) talks to it.
+- Why the front end should hold no model code. Keys, prompts and model names stay behind the API.
 - How a front end reads an SSE stream, and what it does when the service is unreachable.
 - How to write acceptance criteria as a script that prints PASS or FAIL.
 
 ## The idea
 
-This lesson is a capstone: there is no new API feature. You wire what you built into one working system.
+This lesson is a capstone, so it adds no new API feature. You connect what you built into one working system.
 
 **The brief.** Larkspur Labs employees need a chat window for first-line IT help. Behind it sits one service
-that every other tool (a ticketing bot, a mobile app) can use too.
+that any other tool, such as a ticketing bot or a mobile app, can use too.
 
 | Piece | File | Job |
 |---|---|---|
@@ -43,9 +43,9 @@ flowchart LR
     P -. service down .-> ER[st.error, history kept valid]
 ```
 
-The seam between the two is HTTP. The page picks its client from `st.session_state["_api"]`: the scripts
-put FastAPI's `TestClient` there so everything runs in-process with no port; a real run builds an
-`httpx.Client` for `$HELPDESK_API_URL`. The same page code works in both.
+The page and the service meet only over HTTP. The page takes its client from `st.session_state["_api"]`.
+The scripts put FastAPI's `TestClient` there, so everything runs in-process with no port. A real run builds
+an `httpx.Client` for `$HELPDESK_API_URL`. The same page code works in both cases.
 
 **Stretch goals.**
 
@@ -53,7 +53,7 @@ put FastAPI's `TestClient` there so everything runs in-process with no port; a r
 - Add an API key check (a header, via `Depends`) and make the page send it.
 - Show the `first_token_s` from the `done` event in the page's sidebar.
 - Rebuild the page in Gradio (05.4) against the same service. What changes? What does not?
-- Let triage pick the ticket's first user message instead of the last one; add an acceptance check.
+- Let triage pick the ticket's first user message instead of the last one, and add an acceptance check.
 
 ## Scripts
 
@@ -66,7 +66,7 @@ Run all three in order with `./run 05.5` (Windows: `run 05.5`), or one at a time
 ```
 
 Calls every route through `TestClient`: health, a triage, a two-turn streaming chat (the second request carries
-the history), three bad requests that must be `422`, and `/stats`.
+the history), three bad requests that must get `422`, and `/stats`.
 
 **Expected output** (trimmed):
 
@@ -97,8 +97,8 @@ Run summary: 3 model call(s), 476 in + 137 out = 613 tokens, 5.5s
 ./run 05.5/2
 ```
 
-Runs `chat_page.py` with `AppTest`, its HTTP client pointing at the service. Two chat turns, the triage button,
-a log of every request the page made, then a dead service.
+Runs `chat_page.py` with `AppTest`, with the page's HTTP client pointing at the service. You see two chat turns,
+the triage button and a log of every request the page made. Then the service goes dead.
 
 **Expected output** (trimmed; wording differs between runs):
 
@@ -123,9 +123,10 @@ Exceptions: 0; the unanswered turn was removed, 4 messages remain.
 Run summary: 3 model call(s), 539 in + 161 out = 700 tokens, 6.0s
 ```
 
-The triage button runs on the user's last message, which on turn two ("I already restarted it") has little context.
-It is a real limitation of triaging a single chat line; the last stretch goal addresses it. The model also invents
-network names ("Larkspur-Guest"): the assistant has no real data yet (modules 03 and 04).
+The triage button works on the user's last message. On turn two that message is "I already restarted it", which
+has little context. This is a real limit of triaging a single chat line, and the last stretch goal deals with it.
+The model also invents network names ("Larkspur-Guest"), because the assistant has no real data yet (modules 03
+and 04).
 
 ### 3. `03_acceptance_check.py`: the criteria as code
 
@@ -133,7 +134,7 @@ network names ("Larkspur-Guest"): the assistant has no real data yet (modules 03
 ./run 05.5/3
 ```
 
-Runs checks S1-S5 against the service and F1-F4 against the page and prints PASS or FAIL for each. It exits 0 either way.
+Runs checks S1-S5 against the service and F1-F4 against the page, and prints PASS or FAIL for each. It exits 0 either way.
 
 **Expected output** (trimmed):
 
@@ -154,26 +155,27 @@ Run summary: 4 model call(s), 529 in + 193 out = 722 tokens, 7.4s
 
 ## Try this
 
-1. **Run the whole thing.** Terminal 1, from the repo root:
+1. Run the whole thing. Terminal 1, from the repo root:
    `uv run uvicorn helpdesk_service:app --app-dir modules/05-serving-ai-apps/05-capstone-helpdesk-assistant-as-an-api-with-a-cha`.
    Terminal 2: `uv run streamlit run modules/05-serving-ai-apps/05-capstone-helpdesk-assistant-as-an-api-with-a-cha/chat_page.py`.
    Chat, then stop the API with Ctrl+C and send another message. Stop both when done.
-2. **Break S3 on purpose.** Loosen the `ticket_id` pattern in `TicketIn` and run script 3. Which check fails, and why is that the right one?
-3. **Break F2.** Make the page send only the last message. Which check catches it?
-4. **Add a check.** Write `S6`: a conversation of 41 messages is rejected with `422`. Does the service already do that?
-5. **Tighten the prompt.** Change `CHAT_PROMPT` to answer in one sentence and compare reply lengths and token counts.
-6. **Add a stretch goal** from the list above and the acceptance check that proves it.
+2. Break S3 on purpose. Loosen the `ticket_id` pattern in `TicketIn` and run script 3. Which check fails, and why is that the right one?
+3. Break F2. Make the page send only the last message. Which check catches it?
+4. Add a check. Write `S6`: a conversation of 41 messages is rejected with `422`. Does the service already do that?
+5. Tighten the prompt. Change `CHAT_PROMPT` to answer in one sentence, then compare reply lengths and token counts.
+6. Add a stretch goal from the list above, plus the acceptance check that proves it works.
 
 ## If it does not work
 
-Run `./run doctor`: it checks your settings and the `apps` extra; install it with `uv sync --extra apps`.
-A failing `S2` usually means the model does not support JSON-schema output; the service answers `502` and
-script 3 prints the body. If you run the two processes for real, check `HELPDESK_API_URL` and that the API port matches.
+Run `./run doctor`. It checks your settings and the `apps` extra. Install the extra with `uv sync --extra apps`.
+A failing `S2` usually means the model does not support JSON-schema output. The service then answers `502`, and
+script 3 prints the body. If you run the two processes for real, check `HELPDESK_API_URL` and check that the API
+port matches.
 
 ## In the running scenario
 
-The helpdesk assistant is now a small product: one service with a contract, a streaming chat, a triage
-endpoint and counters, and a front end that knows nothing about models. Module 06 re-builds the same ideas with
-LangChain, starting from prompt, model and parser chains.
+The helpdesk assistant is now a small product. It has one service with a contract, a streaming chat, a triage
+endpoint and counters, plus a front end that knows nothing about models. Module 06 rebuilds the same ideas with
+LangChain, starting from chains of a prompt, a model and a parser.
 
 **Next:** 06.1 · Runnables and LCEL: prompt | model | parser

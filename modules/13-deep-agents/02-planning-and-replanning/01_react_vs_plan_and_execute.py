@@ -1,14 +1,15 @@
 """13.2/1  Two ways to run a multi-step task: ReAct and plan-and-execute
 
-The task is a new-starter set-up with four steps. We run it twice with the same simulated tools:
+The task is setting up a new starter, in four steps. The script runs it twice with the same
+simulated tools:
 
   A. ReAct: the model picks ONE tool call at a time, sees the result, then picks the next.
      Every step costs a model call, but the model can adapt after each result.
   B. Plan-and-execute: the model writes the WHOLE plan up front (JSON), plain Python runs the
-     steps, and one more call summarises. Fewer calls and a plan you can inspect before anything
-     runs, but the plan cannot react to what the steps return (script 2 fixes that).
+     steps, and one more call writes a summary. You pay for fewer calls and can inspect the plan
+     before anything runs. But the plan cannot react to what the steps return (script 2 fixes that).
 
-Both runs are counted so you can compare cost. Both have hard caps.
+The script counts the calls in both runs so you can compare cost. Both runs have hard caps.
 
 Run it:   ./run 13.2/1          (Windows: run 13.2/1)
 """
@@ -78,7 +79,7 @@ TOOLS = [
     tool("send_welcome_email", "Send the welcome email with first-day instructions.", {"full_name": "Full name"}),
 ]
 
-# The FIRST JSON object in the planner's prompt is a format example (different person, different steps).
+# The FIRST JSON object in the planner's prompt only shows the format (a different person and different steps).
 PLANNER_SYSTEM = (
     'Write a plan as JSON only, shaped like this example: {"steps": [{"tool": "create_account", "args": {"full_name": "Alex Example"}}, '
     '{"tool": "send_welcome_email", "args": {"full_name": "Alex Example"}}]}\n'
@@ -148,7 +149,7 @@ def main(ctx):
         steps = [(s["tool"], dict(s["args"])) for s in steps]
     except (ValueError, KeyError, TypeError):
         steps = []
-        ctx.note("The planner did not return a usable plan, so nothing runs. Real systems retry or escalate here.")
+        ctx.note("The planner did not return a usable plan, so nothing runs. A real system would retry or escalate.")
     ctx.show_data("The plan (inspectable BEFORE anything runs)", [{"tool": n, "args": a} for n, a in steps])
 
     results = []
@@ -172,8 +173,8 @@ def main(ctx):
     ctx.show_data("Model calls", {"react": react_calls, "plan_and_execute": plan_calls})
     ctx.show_data("Steps actually executed", {"react": react_steps, "plan_and_execute": len(results)})
     if react_steps < len(steps):
-        ctx.note("ReAct stopped before finishing every step: the model ended its turn early (sometimes with text instead of a tool call). A plan you can count steps against makes that visible; with ReAct you only notice by checking.")
-    ctx.note("ReAct pays one call per step but can adapt; plan-and-execute pays two calls however long the plan is, but it is blind to failures. 13.2/2 adds replanning.")
+        ctx.note("ReAct stopped before every step was done: the model ended its turn early, sometimes with text instead of a tool call. With a plan you can count the steps and see this. With ReAct you only notice by checking.")
+    ctx.note("ReAct costs one call per step but can adapt. Plan-and-execute costs two calls however long the plan is, but it cannot see failures. 13.2/2 adds replanning.")
 
 
 if __name__ == "__main__":

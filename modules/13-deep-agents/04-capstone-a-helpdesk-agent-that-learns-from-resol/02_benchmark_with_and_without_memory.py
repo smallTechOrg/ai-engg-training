@@ -1,14 +1,14 @@
 """13.4/2  Does memory help? The same tickets with and without it
 
-Acceptance test for the capstone. Four new tickets, each answered twice by the same prompt:
+The acceptance test for the capstone. The same prompt answers each of four new tickets twice:
 
-  baseline  - no memory at all;
-  memory    - the closest past tickets above the relevance floor are added to the prompt.
+  baseline: no memory at all.
+  memory:   the closest past tickets above the relevance floor are added to the prompt.
 
-Three tickets repeat a problem in the history; one (a software request) has no precedent, and there
-the right behaviour is to NOT cite a past ticket. Scoring is plain string matching so it is
-repeatable: a "repeat" ticket passes if the answer contains its keyword; the "novel" ticket passes
-if the answer cites no ticket id (LL-xxxx).
+Three tickets repeat a problem from the history. One (a software request) has never come up before,
+so the right behaviour there is to NOT cite a past ticket. Scoring is plain string matching, so it
+gives the same result every time. A "repeat" ticket passes if the answer contains its keyword. The
+"novel" ticket passes if the answer cites no ticket id (LL-xxxx).
 
 Eight model calls in total (4 tickets x 2). Run it:   ./run 13.4/2   (Windows: run 13.4/2)
 """
@@ -90,7 +90,7 @@ def main(ctx):
         ctx.show_data("Passes out of 4", {"baseline": b, "memory": m})
         verdict = "PASS" if m >= 3 and m > b else "FAIL"
         ctx.note(f"Acceptance (memory passes at least 3 of 4 and beats the baseline): {verdict}.")
-        ctx.note("The keyword check is crude on purpose: it is repeatable and free. A baseline can pass by luck (generic advice sometimes names the right thing); read the answers too.")
+        ctx.note("The keyword check is crude on purpose: it is repeatable and free. A baseline can pass by luck, because generic advice sometimes names the right thing. Read the answers too.")
         db.close()
 
 

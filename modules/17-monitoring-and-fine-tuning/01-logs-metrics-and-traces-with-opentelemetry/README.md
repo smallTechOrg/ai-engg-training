@@ -5,16 +5,16 @@
 ## What you will learn
 
 - What logs, metrics and traces each tell you, and why you want all three.
-- What spans, attributes and context propagation are in OpenTelemetry (OTel).
-- Why an LLM app needs token and cost metrics, not just latency and errors.
+- What spans, attributes and context propagation mean in OpenTelemetry (OTel), the open standard for recording this data.
+- Why an LLM app needs token and cost metrics, not just speed and error counts.
 - How to expose metrics for Prometheus and send traces to Jaeger.
-- A short view of SLOs, cost budgets and alerts, and where Arize Phoenix and LangSmith fit.
+- A short look at SLOs, cost budgets and alerts, and where Arize Phoenix and LangSmith fit.
 
 Scripts 1 and 2 need no service. Only script 3 needs Jaeger.
 
 ## The idea
 
-The three pillars answer different questions about the Larkspur Labs helpdesk assistant:
+Once your helpdesk assistant is live, you need to see what it is doing without reading its code. That is what monitoring (often called observability) gives you. It rests on three kinds of record, and each answers a different question about the Larkspur Labs helpdesk assistant:
 
 | Pillar | Question | Shape | Cost to store |
 | --- | --- | --- | --- |
@@ -22,9 +22,11 @@ The three pillars answer different questions about the Larkspur Labs helpdesk as
 | Metrics | How much, how often, how slow, overall? | Numbers aggregated over time | Low (fixed series) |
 | Traces | Where did the time go inside one request? | A tree of timed spans | Medium (often sampled) |
 
-A **span** is one timed operation (classify, reply). It has a name, start and end, and **attributes**: key-value facts such as `llm.model`, `llm.tokens.in` or `ticket.category`. Spans form a tree: a child span records its parent's id. **Context propagation** is how that parent link travels: inside a process through a context variable (`start_as_current_span` nests automatically), and across services through the `traceparent` HTTP header, so one trace can cover your API, a worker and the model gateway.
+A **span** is one timed step, such as classify or reply. It has a name, a start, an end and **attributes**: small key-value facts such as `llm.model`, `llm.tokens.in` or `ticket.category`. Spans form a tree, because each child span records the id of its parent.
 
-Put the trace id in your log lines and you can jump from a log line to its trace.
+**Context propagation** is how that parent link gets passed along. Inside one process it travels in a context variable, so `start_as_current_span` nests spans for you. Between services it travels in the `traceparent` HTTP header. That way one trace can cover your API, a background worker and the model gateway.
+
+If you put the trace id in your log lines, you can jump from any log line straight to its trace.
 
 ```mermaid
 flowchart LR
@@ -37,23 +39,25 @@ flowchart LR
 
 ### Why LLM apps need token and cost metrics
 
-An ordinary service costs about the same per request. An LLM request can cost 50 times more than another depending on prompt size, retries or a runaway agent loop. Latency and error rate will not show that. Track input tokens, output tokens and estimated dollars as counters, labelled by a few stable values (model, category). Then you can see a prompt change double your spend the day it ships.
+An ordinary web service costs about the same for every request. An LLM request can cost 50 times more than the one before it, depending on the prompt size, retries or an agent stuck in a loop. Speed and error rate will not show you that.
+
+So track input tokens, output tokens and estimated dollars as counters. Label them with a few stable values, such as model and category. Then, on the day a prompt change doubles your spend, you will see it.
 
 ### SLOs, budgets and alerts (short)
 
-- A **service level objective** is a target on a metric, for example "95% of replies finish in under 5 seconds over 30 days". The error budget is the 5% you may miss.
-- Alert on symptoms users feel (slow, failing, too expensive), not on every internal counter.
-- A **cost budget** is the same idea for money: a monthly limit, an alert at 50% and 80% of it, and a hard stop or cheaper-model fallback at 100%. Script 2 models the budget as a gauge. Wiring real alerts (Alertmanager, Grafana alerts) is conceptual here.
+- A **service level objective** (SLO) is a target for a metric, for example "95% of replies finish in under 5 seconds over 30 days". The error budget is the 5% you are allowed to miss.
+- Alert on problems users feel (slow, failing, too expensive), not on every internal counter.
+- A **cost budget** applies the same idea to money: a monthly limit, alerts at 50% and 80% of it, and at 100% either a hard stop or a switch to a cheaper model. Script 2 models the budget as a gauge. Wiring up real alerts (Alertmanager, Grafana alerts) is only described here, not built.
 
 ### Where Phoenix and LangSmith fit
 
-Jaeger and Prometheus are general purpose. LLM-specific tools such as Arize Phoenix (open source, speaks OpenTelemetry) and LangSmith (hosted, from the LangChain team) add views that know about prompts, completions, token counts and evaluations. If you instrument with OTel, you can usually send the same spans to several of them. Evaluation is covered in 17.2 and later; fine-tuning arrives in 17.4 and is not taught here.
+Jaeger and Prometheus work for any kind of software. Tools built for LLM apps add views that understand prompts, completions, token counts and evaluations. Two examples are Arize Phoenix (open source, speaks OpenTelemetry) and LangSmith (hosted, from the LangChain team). If you instrument your code with OTel, you can usually send the same spans to several of them. Evaluation is covered in 17.2 and later. Fine-tuning comes in 17.4 and is not taught here.
 
 ## Scripts
 
-### 1. `01_logs_metrics_traces.py` — the pillars in one process
+### 1. `01_logs_metrics_traces.py`: the pillars in one process
 
-Run: `./run 17.1/1`. JSON logs with stdlib logging, an OTel tracer with an in-memory exporter around a two-step call (classify, reply), and the spans printed as a tree. No service needed.
+Run: `./run 17.1/1`. The script writes JSON logs with Python's standard logging, wraps a two-step call (classify, then reply) in an OTel tracer that keeps spans in memory, and prints the spans as a tree. No service needed.
 
 **Expected output** (trimmed, real run):
 
@@ -79,9 +83,9 @@ Step 5: Read the trace
 3 spans, 1 trace.
 ```
 
-### 2. `02_metrics_prometheus.py` — metrics with `prometheus_client`
+### 2. `02_metrics_prometheus.py`: metrics with `prometheus_client`
 
-Run: `./run 17.1/2`. A Counter (requests, tokens, cost), a Histogram (latency) and a Gauge (budget left) with invented prices as constants. It makes four real calls and prints `generate_latest()`, the text a `/metrics` endpoint would serve. No server is started.
+Run: `./run 17.1/2`. The script keeps a Counter (requests, tokens, cost), a Histogram (latency) and a Gauge (budget left), with made-up prices stored as constants. It makes four real calls and prints `generate_latest()`, which is the text a `/metrics` endpoint would serve. No server starts.
 
 **Expected output** (trimmed, real run):
 
@@ -99,7 +103,7 @@ helpdesk_llm_cost_dollars_total 0.00016900000000000002
 helpdesk_budget_remaining_dollars 24.999831
 ```
 
-Example PromQL you would run in Prometheus or Grafana once a real service exposes these metrics (not run in this lesson):
+PromQL is the query language of Prometheus. Here are example queries you would run in Prometheus or Grafana once a real service exposes these metrics (this lesson does not run them):
 
 ```promql
 # requests per second, by category, over 5 minutes
@@ -119,9 +123,9 @@ increase(helpdesk_llm_cost_dollars_total[1h])
 helpdesk_budget_remaining_dollars < 5
 ```
 
-### 3. `03_export_to_jaeger.py` — send the trace to Jaeger
+### 3. `03_export_to_jaeger.py`: send the trace to Jaeger
 
-Run: `./run 17.1/3`. The same traced call as script 1, exported with the OTLP HTTP exporter to `OTEL_EXPORTER_OTLP_ENDPOINT` (the base URL, for example `http://localhost:4318`). It calls `require("OTEL_EXPORTER_OTLP_ENDPOINT")` first and exits with code 3 if nothing is listening.
+Run: `./run 17.1/3`. This is the same traced call as script 1, but it sends the spans with the OTLP HTTP exporter to `OTEL_EXPORTER_OTLP_ENDPOINT`. That variable holds the base URL, for example `http://localhost:4318`. The script calls `require("OTEL_EXPORTER_OTLP_ENDPOINT")` first and exits with code 3 if nothing is listening.
 
 **Expected output on this machine (no Jaeger), real run, exit code 3:**
 
@@ -132,28 +136,30 @@ This lesson needs OpenTelemetry collector / Jaeger: OTEL_EXPORTER_OTLP_ENDPOINT 
 - Then set it in .env, for example OTEL_EXPORTER_OTLP_ENDPOINT=http://localhost:4318
 ```
 
-With Jaeger running you will see the model calls, then a trace id, then instructions to open `http://localhost:16686`. In the UI pick service `larkspur-helpdesk` and click Find Traces. The waterfall shows `handle_ticket` as one wide bar with `classify` and `reply` nested under it, one after the other; the bar lengths are the model calls. Clicking a span shows its attributes (`llm.model`, token counts, `ticket.category`). (Described, not pasted: the author could not run Jaeger here. The exporter code was only checked against a throwaway local HTTP listener that accepted the POST.)
+With Jaeger running, you will see the model calls, then a trace id, then a prompt to open `http://localhost:16686`. In the UI, pick the service `larkspur-helpdesk` and click Find Traces. The waterfall shows `handle_ticket` as one wide bar, with `classify` and `reply` nested under it, one after the other. The bar lengths are the model calls. Click a span to see its attributes (`llm.model`, token counts, `ticket.category`).
+
+This part is described, not pasted, because the author could not run Jaeger here. The exporter code was only checked against a throwaway local HTTP listener that accepted the POST.
 
 ## Try this
 
 1. In script 1, add a third span `redact` (a plain function) between classify and reply. Where does it appear in the tree?
-2. Make `classify` raise an exception inside its span and use `span.record_exception(e)` and `span.set_status(...)`. How would you find failed requests in a trace UI?
+2. Make `classify` raise an exception inside its span, and call `span.record_exception(e)` and `span.set_status(...)`. How would you find failed requests in a trace UI?
 3. In script 2, add a `model` label to the request counter. How many time series would 5 models times 4 categories times 2 statuses create? Why is a `user_id` label dangerous?
-4. Change the invented prices and the budget so the gauge goes negative after four calls. What alert would catch it?
-5. Add `ctx.settings.model` as a log field and log the ticket text. What privacy problem did you just create? (Module 18 returns to this.)
-6. With the stack running, start your own tiny app that calls `prometheus_client.start_http_server(8000)` and see the target turn UP at `http://localhost:9090/targets`.
+4. Change the made-up prices and the budget so the gauge goes below zero after four calls. What alert would catch it?
+5. Add `ctx.settings.model` as a log field and log the ticket text. What privacy problem did you just create? (Module 18 comes back to this.)
+6. With the stack running, start your own tiny app that calls `prometheus_client.start_http_server(8000)`, and watch the target turn UP at `http://localhost:9090/targets`.
 
 ## If it does not work
 
-- Run `./run doctor` to see which services and extras are detected. Install the extra with `./setup.sh --all`.
-- **The stack files:** `docker-compose.yml` starts Jaeger (`all-in-one:1`, UI 16686, OTLP HTTP 4318), Prometheus (`v3`, 9090, config in `prometheus.yml`, scraping `host.docker.internal:8000`) and Grafana (`12`, 3000). Every port is bound to `127.0.0.1`. Start with `docker compose up -d` in this folder, stop with `docker compose down`. In Grafana, add a Prometheus data source with URL `http://prometheus:9090`.
-- **Honest note:** these files were not run on the author's machine (no Docker there). They were only checked for structure. If an image tag has moved on, adjust it.
-- **Cloud or native instead of Docker:** set the address in `.env`, for example `OTEL_EXPORTER_OTLP_ENDPOINT=https://your-collector.example:4318`, `PROMETHEUS_URL=...`, `GRAFANA_URL=...`. Hosted backends often need auth headers: set `OTEL_EXPORTER_OTLP_HEADERS` as the OTel docs describe (keep it in `.env`, never in code).
-- Port 4318 is the OTLP **HTTP** port. Port 4317 is gRPC and will not work with this exporter.
-- Script 3 says the export timed out: Jaeger may still be starting; wait a few seconds and rerun.
+- Run `./run doctor` to see which services and extras it finds. Install the extra with `./setup.sh --all`.
+- The stack lives in `docker-compose.yml`. It starts Jaeger (`all-in-one:1`, UI 16686, OTLP HTTP 4318), Prometheus (`v3`, 9090, config in `prometheus.yml`, scraping `host.docker.internal:8000`) and Grafana (`12`, 3000). Every port is bound to `127.0.0.1`. Start it with `docker compose up -d` in this folder and stop it with `docker compose down`. In Grafana, add a Prometheus data source with the URL `http://prometheus:9090`.
+- These files were not run on the author's machine, which has no Docker. They were only checked for structure. If an image tag has moved on, adjust it.
+- To use a cloud or native install instead of Docker, set the address in `.env`, for example `OTEL_EXPORTER_OTLP_ENDPOINT=https://your-collector.example:4318`, `PROMETHEUS_URL=...`, `GRAFANA_URL=...`. Hosted backends often need auth headers. Set `OTEL_EXPORTER_OTLP_HEADERS` as the OTel docs describe, and keep it in `.env`, never in code.
+- Port 4318 is the OTLP **HTTP** port. Port 4317 is for gRPC and will not work with this exporter.
+- If script 3 says the export timed out, Jaeger may still be starting. Wait a few seconds and run it again.
 
 ## In the running scenario
 
-The helpdesk assistant now explains itself. Each ticket leaves a JSON log line, a trace showing classify and reply timings with token counts, and metric increments for requests, latency, tokens and dollars. When someone asks "why was Tuesday expensive?" or "why is the assistant slow?", you look at a chart and then a trace instead of guessing.
+The helpdesk assistant can now explain itself. Each ticket leaves a JSON log line, a trace with classify and reply timings and token counts, and metric updates for requests, latency, tokens and dollars. When someone asks "why was Tuesday expensive?" or "why is the assistant slow?", you look at a chart and then a trace instead of guessing.
 
 **Next:** 17.2 · Prometheus metrics and Grafana dashboards (planned)

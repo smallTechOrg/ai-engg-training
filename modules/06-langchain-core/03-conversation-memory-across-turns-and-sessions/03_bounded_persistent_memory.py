@@ -1,13 +1,13 @@
 """06.3/3  Scenario: a helpdesk chat with bounded, persistent memory
 
-Two production problems with script 2's memory:
+Script 2's memory has two problems in production:
 
-  1. It grows without limit, so cost and latency climb each turn. Fix: `trim_messages` keeps only the
-     last few messages in what the model SEES (the saved state keeps everything).
+  1. It grows without limit, so cost and wait time climb each turn. Fix: `trim_messages` keeps
+     only the last few messages in what the model sees (the saved state keeps everything).
   2. It vanishes when the process ends. Fix: a SQLite saver (`SqliteSaver`), here in a temp directory.
 
-The script "restarts" the app between turns 2 and 3 by building a brand-new graph and a new
-database connection over the same file: the conversation is still there.
+Between turns 2 and 3 the script "restarts" the app. It builds a brand-new graph and a new
+database connection to the same file, and the conversation is still there.
 
 Run it:   ./run 06.3/3          (Windows: run 06.3/3)
 """
@@ -32,7 +32,7 @@ THREAD = {"configurable": {"thread_id": "priya"}}
 def main(ctx):
     model = ChatOpenAI(model=ctx.model, base_url=ctx.settings.base_url, api_key=ctx.settings.api_key, temperature=0)
     db_path = Path(tempfile.mkdtemp(prefix="larkspur-chat-")) / "memory.sqlite"
-    sent_sizes: list[int] = []  # how many messages the model saw per call (including the new question)
+    sent_sizes: list[int] = []  # how many messages the model saw on each call (including the new question)
 
     prompt = ChatPromptTemplate.from_messages(
         [
@@ -82,8 +82,8 @@ def main(ctx):
     ctx.show_data("messages stored in the database", len(stored))
     ctx.show_data("messages the model saw per call", sent_sizes)
     ctx.note(f"The window is {KEEP_LAST} messages but start_on='human' drops a leading AI message, so the model saw 3 once the chat was long.")
-    ctx.note("Storage keeps the whole conversation (audit, support hand-over); the window keeps each call cheap.")
-    ctx.note("Trimming loses facts: once the first turn left the window, 'Priya' was gone. Fixes: summarise old turns, or save key facts separately (module 13).")
+    ctx.note("Storage keeps the whole chat (for audits and hand-overs). The window keeps each call cheap.")
+    ctx.note("Trimming loses facts: once turn 1 left the window, 'Priya' was gone. Summarise old turns or save facts (module 13).")
 
 
 if __name__ == "__main__":

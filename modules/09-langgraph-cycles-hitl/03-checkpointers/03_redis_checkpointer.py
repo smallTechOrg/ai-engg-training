@@ -1,10 +1,10 @@
 """09.3/3  A Redis checkpointer (needs a Redis server)
 
-SQLite is one file on one machine. When several workers or a restarted container must
-see the same threads, the checkpoints live in a server instead. This script keeps the
-exact graph of 09.3/1 and only swaps the saver for `RedisSaver`. It needs `REDIS_URL`
-in `.env` (and the `langgraph-checkpoint-redis` package). Without them it stops with a
-clear message (exit code 3) and does not pretend to run.
+SQLite is one file on one machine. When several workers, or a restarted container, need
+to see the same threads, the checkpoints have to live on a server instead. This script
+keeps the exact graph of 09.3/1 and only swaps the saver for `RedisSaver`. It needs
+`REDIS_URL` in `.env` (and the `langgraph-checkpoint-redis` package). Without them it
+stops with a clear message (exit code 3) instead of pretending to run.
 
 Start Redis:   docker run --rm -p 6379:6379 redis/redis-stack-server:latest
                (RedisSaver needs the RediSearch and RedisJSON modules, which the
@@ -68,7 +68,7 @@ def main(ctx):
         ctx.show_data("state read back from Redis", graph.get_state(config).values)
         ctx.note(f"checkpoints for this thread: {len(list(graph.get_state_history(config)))}")
 
-    ctx.note("Cleanup: the keys are named after this run's random thread_id; they expire or can be flushed in a dev Redis.")
+    ctx.note("Cleanup: the keys use this run's random thread_id. They expire, or you can flush them in a dev Redis.")
 
 
 if __name__ == "__main__":

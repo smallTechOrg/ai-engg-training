@@ -1,8 +1,8 @@
 """05.5/3  Acceptance check for the capstone
 
-Runs the capstone's acceptance criteria against the service and the page and prints PASS or FAIL
-for each. A failed check is a result to read, not a crash: this script exits 0 either way, so
-you can see exactly what your changes broke.
+Runs the capstone's acceptance criteria against the service and the page, and prints PASS or
+FAIL for each. A failed check is a result to read, not a crash. This script exits 0 either way,
+so you can see exactly what your changes broke.
 
 Run it:   ./run 05.5/3          (Windows: run 05.5/3)
 """

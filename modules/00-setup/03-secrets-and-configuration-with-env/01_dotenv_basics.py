@@ -1,10 +1,10 @@
 """00.3/1  What a .env file is, and who wins
 
 A .env file is a plain text file of NAME=value lines. A library (python-dotenv) copies
-those lines into the process's environment variables, where any code can read them.
+those lines into the program's environment variables, where any code can read them.
 This script builds a throwaway .env in a temporary folder, so your real one is never
-touched, and shows the rule that surprises people: a variable that is already set wins
-over the file. No model calls.
+touched. It then shows the rule that surprises people: a variable that is already set
+wins over the file. It makes no model calls.
 
 Run it:   ./run 00.3/1          (Windows: run 00.3/1)
      or:  python modules/00-setup/03-secrets-and-configuration-with-env/01_dotenv_basics.py

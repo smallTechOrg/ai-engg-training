@@ -1,7 +1,7 @@
 """06.1/2  LCEL: prompt | model | parser
 
-LangChain Expression Language chains Runnables with the `|` operator. Each piece takes
-the previous piece's output as its input:
+LangChain Expression Language (LCEL) chains Runnables with the `|` operator. Each piece
+takes the previous piece's output as its input:
 
     ChatPromptTemplate  ->  ChatOpenAI  ->  StrOutputParser
     dict of variables      PromptValue      AIMessage            str
@@ -46,7 +46,7 @@ def main(ctx):
         ctx.record_usage(ai_message.usage_metadata)
     text = parser.invoke(ai_message)
     ctx.show_data("3. parser.invoke(ai_message) -> " + type(text).__name__, text)
-    ctx.note("The chain does these three hops for you. Debugging a chain is checking each hop's output.")
+    ctx.note("The chain does these three steps for you. To debug a chain, check what each step outputs.")
 
     ctx.step("invoke: the whole chain, one input")
     result = chain.invoke(variables)
@@ -56,14 +56,14 @@ def main(ctx):
     results = chain.batch([{"topic": p} for p in PRODUCTS])
     for product, answer in zip(PRODUCTS, results):
         ctx.show_data(f"chain.batch -> {product}", answer)
-    ctx.note("batch returns a list in the same order as the inputs. Token usage is not visible here, because the parser dropped the AIMessage.")
+    ctx.note("batch returns a list in input order. You cannot see token usage here: the parser dropped the AIMessage.")
 
     ctx.step("stream: the answer piece by piece")
     pieces = []
     for piece in chain.stream({"topic": PRODUCTS[1]}):
         pieces.append(piece)
     ctx.show_data("chain.stream yielded", {"number of pieces": len(pieces), "first pieces": pieces[:5], "joined": "".join(pieces)})
-    ctx.note("Each piece is a str because the last runnable is the string parser. Without it you would get AIMessageChunk objects.")
+    ctx.note("Each piece is a str because the string parser comes last. Without it you would get AIMessageChunk objects.")
 
 
 if __name__ == "__main__":

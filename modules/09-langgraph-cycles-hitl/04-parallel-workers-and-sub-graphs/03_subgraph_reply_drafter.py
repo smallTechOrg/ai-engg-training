@@ -1,8 +1,8 @@
 """09.4/3  A sub-graph: a reusable drafter inside a bigger graph
 
-A compiled graph is itself a node-shaped thing. Here a small graph (draft, check, revise
-with a cap, like 09.1) is packaged once and used inside a parent graph that first picks a
-tone from the ticket. Two ways to attach it:
+A compiled graph can be used as a node in another graph. Here a small graph (draft, check,
+revise with a cap, like 09.1) is packaged once. A parent graph first picks a tone from the
+ticket and then uses it. There are two ways to attach it:
   a. the sub-graph shares state keys with the parent: add it directly with add_node;
   b. the sub-graph has its own private state: wrap it in a function that maps keys in and out.
 `stream(..., subgraphs=True)` shows which events came from inside the sub-graph.
@@ -108,7 +108,7 @@ def main(ctx):
         for node, delta in update.items():
             ctx.note(f"[{where}] node '{node}' wrote keys {sorted(delta)}")
 
-    ctx.note("Sub-graphs let one team own 'how we draft replies' and many graphs reuse it.")
+    ctx.note("With sub-graphs, one team can own 'how we draft replies' and many graphs can reuse it.")
 
 
 if __name__ == "__main__":

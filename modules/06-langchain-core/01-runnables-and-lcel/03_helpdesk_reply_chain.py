@@ -5,9 +5,9 @@ Two chains built from the same pieces:
   1. reply chain:   templated system prompt (employee name, ticket) | model | StrOutputParser
   2. triage chain:  prompt | model.with_structured_output(Triage)  -> a validated Triage object
 
-`with_structured_output` asks the model for output that matches a pydantic class. If the
-endpoint does not support that, the script falls back to JSON in the prompt, parsed with
-`PydanticOutputParser`. Either way the rest of your code receives a Triage object.
+`with_structured_output` asks the model for output that matches a Pydantic class. If the
+endpoint does not support that, the script falls back to asking for JSON in the prompt and
+parsing it with `PydanticOutputParser`. Either way, the rest of your code gets a Triage object.
 
 Run it:   ./run 06.1/3          (Windows: run 06.1/3)
 """
@@ -72,9 +72,9 @@ def main(ctx):
     triage = None
     try:
         structured = model.with_structured_output(Triage)
-        ctx.note("model.with_structured_output(Triage) returns a new runnable whose output is a Triage object.")
+        ctx.note("model.with_structured_output(Triage) returns a new runnable that outputs a Triage object.")
         triage = (triage_prompt | structured).invoke(TICKET)
-    except Exception as error:  # endpoint without json_schema/tool support, or a reply that failed validation
+    except Exception as error:  # the endpoint has no json_schema/tool support, or the reply failed validation
         ctx.note(f"with_structured_output did not work here ({type(error).__name__}). Falling back to JSON in the prompt.")
     if not isinstance(triage, Triage):
         parser = PydanticOutputParser(pydantic_object=Triage)
@@ -96,8 +96,8 @@ def main(ctx):
     if isinstance(triage, Triage):
         queue = "on-site support" if triage.needs_human else "self-service reply"
         ctx.note(f"{triage.category} / {triage.urgency} -> {queue}")
-    ctx.note("By hand (lessons 01.6, 01.7) this was a prompt, a JSON schema, a call and a validation. Here it is `prompt | structured`.")
-    ctx.note("Token counts for these calls are not shown: the parsers drop the AIMessage that carries them. Script 1 showed where they live.")
+    ctx.note("By hand (01.6, 01.7) this took a prompt, a JSON schema, a call and a check. Here it is `prompt | structured`.")
+    ctx.note("No token counts here: the parsers drop the AIMessage that carries them. Script 1 showed where they live.")
 
 
 if __name__ == "__main__":

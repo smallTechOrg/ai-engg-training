@@ -4,20 +4,20 @@
 
 ## What you will learn
 
-- The difference between `Process.sequential` (you fix the order) and `Process.hierarchical` (a manager decides).
+- The difference between `Process.sequential` (you set the order) and `Process.hierarchical` (a manager decides).
 - How to get a typed Python object out of a task (`output_pydantic`).
 - How `manager_llm` creates a manager agent, and what it costs.
-- How `allow_delegation=True` gives an agent two extra tools, and how to watch them with the event bus.
+- How `allow_delegation=True` gives an agent two extra tools, and how to watch them with the event bus (CrewAI's way of reporting what happens during a run).
 
 ## The idea
 
-**What is new since 14.1:** there, every crew ran in a fixed order. Now you choose who is in charge of the order.
+In 14.1, every crew ran in a fixed order. Now you choose who decides the order.
 
-In a **sequential** crew each task names its agent, and tasks run in list order. In a **hierarchical**
-crew the tasks have no agent: CrewAI builds a manager from `manager_llm`, the manager picks a worker for
+In a sequential crew, each task names its agent, and the tasks run in list order. In a hierarchical
+crew, the tasks have no agent. CrewAI builds a manager from `manager_llm`. The manager picks a worker for
 each task, reviews the answer and may delegate again. Separately, any agent with `allow_delegation=True`
-receives the tools "Delegate work to coworker" and "Ask question to coworker", so even a sequential
-crew can pass sub-questions around. Delegation is always the model's decision, never guaranteed.
+gets two tools, "Delegate work to coworker" and "Ask question to coworker". So even a sequential crew can
+pass sub-questions around. The model always decides whether to delegate, so it is never guaranteed.
 
 ```mermaid
 flowchart TB
@@ -32,8 +32,8 @@ flowchart TB
     end
 ```
 
-By hand this is a controller function that decides which prompt to send next. CrewAI moves that
-decision into a model call, which is flexible and expensive: the hierarchical script below made 15
+By hand, this would be a controller function that decides which prompt to send next. CrewAI moves that
+decision into a model call. That is flexible but expensive: the hierarchical script below made 15
 requests for one task.
 
 ## Scripts
@@ -46,8 +46,8 @@ Run all three with `./run 14.2`. Each prints `successful_requests` from `result.
 ./run 14.2/1
 ```
 
-A triager returns a `Triage` pydantic object; Python code then branches on `triage.urgency`. The responder
-gets the triage as text through `context=`.
+A triager returns a `Triage` pydantic object (a Python object with typed fields). Python code then
+branches on `triage.urgency`. The responder gets the triage as text through `context=`.
 
 **Expected output** (trimmed; model output varies):
 
@@ -67,8 +67,8 @@ requests and tokens
 ./run 14.2/2
 ```
 
-One task with no agent, two workers, `Process.hierarchical` and `manager_llm`. An event handler on
-`ToolUsageStartedEvent` records the manager's delegation tools.
+This crew has one task with no agent, two workers, `Process.hierarchical` and `manager_llm`. An event
+handler on `ToolUsageStartedEvent` records each time the manager uses a delegation tool.
 
 **Expected output** (trimmed):
 
@@ -82,7 +82,7 @@ requests and tokens
 { "successful_requests": 15, "total_tokens": 15609 }
 ```
 
-Fifteen requests and about 15,000 tokens for a five-sentence reply: that is the price of the manager.
+That is fifteen requests and about 15,000 tokens for a five-sentence reply. This is what the manager costs.
 
 ### 3. `03_delegation_in_a_sequential_crew.py`: delegation without a manager
 
@@ -90,7 +90,7 @@ Fifteen requests and about 15,000 tokens for a five-sentence reply: that is the 
 ./run 14.2/3
 ```
 
-The lead has `allow_delegation=True`; the identity specialist is in the crew but owns no task. The script
+The lead has `allow_delegation=True`. The identity specialist is in the crew but owns no task. The script
 prints whether the lead delegated.
 
 **Expected output** (trimmed):
@@ -118,12 +118,12 @@ requests and tokens
 ## If it does not work
 
 Run `./run doctor`. Install the extra with `uv sync --extra crewai`. The hierarchical script can take 10-30
-seconds on a slow endpoint. If `.pydantic` is `None` in script 1, the model's answer did not fit the schema;
-the script prints the raw text instead of failing.
+seconds on a slow endpoint. If `.pydantic` is `None` in script 1, the model's answer did not fit the schema.
+The script then prints the raw text instead of failing.
 
 ## In the running scenario
 
-The helpdesk team gets a coordinator. Fixed pipelines (sequential) are right when the steps never change;
-a manager earns its cost only when the right worker really depends on the ticket.
+The helpdesk team gets a coordinator. A fixed pipeline (sequential) is the right choice when the steps never
+change. A manager is only worth its cost when the right worker really depends on the ticket.
 
 **Next:** 14.3 · Tools, MCP and LangGraph alongside a crew (planned)

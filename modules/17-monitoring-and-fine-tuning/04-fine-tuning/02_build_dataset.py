@@ -1,14 +1,14 @@
 """17.4/2  Build a fine-tuning dataset from run logs and curated examples
 
-Chat fine-tuning data is a JSON-lines file; each line is one example:
+Chat fine-tuning data is a JSON-lines file. Each line is one example:
     {"messages": [{"role": "system", ...}, {"role": "user", ...}, {"role": "assistant", ...}]}
 Two sources:
   - curated_examples.json: invented tickets with ideal replies written by a person (the gold),
   - your run logs: real calls the helpdesk assistant already made (the `wire` events hold the
     request messages and the reply). Logged replies are the model's OWN output, so they are
     candidates for review, never gold by themselves.
-We filter, de-duplicate, split train/validation deterministically and write both files to a
-temporary folder. No model call, no GPU.
+The script filters and removes duplicates, splits the data into train and validation the same
+way every time, and writes both files to a temporary folder. No model call, no GPU.
 
 Run it:   ./run 17.4/2          (Windows: run 17.4/2)
      or:  python modules/17-monitoring-and-fine-tuning/04-fine-tuning/02_build_dataset.py
@@ -95,7 +95,7 @@ def main(ctx):
     ctx.step("Harvest candidates from the run logs")
     logged, files = harvest(state_dir("logs"))
     ctx.note(f"{files} log file(s) read; {len(logged)} helpdesk-style single-turn calls found.")
-    ctx.note("These replies came from a model, not a person: use them only after review. Here we keep them labelled `log` so you can drop them.")
+    ctx.note("A model wrote these replies, not a person, so use them only after review. They stay labelled `log` so you can drop them.")
 
     ctx.step("Filter and de-duplicate (gold first, so it wins ties)")
     seen, kept, dropped = set(), [], {}
@@ -128,7 +128,7 @@ def main(ctx):
     for e in kept:
         by_source[e["_source"]] = by_source.get(e["_source"], 0) + 1
     ctx.note(f"sources kept: {by_source}")
-    ctx.note("Next: validate the files before paying for training (script 3). The temporary folder is not deleted by this script; the OS will clean it.")
+    ctx.note("Next, check the files before paying for training (script 3). This script leaves the temp folder; the OS cleans it up.")
 
 
 if __name__ == "__main__":

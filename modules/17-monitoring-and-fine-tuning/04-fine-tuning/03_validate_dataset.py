@@ -1,11 +1,11 @@
 """17.4/3  Validate a fine-tuning dataset before you spend money on it
 
 A training run that fails at hour three because line 812 had a bad role is an expensive way to
-find a typo. This script writes a small dataset to a temp folder, deliberately breaks some
-lines, and runs the checks a hosted fine-tuning service or your own trainer would care about:
+find a typo. This script writes a small dataset to a temp folder, breaks some lines on purpose,
+and runs the checks that a hosted fine-tuning service or your own trainer cares about:
   format (JSON, messages, roles, order, non-empty), size (token estimate), duplicates,
   train/validation leakage, personal data, and label balance.
-It reports line numbers so you can fix the file. No model call, no GPU.
+It reports line numbers, so you can fix the file. No model call, no GPU.
 
 Run it:   ./run 17.4/3          (Windows: run 17.4/3)
      or:  python modules/17-monitoring-and-fine-tuning/04-fine-tuning/03_validate_dataset.py
@@ -111,7 +111,7 @@ def main(ctx):
     counts = Counter(r["category"] for r in rows)
     for cat, n in counts.most_common():
         ctx.console.print(f"  {cat:9} {n:>2} {'#' * n}", markup=False)
-    ctx.note("A tuned model mirrors its data: if 80% of examples are `network`, it will lean that way. Balance, or at least know the skew.")
+    ctx.note("A tuned model copies its data: if 80% of examples are `network`, it leans that way. Balance it, or at least know the skew.")
     total_tokens = sum(est_tokens(SYSTEM + r["ticket"] + r["reply"]) for r in rows)
     ctx.note(f"about {total_tokens} tokens across {len(rows)} examples; hosted services bill training per token per epoch, so this number times epochs is your training bill.")
 

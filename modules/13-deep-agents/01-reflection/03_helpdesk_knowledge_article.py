@@ -1,9 +1,9 @@
 """13.1/3  Scenario: a knowledge-base article, reflected to a quality bar
 
-The helpdesk keeps getting the same ticket (people locked out after changing their password
-on a phone). Write the knowledge-base article that deflects it. A first draft is rarely
-publishable, so the article is reflected against a rubric until it clears the bar or the
-round cap is reached.
+The helpdesk keeps getting the same ticket: people are locked out after changing their password
+on a phone. This script writes the knowledge-base article that should stop those tickets. A first
+draft is rarely ready to publish, so the script critiques and revises it against a rubric until it
+clears the bar or reaches the round cap.
 
 Run it:   ./run 13.1/3          (Windows: run 13.1/3)
 """

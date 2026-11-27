@@ -1,13 +1,13 @@
 """13.1/1  Reflection in plain Python: draft, critique, revise
 
-Reflection means a model reviews its own output against a written standard and then fixes it.
-Three calls, no framework:
+Reflection means a model reviews its own output against a written standard, then fixes it.
+It takes three calls and no framework:
 
-  1. DRAFT   - write a first version;
-  2. CRITIQUE - score it against a rubric (1-5 per criterion) and say what to fix, as JSON;
-  3. REVISE  - rewrite the draft using that feedback.
+  1. DRAFT: write a first version.
+  2. CRITIQUE: score it against a rubric (1-5 per criterion) and say what to fix, as JSON.
+  3. REVISE: rewrite the draft using that feedback.
 
-We score the draft and the revision with the same rubric, so you can see whether the loop helped.
+The script scores the draft and the revision with the same rubric, so you can see whether it helped.
 
 Run it:   ./run 13.1/1          (Windows: run 13.1/1)
 """
@@ -62,7 +62,7 @@ def main(ctx):
     ctx.note(draft)
 
     ctx.step("Critique the draft against the rubric")
-    ctx.note("The critic is a second call with a different system message: the rubric, and 'reply with JSON'.")
+    ctx.note("The critic is a second model call with its own system message: the rubric plus 'reply with JSON'.")
     before, feedback = critique(draft)
     ctx.show_data("Scores and feedback", {"scores": before, "feedback": feedback})
 
@@ -82,7 +82,7 @@ def main(ctx):
         ctx.show_data("Scores before -> after", rows)
         ctx.note(f"Average: {sum(before.values()) / len(before):.1f} -> {sum(after.values()) / len(after):.1f}")
     else:
-        ctx.note("The critic did not return usable JSON, so there is nothing to compare. That happens; see the README.")
+        ctx.note("The critic did not return usable JSON, so there is nothing to compare. This can happen. See the README.")
     ctx.note("One round, no loop. 13.1/2 turns this into a loop that stops when the score is high enough.")
 
 

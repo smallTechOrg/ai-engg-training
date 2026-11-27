@@ -1,15 +1,15 @@
 """05.1/1  REST basics: routes, Pydantic models, status codes
 
-The helpdesk API lives in helpdesk_api.py, next to this script. Here we call its two
-model-free routes the way any HTTP client would, but in-process: FastAPI's TestClient
-sends real HTTP requests to the app without opening a port.
+The helpdesk API lives in helpdesk_api.py, next to this script. This script calls the
+two routes that do not use a model, the way any HTTP client would. It does so in-process:
+FastAPI's TestClient sends real HTTP requests to the app without opening a port.
 
   - GET  /health   -> 200 and a small JSON body
-  - POST /echo     -> 200 when the body is valid, 422 when it is not (FastAPI + Pydantic
+  - POST /echo     -> 200 when the body is valid, 422 when it is not (FastAPI and Pydantic
                       reject it before the route's code runs)
   - an unknown path -> 404, a wrong method -> 405
 
-No model calls in this script.
+This script makes no model calls.
 
 Run it:   ./run 05.1/1          (Windows: run 05.1/1)
 """
@@ -32,13 +32,13 @@ def main(ctx):
     client = TestClient(app)  # an httpx client wired straight into the app: no server, no port
 
     ctx.step("GET /health")
-    ctx.note("The simplest route: no input, a fixed response. Load balancers and uptime checks call this.")
+    ctx.note("The simplest route: no input, a fixed answer. Load balancers and uptime checks call it.")
     show(ctx, "Response body", client.get("/health"))
 
     ctx.step("POST /echo with a valid body")
     body = {"message": "Is the VPN down?", "repeat": 2}
     ctx.show_data("Request body (JSON)", body)
-    ctx.note("FastAPI parses the JSON into an EchoIn object, the route returns an EchoOut, FastAPI turns it back into JSON.")
+    ctx.note("FastAPI turns the JSON into an EchoIn object. The route returns an EchoOut, and FastAPI makes it JSON.")
     show(ctx, "Response body", client.post("/echo", json=body))
 
     ctx.step("POST /echo with a bad body")
@@ -51,7 +51,7 @@ def main(ctx):
         where = ".".join(str(part) for part in problem["loc"])
         ctx.note(f"  - {where}: {problem['msg']}")
     ctx.note("422 Unprocessable Content means: your JSON was readable, but it does not match the contract.")
-    ctx.note("The unknown key 'colour' was silently ignored; add model_config = ConfigDict(extra='forbid') to reject it.")
+    ctx.note("The unknown key 'colour' was silently ignored. Add model_config = ConfigDict(extra='forbid') to reject it.")
 
     ctx.step("Not JSON at all, a wrong path, a wrong method")
     for label, response in [

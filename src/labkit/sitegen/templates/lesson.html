@@ -7,11 +7,11 @@
 <header class="pagehead lessonhead">
   <p class="eyebrow"><span class="lesson-id">Lesson {{ lesson.id }}</span> {{ m.badge(lesson.status) }}{% if lesson.caution %} <span class="badge badge-caution">caution</span>{% endif %}</p>
   <h1>{{ lesson.title }}</h1>
-  {% if lesson.caution %}<p class="caution" role="note"><strong>Caution before running live:</strong> {{ lesson.caution }}</p>{% endif %}
+  {% if lesson.caution %}<p class="caution" role="note"><strong>Before you run this live:</strong> {{ lesson.caution }}</p>{% endif %}
   <dl class="facts">
     {% if meta.time %}<div><dt>Time</dt><dd>{{ meta.time }}</dd></div>{% endif %}
     <div><dt>Model needs</dt><dd>{{ m.need_chips(lesson.needs) }}</dd></div>
-    <div><dt>Packages</dt><dd>{% if meta.packages %}{% for p in meta.packages %}<span class="chip chip-pkg" title="{{ meta.packages_text }}">{{ p }}</span>{% endfor %}{% else %}<span class="chip chip-pkg" title="{{ meta.packages_text }}">base install</span>{% endif %}</dd></div>
+    <div><dt>Packages</dt><dd>{% if meta.packages %}{% for p in meta.packages %}<span class="chip chip-pkg" title="{{ meta.packages_text }}">{{ p }}</span>{% endfor %}{% else %}<span class="chip chip-pkg" title="{{ meta.packages_text }}">nothing extra</span>{% endif %}</dd></div>
     {% if meta.services %}<div><dt>Services</dt><dd>{% for s in meta.services %}<span class="chip chip-svc">{{ s }}</span>{% endfor %}</dd></div>{% endif %}
   </dl>
   {% if github %}<p class="gh"><a href="{{ github }}">View this lesson's folder on GitHub</a></p>{% endif %}
@@ -79,7 +79,7 @@
             {% endfor %}
             </ol>
             {% if s.fallback_output %}
-              <div class="fallback"><h5>What you will see</h5><p class="muted">The README shows this output for the whole script, not step by step.</p>{% for o in s.fallback_output %}{{ o }}{% endfor %}</div>
+              <div class="fallback"><h5>What you will see</h5><p class="muted">This is the output of the whole script, shown in one piece.</p>{% for o in s.fallback_output %}{{ o }}{% endfor %}</div>
             {% endif %}
           {% else %}
             <div class="single">
@@ -99,7 +99,7 @@
           {% if s.outputs %}
             {% for label, block in s.outputs %}<p class="output-label">{{ label }}</p>{{ block }}{% endfor %}
           {% else %}
-            <p class="muted">The README does not show output for this script.</p>
+            <p class="muted">There is no sample output for this script yet.</p>
           {% endif %}
         </div>
       </div>
@@ -110,7 +110,7 @@
     {% if support %}
     <div class="support" id="supporting-files">
       <h3>Supporting files<a class="anchor" href="#supporting-files" aria-label="Link to this section">#</a></h3>
-      <p class="muted">Data, configuration and helper code the scripts use. Shown exactly as in the repository.</p>
+      <p class="muted">Data, settings and helper code that the scripts use, shown exactly as they are in the repository.</p>
       {% for f in support %}
       <details class="supportfile">
         <summary><code>{{ f.name }}</code><span class="step-meta">{{ f.lines }} line{{ '' if f.lines == 1 else 's' }}</span></summary>

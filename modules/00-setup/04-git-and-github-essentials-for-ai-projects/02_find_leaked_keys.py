@@ -1,9 +1,10 @@
 """00.4/2  Catching a key before it is committed
 
 The most common security incident in AI projects is an API key pasted into a file and
-pushed. This script shows how secret scanners work: a handful of patterns run over every
-line. It writes a sample helpdesk-bot settings file full of INVENTED keys to a temporary
-folder, scans it, and reports each hit with the key masked. No model calls.
+pushed. This script shows how secret scanners work: they run a handful of patterns over
+every line. It writes a sample helpdesk-bot settings file full of INVENTED keys to a
+temporary folder, scans it, and reports each hit with the key masked. It makes no model
+calls.
 
 Run it:   ./run 00.4/2          (Windows: run 00.4/2)
 """

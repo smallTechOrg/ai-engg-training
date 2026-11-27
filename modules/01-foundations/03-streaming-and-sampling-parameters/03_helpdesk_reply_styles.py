@@ -1,8 +1,8 @@
 """01.3/3  Helpdesk replies: when to be predictable, when to be lively
 
-The running scenario has two kinds of writing. A policy answer must be the same for every
+The running example has two kinds of writing. A policy answer must be the same for every
 employee who asks, so it runs at temperature 0. An outage announcement should sound human
-and can vary, so it runs warmer. Each is generated twice so you can compare.
+and can vary, so it runs at a higher temperature. Each is written twice so you can compare.
 
 Run it:   ./run 01.3/3          (Windows: run 01.3/3)
 """

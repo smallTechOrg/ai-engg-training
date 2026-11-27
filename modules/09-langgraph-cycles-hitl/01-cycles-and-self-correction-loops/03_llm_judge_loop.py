@@ -1,8 +1,9 @@
 """09.1/3  The checker is an LLM judge
 
-Same loop as script 2, but the checker is a second model call that returns structured
-{ok, problems}. A judge can assess things code cannot (tone, whether the reply answers the
-question) but it is another model call: it costs tokens and can be wrong. The loop is capped.
+This is the same loop as script 2, but the checker is a second model call. It returns a
+structured answer, {ok, problems}. A judge can assess things code cannot, such as tone or
+whether the reply answers the question. But it is one more model call, so it costs tokens and
+it can be wrong. The loop has a cap.
 
 Run it:   ./run 09.1/3          (Windows: run 09.1/3)
 """
@@ -84,7 +85,7 @@ def main(ctx):
 
     ctx.step("Result")
     ctx.show_data("Final state", final)
-    ctx.note("A judge can be too strict or too lenient. The cap guarantees the loop ends either way.")
+    ctx.note("A judge can be too strict or too lenient. Either way, the cap makes sure the loop ends.")
 
 
 if __name__ == "__main__":

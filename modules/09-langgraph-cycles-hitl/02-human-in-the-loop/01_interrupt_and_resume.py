@@ -2,8 +2,8 @@
 
 A node calls `interrupt(payload)`. The graph stops, saves its state in the checkpointer
 and hands the payload back to the caller. Later the caller runs the graph again with
-`Command(resume=value)` on the same thread; `interrupt()` then returns `value` inside
-the node and the run carries on. A person (or, here, a script) decides in between.
+`Command(resume=value)` on the same thread. This time `interrupt()` returns `value` inside
+the node and the run carries on. In between, a person decides (here, a script plays the person).
 
 Run it:   ./run 09.2/1          (Windows: run 09.2/1)
 """
@@ -24,7 +24,7 @@ class State(TypedDict):
 
 
 def ask_manager(state: State) -> dict:
-    # Everything BEFORE interrupt() runs again on resume, so keep this node small.
+    # Everything BEFORE interrupt() runs again when the graph resumes, so keep this node small.
     answer = interrupt({"question": "Approve this request?", "request": state["request"]})
     return {"decision": str(answer)}
 
@@ -42,7 +42,7 @@ def build():
     g.add_edge(START, "ask_manager")
     g.add_edge("ask_manager", "act")
     g.add_edge("act", END)
-    # Interrupts need a checkpointer: that is where the paused state lives.
+    # Interrupts need a checkpointer, because that is where the paused state is saved.
     return g.compile(checkpointer=InMemorySaver())
 
 
@@ -54,7 +54,7 @@ def main(ctx):
     ctx.step("Run until the interrupt")
     first = graph.invoke({"request": "Grant Priya access to the finance share", "decision": "", "result": ""}, config)
     ctx.show_data("invoke() returned", first)
-    ctx.note("The result carries '__interrupt__' with the payload we passed to interrupt(). The graph is paused, not finished.")
+    ctx.note("The result holds '__interrupt__' with the payload given to interrupt(). The graph is paused, not finished.")
 
     ctx.step("Look at the paused state")
     snap = graph.get_state(config)

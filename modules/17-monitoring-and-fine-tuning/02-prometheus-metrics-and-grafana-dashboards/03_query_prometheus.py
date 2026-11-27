@@ -1,9 +1,9 @@
 """17.2/3  Run the dashboard's queries against a real Prometheus
 
-Needs Prometheus (PROMETHEUS_URL). Start it with `docker compose up -d` in this folder, run
+Needs Prometheus (PROMETHEUS_URL). Start it with `docker compose up -d` in this folder. Run
 script 1 with LESSON_METRICS_PORT=8000 so there is something to scrape, then run this script.
-It reads every PromQL expression from the dashboard JSON and asks Prometheus's HTTP API
-(/api/v1/query) for the current value, so you see which panels would be empty.
+It reads every PromQL expression from the dashboard JSON and asks the Prometheus HTTP API
+(/api/v1/query) for the current value, so you can see which panels would be empty.
 
 Run it:   ./run 17.2/3          (Windows: run 17.2/3)
      or:  python modules/17-monitoring-and-fine-tuning/02-prometheus-metrics-and-grafana-dashboards/03_query_prometheus.py
@@ -48,7 +48,7 @@ def main(ctx):
         empty += not values
         ctx.console.print(f"{p['title']}: {values if values else 'no data yet'}", markup=False)
     ctx.note(f"{len(dash['panels']) - empty} of {len(dash['panels'])} panels have data.")
-    ctx.note("Rate-based panels need at least two scrapes inside the window; wait 15 seconds and rerun if they are empty.")
+    ctx.note("Panels that use rate() need at least two scrapes in the window. If they are empty, wait 15 seconds and rerun.")
 
 
 if __name__ == "__main__":

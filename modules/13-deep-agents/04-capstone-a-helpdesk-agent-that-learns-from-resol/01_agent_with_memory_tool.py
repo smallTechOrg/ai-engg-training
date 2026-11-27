@@ -1,13 +1,13 @@
 """13.4/1  The agent: memory as a tool, and learning after the ticket is closed
 
-Capstone. The helpdesk agent from module 02 gets one new capability: a `search_memory` tool over a
+Capstone. The helpdesk agent from module 02 gets one new ability: a `search_memory` tool over a
 SQLite store of past resolved tickets (episodic memory, 13.3). The loop is the usual tool loop with a
-hard cap. After a person resolves the ticket, the resolution is written back as a new episode, so the
-next session can use it. Two sessions are simulated by opening the database file twice.
+hard cap. After a person resolves the ticket, the script writes the resolution back as a new episode,
+so the next session can use it. It simulates two sessions by opening the database file twice.
 
-  session 1: the store holds the history in tickets.json; the agent handles LL-5001 using search_memory;
-             the engineer's real resolution is stored as a new episode;
-  session 2: a fresh connection; the new episode is there.
+  session 1: the store holds the history from tickets.json. The agent handles LL-5001 using
+             search_memory. The engineer's real resolution is stored as a new episode.
+  session 2: a fresh connection. The new episode is there.
 
 Run it:   ./run 13.4/1          (Windows: run 13.4/1)
 """
@@ -112,7 +112,7 @@ def main(ctx):
         total = db.execute("SELECT COUNT(*) FROM episodes").fetchone()[0]
         ctx.show_data("Episodes now", {"count": total, "includes_new": bool(db.execute("SELECT 1 FROM episodes WHERE id = ?", (ticket["id"],)).fetchone())})
         db.close()
-        ctx.note("Write after the human resolves, not after the agent answers: otherwise the agent learns from its own mistakes.")
+        ctx.note("Write after the person resolves the ticket, not after the agent answers, or the agent learns its own mistakes.")
 
 
 if __name__ == "__main__":

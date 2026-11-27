@@ -1,10 +1,10 @@
 """13.1/2  Reflection as a LangGraph loop
 
-The same three roles as a graph: draft -> critique -> (good enough? finish : revise -> critique).
-A conditional edge decides after every critique. Two stop rules, both required:
+The same three roles, now as a graph: draft -> critique -> (good enough? finish : revise -> critique).
+After every critique, a conditional edge decides what happens next. You need both stop rules:
 
-  - quality: the average score reaches THRESHOLD;
-  - budget:  MAX_ROUNDS critiques have happened (a loop that calls a model must have a hard cap).
+  - quality: the average score reaches THRESHOLD.
+  - budget: MAX_ROUNDS critiques have happened. Any loop that calls a model needs a hard cap.
 
 Run it:   ./run 13.1/2          (Windows: run 13.1/2)
 """
@@ -65,7 +65,7 @@ def main(ctx):
             scores = [int(data[k]) for k in RUBRIC]
             average, feedback = sum(scores) / len(scores), str(data.get("feedback", ""))
         except (ValueError, KeyError, TypeError):
-            # Unusable critique: score 0 and ask for a general improvement. The loop's cap still applies.
+            # The critique is unusable: score it 0 and ask for a general improvement. The cap still applies.
             average, feedback = 0.0, "Make it clearer, more actionable and friendlier."
         return {
             "average": average,

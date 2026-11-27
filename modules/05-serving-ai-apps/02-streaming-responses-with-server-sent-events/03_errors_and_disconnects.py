@@ -1,14 +1,14 @@
 """05.2/3  Errors and disconnects in a stream
 
-Streaming changes how failure works. Two cases:
+Streaming changes how failure works. There are two cases:
 
   1. Before the stream starts (a bad request body): FastAPI answers 422 as usual.
-  2. After it starts: the 200 status line has already been sent, so a failure can no longer
-     become a 502. The server sends an `error` event and the client must look for it.
+  2. After it starts: the 200 status line has already gone out, so a failure can no longer
+     become a 502. The server sends an `error` event, and the client must look for it.
 
-And one case from the other side: the user closes the tab. The client stops reading and the
-server's generator is closed; its `finally:` block runs and releases the upstream model stream,
-so you stop paying for tokens nobody reads.
+There is also one case from the other side: the user closes the tab. The client stops
+reading and the server closes its generator. The generator's `finally:` block runs and
+releases the model stream, so you stop paying for tokens nobody reads.
 
 Run it:   ./run 05.2/3          (Windows: run 05.2/3)
 """
@@ -75,8 +75,8 @@ def main(ctx):
                     ctx.note("Closing the connection now, as a browser does when the user leaves the page.")
                     break
         ctx.show_data("What the server logged", server_log)
-        ctx.note("A real server notices the closed socket and stops the generator; the finally block frees the model stream.")
-        ctx.note("Here the TestClient has already buffered the body, so the run was finished before we left; the cleanup line is the same.")
+        ctx.note("A real server notices the closed socket and stops the generator. The finally block frees the model stream.")
+        ctx.note("Here the TestClient had already buffered the body, so the run ended before we left. The cleanup is the same.")
         ctx.note("This call's tokens are not added to the totals because the `done` event was never read.")
     finally:
         app.dependency_overrides.clear()

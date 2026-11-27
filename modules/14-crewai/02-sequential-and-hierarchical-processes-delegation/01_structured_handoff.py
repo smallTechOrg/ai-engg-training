@@ -3,10 +3,10 @@
 In 14.1 one task's output reached the next as plain text (context=[...]). Here the first
 task returns a PYDANTIC OBJECT (output_pydantic), so your own Python code can read
 result.tasks_output[0].pydantic.category instead of parsing a sentence. The second task still
-gets the text, because that is all an agent can read.
+gets the text, because text is all an agent can read.
 
-Sequential means: tasks run in the order of the list, each by the agent it names.
-No manager, no choices. Predictable and cheap: two tasks here.
+Sequential means the tasks run in list order, each done by the agent it names. There is no
+manager and no choice to make. That makes it predictable and cheap: two tasks here.
 
 Run it:   ./run 14.2/1          (Windows: run 14.2/1)
 """
@@ -42,8 +42,8 @@ def main(ctx):
     responder = Agent(role="Helpdesk responder", goal="Write a calm first reply",
                       backstory="You write short, kind replies with one clear next step.", llm=llm, allow_delegation=False, max_iter=3)
 
-    # output_pydantic asks CrewAI to turn the agent's answer into a Triage object. If the model's answer
-    # does not fit, CrewAI makes an extra conversion call; if that fails too, .pydantic stays None.
+    # output_pydantic asks CrewAI to turn the agent's answer into a Triage object. If the answer does
+    # not fit, CrewAI makes an extra call to convert it. If that fails too, .pydantic stays None.
     t1 = Task(description="Triage this ticket.\n\n" + TICKET,
               expected_output="category (network, hardware, software, access or other), urgency (low, normal, high) and a one-line summary",
               agent=triager, output_pydantic=Triage)
@@ -58,7 +58,7 @@ def main(ctx):
     ctx.step("Use the typed output in Python")
     triage = result.tasks_output[0].pydantic
     if triage is None:
-        ctx.note("The triager's answer did not parse into Triage, so .pydantic is None. Fall back to .raw; real code should retry or alert.")
+        ctx.note("The triager's answer did not fit Triage, so .pydantic is None. Using .raw; real code should retry or alert.")
         ctx.show_data("raw triage text", result.tasks_output[0].raw)
     else:
         ctx.show_data("Triage object", triage.model_dump())

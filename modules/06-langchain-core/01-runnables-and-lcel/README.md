@@ -5,16 +5,17 @@
 ## What you will learn
 
 - How the lesson 01.1 call looks through LangChain's `ChatOpenAI`: message classes, `AIMessage`, `usage_metadata`.
-- What a **Runnable** is: anything with `invoke`, `batch` and `stream`.
+- What a Runnable is: any LangChain object with `invoke`, `batch` and `stream` methods.
 - How the `|` operator (LCEL) chains runnables, and what type each one hands to the next.
-- How to template a system prompt, and how `with_structured_output` returns a pydantic object.
+- How to put placeholders in a system prompt, and how `with_structured_output` returns a Pydantic object.
 
 ## The idea
 
-Everything you built by hand in module 01 (build messages, call the model, pull out the text,
-validate JSON) is a sequence of steps where each takes the previous step's output. LangChain
-gives every step the same interface, a **Runnable**, and the `|` operator joins them into a
-**RunnableSequence**, which is itself a Runnable.
+LangChain is a Python library of ready-made building blocks for LLM apps. In module 01 you did
+every step by hand: build the messages, call the model, pull out the text, check the JSON. Each
+step takes the previous step's output. LangChain gives every step the same interface, called a
+Runnable. The `|` operator joins Runnables into a RunnableSequence, which is itself a Runnable.
+This way of writing chains with `|` is called LCEL (LangChain Expression Language).
 
 ```mermaid
 flowchart LR
@@ -25,9 +26,10 @@ flowchart LR
     M -. with_structured_output .-> S[Triage object]
 ```
 
-Because the chain is a Runnable, `chain.invoke(x)` runs one input, `chain.batch([x, y, z])` runs
-several concurrently, and `chain.stream(x)` yields the answer in pieces, with no extra code. The
-price is a new vocabulary on top of the SDK call you already know. The lesson shows both side by side.
+Because the chain is a Runnable, you get three ways to run it with no extra code.
+`chain.invoke(x)` runs one input. `chain.batch([x, y, z])` runs several at the same time.
+`chain.stream(x)` yields the answer in pieces. The cost is a new set of terms on top of the SDK
+call you already know, so the lesson shows both side by side.
 
 ## Scripts
 
@@ -39,8 +41,8 @@ Run all three with `./run 06.1` (Windows: `run 06.1`), or one at a time.
 ./run 06.1/1
 ```
 
-Makes the 01.1 call with the raw SDK, then with `ChatOpenAI` (configured with the same base URL,
-key and model), and opens up the `AIMessage`.
+Makes the 01.1 call with the raw SDK, then with `ChatOpenAI` (set up with the same base URL,
+key and model). Then it opens up the `AIMessage` to show what is inside.
 
 **Expected output** (trimmed; wording and tokens will differ):
 
@@ -70,9 +72,9 @@ Run summary: 2 model call(s), 36 in + 58 out = 94 tokens
 ./run 06.1/2
 ```
 
-Builds a chain, then runs the three hops by hand to show what each passes on
-(`dict` to `ChatPromptValue` to `AIMessage` to `str`), then uses `invoke`, `batch` (three topics)
-and `stream`.
+Builds a chain, then runs its three steps by hand to show what each one passes on
+(`dict` to `ChatPromptValue` to `AIMessage` to `str`). Then it uses `invoke`, `batch` (three
+topics) and `stream`.
 
 **Expected output** (trimmed):
 
@@ -95,8 +97,8 @@ chain.stream yielded
 { "number of pieces": 5, "first pieces": ["", "Multi-factor authentication is an extra layer ...", ...] }
 ```
 
-Notes: in this LangChain version the string parser returns a `TextAccessor` (a `str` subclass), and
-a stream may begin or end with an empty piece. The pieces' size depends on your provider.
+In this LangChain version the string parser returns a `TextAccessor`, which is a kind of `str`. A
+stream may also begin or end with an empty piece. How big the pieces are depends on your provider.
 
 ### 3. `03_helpdesk_reply_chain.py`: reply chain plus a structured step
 
@@ -104,10 +106,10 @@ a stream may begin or end with an empty piece. The pieces' size depends on your 
 ./run 06.1/3
 ```
 
-A reply chain with a templated system prompt (`{employee}`, `{ticket}`), then a triage chain
-using `model.with_structured_output(Triage)` that returns a `Triage` object. If the endpoint cannot
-do structured output, the script falls back to a prompt with format instructions and
-`PydanticOutputParser`, and if that also fails it says so and carries on.
+First a reply chain whose system prompt has placeholders (`{employee}`, `{ticket}`). Then a triage
+chain that uses `model.with_structured_output(Triage)` and returns a `Triage` object. If the endpoint
+cannot do structured output, the script falls back to a prompt with format instructions and
+`PydanticOutputParser`. If that also fails, it says so and carries on.
 
 **Expected output** (trimmed):
 
@@ -126,33 +128,33 @@ Step 3: Putting both chains to use ───────────────
 network / high -> on-site support
 ```
 
-The run summary for this script reports no model calls: the parsers discard the `AIMessage` that
-carries token counts (script 1 shows where those live).
+The run summary for this script reports no model calls. That is because the parsers throw away the
+`AIMessage` that carries the token counts. Script 1 shows where those live.
 
 ## Try this
 
-1. **Print a prompt.** Call `reply_prompt.invoke(TICKET)` in script 3 with an extra variable
+1. Print a prompt. Call `reply_prompt.invoke(TICKET)` in script 3 with an extra variable
    missing. What error do you get, and when (at build time or at invoke time)?
-2. **Drop the parser.** Remove `StrOutputParser()` from the chain in script 2. What does `invoke`
+2. Drop the parser. Remove `StrOutputParser()` from the chain in script 2. What does `invoke`
    return now? What does `stream` yield?
-3. **Batch more.** Add three more topics and time `batch` against a Python loop of `invoke`.
-4. **Swap the model.** Change `temperature` to `1` and run script 3 twice. Does the structured
+3. Batch more. Add three more topics and time `batch` against a Python loop of `invoke`.
+4. Change the temperature. Set `temperature` to `1` and run script 3 twice. Does the structured
    output stay valid?
-5. **Inspect the schema.** Print `Triage.model_json_schema()` and compare with what you wrote by hand
+5. Inspect the schema. Print `Triage.model_json_schema()` and compare with what you wrote by hand
    in lesson 01.6. Run with `--raw` and find where it appears in the request.
-6. **Add a step.** Pipe a plain function into the chain with `| (lambda s: s.upper())`. Functions are
+6. Add a step. Pipe a plain function into the chain with `| (lambda s: s.upper())`. Functions are
    Runnables too (`RunnableLambda`).
 
 ## If it does not work
 
-Run `./run doctor`; install the packages with `uv sync --extra langchain`. If script 3 prints that
-`with_structured_output` did not work, your endpoint lacks JSON-schema or tool-call support; the
-prompt-based fallback usually still works. Errors containing `401` or `404` mean the same settings
-problems as lesson 01.1: check `LLM_API_KEY` and `LLM_MODEL`.
+Run `./run doctor`, and install the packages with `uv sync --extra langchain`. If script 3 prints that
+`with_structured_output` did not work, your endpoint does not support JSON-schema output or tool calls.
+The fallback that uses the prompt usually still works. Errors with `401` or `404` in them mean the same
+settings problems as in lesson 01.1. Check `LLM_API_KEY` and `LLM_MODEL`.
 
 ## In the running scenario
 
-The helpdesk assistant's two jobs from module 01, replying and triaging, are now two small chains
-you can compose, batch and stream. Next the assistant gains memory of the conversation.
+The helpdesk assistant's two jobs from module 01, replying and triaging, are now two small chains.
+You can combine, batch and stream them. Next the assistant learns to remember the conversation.
 
 **Next:** 06.2 · Prompt templates and output parsers (planned)

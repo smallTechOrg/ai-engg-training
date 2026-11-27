@@ -1,9 +1,9 @@
 """05.4/1  Gradio in one function: gr.Interface
 
-Gradio's idea: you write a normal Python function, name its input and output components, and
-Gradio builds the web page AND an HTTP API for it. We build an Interface around the helpdesk
-reply function, inspect what Gradio made, then call the function the way Gradio would. We never
-call `.launch()`, so no server starts and no browser opens.
+The idea behind Gradio: you write a normal Python function and name its input and output
+components. Gradio builds the web page and also an HTTP API for it. We build an Interface
+around the helpdesk reply function, look at what Gradio made, then call the function the way
+Gradio would. We never call `.launch()`, so no server starts and no browser opens.
 
 Run it:   ./run 05.4/1          (Windows: run 05.4/1)
 """
@@ -35,7 +35,7 @@ def main(ctx):
         flagging_mode="never",
         api_name="reply",
     )
-    ctx.note("Inputs and outputs are matched to the function's arguments and return value by position.")
+    ctx.note("Gradio matches inputs and outputs to the function's arguments and return value by position.")
     ctx.show_data(
         "What Gradio built",
         {
@@ -45,7 +45,7 @@ def main(ctx):
             "public API endpoints": [d["api_name"] for d in demo.config["dependencies"] if d.get("api_visibility") == "public"],
         },
     )
-    ctx.note("demo.launch() would start a server on port 7860 and serve this page. We deliberately do not.")
+    ctx.note("demo.launch() would start a server on port 7860 and serve this page. We choose not to.")
 
     ctx.step("Call the function as the Submit button would")
     ticket = "My laptop won't connect to the office Wi-Fi. Other people near me are fine."
@@ -62,7 +62,7 @@ def main(ctx):
             "sharing": "demo.launch(share=True) makes a temporary public link (only for demos, never for real data)",
         },
     )
-    ctx.note("Compare 05.1: there you defined request and response models, status codes and docs yourself.")
+    ctx.note("Compare 05.1, where you defined the request and response models, status codes and docs yourself.")
 
 
 if __name__ == "__main__":

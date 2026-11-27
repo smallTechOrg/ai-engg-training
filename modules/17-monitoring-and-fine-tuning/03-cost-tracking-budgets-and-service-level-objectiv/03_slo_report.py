@@ -1,10 +1,11 @@
 """17.3/3  Service level objectives from run logs
 
-An SLO turns a metric into a promise: "99% of calls succeed" and "95% of calls finish in under
-5 seconds". The gap to 100% is the ERROR BUDGET, the amount of failure you may spend.
-The log file records each HTTP request and response with a timestamp `t`, so latency and
-success can be computed offline. We make three real calls, read all logs, then compute:
-  - the two SLIs (service level indicators) and whether each SLO is met,
+An SLO (service level objective) turns a metric into a promise: "99% of calls succeed" and "95%
+of calls finish in under 5 seconds". The gap to 100% is the ERROR BUDGET, the amount of failure
+you are allowed. The log file records each HTTP request and response with a timestamp `t`, so
+you can work out latency and success offline. The script makes three real calls, reads all
+logs, then computes:
+  - the two SLIs (service level indicators, the measurements) and whether each SLO is met,
   - how much error budget is left,
   - the burn rate: how fast the budget is being used compared with the allowed pace,
   - a what-if with simulated failures, clearly labelled as simulated.
@@ -86,17 +87,17 @@ def main(ctx):
         return
     lats = [lat for lat, ok in calls if ok]
     ctx.note(f"{len(calls)} calls found. Latency: median {percentile(lats, 0.5):.2f}s, p95 {percentile(lats, 0.95):.2f}s, max {max(lats):.2f}s.")
-    ctx.note("Percentiles beat averages: one 30-second call hides inside a good mean.")
+    ctx.note("Percentiles beat averages: one 30-second call can hide inside a good average.")
 
     ctx.step("Evaluate the SLOs on the real data")
     met = report(ctx, calls, "real")
     ctx.note("SLOs met." if met else "At least one SLO is missed on this sample.")
 
     ctx.step("What if? Simulate failures (NOT real data)")
-    ctx.note("We copy the real calls and mark 3 of them failed, to see what 3 errors do to the budget.")
+    ctx.note("We copy the real calls and mark 3 as failed, to see what 3 errors do to the budget.")
     simulated = [(lat, ok and i >= 3) for i, (lat, ok) in enumerate(calls)]
     report(ctx, simulated, "simulated")
-    ctx.note("Alerting on burn rate (for example 'page when the 1-hour burn rate exceeds 14x') catches a fast outage early and ignores a slow, tolerable trickle.")
+    ctx.note("Alert on burn rate (say, 'page when the 1-hour burn rate passes 14x'). It catches a fast outage early and ignores a slow trickle you can live with.")
     ctx.note("The same SLI in PromQL: sum(rate(helpdesk_requests_total{status='ok'}[30d])) / sum(rate(helpdesk_requests_total[30d]))")
 
 

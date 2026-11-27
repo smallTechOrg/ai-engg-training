@@ -1,13 +1,14 @@
 """05.4/2  Blocks and ChatInterface for the helpdesk
 
-Interface is one function. For a real tool you want a layout, several tabs and a chat, so Gradio
-offers `gr.Blocks` (arrange components, wire events like `button.click(fn, inputs, outputs)`) and
-`gr.ChatInterface` (a ready-made chat around a function `fn(message, history)`).
+Interface is one function. A real tool needs a layout, several tabs and a chat. For that
+Gradio offers `gr.Blocks`, where you arrange components and connect events such as
+`button.click(fn, inputs, outputs)`. It also offers `gr.ChatInterface`, a ready-made chat
+around a function `fn(message, history)`.
 
 gradio_demo.py builds a two-tab app: a triage form and a chat. Here we build it and call its
 handler functions directly, as Gradio would when the button is clicked. A handler that raises
-`gr.Error` shows a red message in the page instead of a stack trace. A generator handler is
-how Gradio streams: every `yield` replaces the chat bubble with the longer text.
+`gr.Error` shows a red message in the page instead of a stack trace. Gradio streams through
+generator handlers: every `yield` replaces the chat bubble with the longer text.
 
 Run it:   ./run 05.4/2          (Windows: run 05.4/2)
 """
@@ -29,7 +30,7 @@ def main(ctx):
     public = [d["api_name"] for d in demo.config["dependencies"] if d.get("api_visibility") == "public"]
     ctx.show_data("Public API endpoints Gradio created", public)
     ctx.note(f"{len(demo.config['components'])} components and {len(demo.config['dependencies'])} event handlers exist in total;")
-    ctx.note("most handlers are ChatInterface's own plumbing. Yours are 'triage' (the button) and 'chat'.")
+    ctx.note("most handlers are ChatInterface's internal wiring. Yours are 'triage' (the button) and 'chat'.")
 
     ctx.step("The Triage button: handler called with the input values")
     ticket = "The badge reader at the front door has been dead since the power cut. Visitors are waiting outside."
@@ -60,7 +61,7 @@ def main(ctx):
     for usage in gradio_demo.usage_log:
         ctx.record_usage({"prompt_tokens": usage[0], "completion_tokens": usage[1]})
     if not gradio_demo.usage_log:
-        ctx.note("The provider reported no usage; nothing to add.")
+        ctx.note("The provider reported no usage, so there is nothing to add.")
 
 
 if __name__ == "__main__":

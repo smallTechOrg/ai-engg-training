@@ -1,11 +1,12 @@
 """14.4/3  Capstone, part 3: acceptance criteria as code
 
-Turn the README's acceptance criteria into checks that run on a crew's output and print a pass/fail
-table. The crew (triager with typed output + comms writer, no tool, so the cost stays low)
-handles one incident; the checks cover the typed field, the message and the request budget.
+This script turns the README's acceptance criteria into checks that run on a crew's output and print
+a pass/fail table. The crew handles one incident. It has a triager with typed output and a comms
+writer, and no tool, so the cost stays low. The checks cover the typed field, the message and the
+request budget.
 
-Passing is not the point. A failed row tells you which criterion to improve, and the checks
-run unchanged if you swap in a stronger crew.
+Passing is not the goal. A failed row tells you which criterion to improve, and the checks run
+unchanged if you swap in a stronger crew.
 
 Run it:   ./run 14.4/3          (Windows: run 14.4/3)
 """
@@ -64,7 +65,7 @@ def main(ctx):
     passed = sum(1 for _, ok in checks if ok)
     ctx.show_data("Score", {"passed": passed, "total": len(checks), "message": message})
     if passed < len(checks):
-        ctx.note("Some checks failed. With a real model, read which ones: that is your next improvement. With the stub, failing is expected.")
+        ctx.note("Some checks failed. With a real model, the failed rows show what to improve next. With the stub, failing is expected.")
     if usage.total_tokens:
         ctx.record_usage({"prompt_tokens": usage.prompt_tokens, "completion_tokens": usage.completion_tokens})
 

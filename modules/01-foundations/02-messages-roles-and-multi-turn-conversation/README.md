@@ -4,24 +4,26 @@
 
 ## What you will learn
 
-- A model is **stateless**: it remembers nothing from one call to the next.
-- A "conversation" is a list of messages that **your code** keeps and resends in full every time.
-- What the three roles are for: `system` (the rules), `user` (the person), `assistant` (the model's earlier replies).
+- A model is stateless: it remembers nothing from one call to the next.
+- A "conversation" is a list of messages that *your code* keeps and sends again, in full,
+  every time.
+- What the three roles are for: `system` (the rules), `user` (the person) and `assistant`
+  (the model's earlier replies).
 - Why every turn of a conversation costs more than the one before it.
 
 ## The idea
 
-In lesson 01.1 you sent one message and got one reply. Chat products feel different: you
-ask a follow-up and the assistant knows what "it" refers to. Nothing changed in the model
-to make that happen. The application simply sends the **whole conversation again**, with
-your new message added at the end.
+In lesson 01.1 you sent one message and got one reply. Chat apps feel different: you ask a
+follow-up question and the assistant knows what "it" refers to. Nothing changed inside the
+model to make that happen. The app simply sends the **whole conversation again**, with your
+new message added at the end.
 
-The loop every chat application runs:
+Every chat app runs this loop:
 
-1. Append the user's new message to the list.
+1. Add the user's new message to the list.
 2. Send the entire list to the model.
-3. Append the model's reply to the list (role `assistant`).
-4. Go to 1.
+3. Add the model's reply to the list (role `assistant`).
+4. Go back to step 1.
 
 ```mermaid
 sequenceDiagram
@@ -42,15 +44,18 @@ The roles tell the model who said what:
 | Role | Written by | Purpose |
 |---|---|---|
 | `system` | You, the developer | The job, the rules, the tone. Usually first, usually once. |
-| `user` | The person using your application | Questions and requests. |
-| `assistant` | The model (stored and resent by you) | Its earlier replies, so it can stay consistent with them. |
+| `user` | The person using your app | Questions and requests. |
+| `assistant` | The model (stored and sent again by you) | Its earlier replies, so it can stay consistent with them. |
 
-Two consequences follow, and both come back throughout the course:
+This has two consequences, and both come back throughout the course.
 
-- **You control the memory.** Because you build the list, you can edit it: drop old turns,
-  summarise them, or insert facts the user never typed. Lesson 01.4 and module 02 use this.
-- **Long conversations cost more.** Turn 10 resends turns 1 to 9. Prompt tokens grow with
-  every turn even if each message is short.
+First, you control the memory. Because your code builds the list, it can change it: drop
+old turns, summarise them, or add facts the user never typed. Lesson 01.4 and module 02 do
+this.
+
+Second, long conversations cost more. Turn 10 sends turns 1 to 9 again. The number of
+prompt tokens (the pieces of text you send, which you pay for) grows with every turn, even
+when each message is short.
 
 ## Scripts
 
@@ -62,9 +67,9 @@ Run all three in order with `./run 01.2` (Windows: `run 01.2`), or one at a time
 ./run 01.2/1
 ```
 
-Three calls. Call 1 tells the model a fact. Call 2 asks about the fact in a fresh request,
-and the model cannot answer. Call 3 asks the same question but resends call 1's messages,
-and now it can.
+This script makes three calls. Call 1 tells the model a fact. Call 2 asks about the fact in
+a new request, and the model cannot answer. Call 3 asks the same question but sends call
+1's messages again, and now the model can answer.
 
 **Expected output** (wording and token numbers will differ):
 
@@ -96,18 +101,18 @@ tokens: 30 in + 6 out = 36
 Run summary: 3 model call(s), 57 in + 29 out = 86 tokens, 5.7s
 ```
 
-Read the code: the only difference between call 2 and call 3 is the contents of the
-`messages` list. Notice that the `assistant` message in call 3 is something *the script*
-put there. The model has no way to check whether it really said it.
+Look at the code: the only difference between call 2 and call 3 is what is in the
+`messages` list. Notice that the `assistant` message in call 3 was put there by *the
+script*. The model has no way to check whether it really said it.
 
-### 2. `02_conversation_loop.py`: the loop behind every chat application
+### 2. `02_conversation_loop.py`: the loop behind every chat app
 
 ```
 ./run 01.2/2
 ```
 
-Runs three scripted turns through the append-send-append loop and prints the full list
-before every call, then the prompt tokens for each turn.
+This script runs three scripted turns through the loop (add, send, add). It prints the full
+list before every call, and then the prompt tokens for each turn.
 
 **Expected output** (shortened):
 
@@ -132,8 +137,8 @@ The list now holds 7 messages. Prompt tokens sent on each turn:
 Each turn resends all earlier turns, so every turn costs more than the one before.
 ```
 
-To chat with it yourself, add `--chat` (works in a real terminal; an empty line stops,
-and it ends by itself after 6 turns):
+To chat with it yourself, add `--chat`. This works in a real terminal. An empty line stops
+it, and it ends by itself after 6 turns:
 
 ```
 ./run 01.2/2 --chat
@@ -145,9 +150,9 @@ and it ends by itself after 6 turns):
 ./run 01.2/3
 ```
 
-The running scenario over three turns. The employee gives the laptop's asset tag in turn 1
-only. In turn 3 they ask for a handover note for the on-site technician; a useful note has
-to include that tag. The script checks whether the reply contains it.
+This is the running example over three turns. The employee gives the laptop's asset tag in
+turn 1 only. In turn 3 they ask for a handover note for the on-site technician, and a
+useful note has to include that tag. The script checks whether the reply contains it.
 
 **Expected output** (shortened):
 
@@ -184,32 +189,33 @@ flowchart LR
    `messages.append({"role": "assistant", "content": reply})`. Run it. What does the model
    say in turn 3, and why can it still answer part of the question?
 2. **Send only the latest message.** In `03_helpdesk_conversation.py`, change the call to
-   `messages=[messages[0], messages[-1]]` (system plus the newest user message). What
-   happens to the handover note?
+   `messages=[messages[0], messages[-1]]` (the system message plus the newest user
+   message). What happens to the handover note?
 3. **Put words in the model's mouth.** In `01_the_model_forgets.py`, change the `assistant`
    message in call 3 to `"Noted. Your favourite colour is orange."`. Which does the model
    believe: the user message or its own "earlier reply"?
 4. **Watch the request grow.** Run `./run 01.2/2 --raw` and compare the request body of
-   turn 1 with turn 3.
+   turn 1 with that of turn 3.
 5. **Move the system message** to the end of the list in script 2. Does the model still
-   follow it? (Behaviour differs between models, which is a reason to keep it first.)
+   follow it? (Models behave differently here, which is one reason to keep it first.)
 6. **Chat until it forgets nothing.** Run `./run 01.2/2 --chat` and refer back to your
-   first message in your last one. Then ask yourself what happens after 500 turns.
+   first message in your last one. Then think about what would happen after 500 turns.
    Lesson 01.4 answers that.
 
 ## If it does not work
 
-Run `./run doctor`. It checks your settings and makes a real call, and tells you exactly
-what to fix. If `--chat` does nothing, you are not in an interactive terminal (for example
-output is being piped); the script then falls back to the scripted turns.
+Run `./run doctor`. It checks your settings, makes a real call and tells you exactly what
+to fix. If `--chat` does nothing, you are not in an interactive terminal (for example, the
+output is being piped to another program). The script then falls back to the scripted
+turns.
 
-If the token lines say `not reported by this endpoint`, your provider does not send usage
-numbers. The conversation still works; you just cannot see the growth in tokens.
+If the token lines say `not reported by this endpoint`, your provider does not send token
+counts. The conversation still works. You just cannot see the tokens grow.
 
 ## In the running scenario
 
 The helpdesk assistant can now hold a conversation about one ticket and use what the
-employee said earlier. Its memory is exactly the message list, and it lasts only while the
-script runs. It still cannot look anything up or take action.
+employee said earlier. Its memory is exactly the message list, and that memory lasts only
+while the script runs. It still cannot look anything up or take any action.
 
 **Next:** 01.3 · Streaming and sampling parameters

@@ -1,11 +1,11 @@
 """05.4/3  Streamlit or Gradio? The same chat in both
 
-We build the SAME tiny helpdesk chat twice, run each once with the same question, and compare
-what each framework made us write and what we got for free. Neither is launched: Streamlit runs
-through AppTest, Gradio through a direct call of its handler.
+We build the same tiny helpdesk chat twice and run each once with the same question. Then we
+compare what each framework made us write and what we got for free. Neither is launched:
+Streamlit runs through AppTest, and Gradio through a direct call of its handler.
 
-The comparison is about shape, not speed: the honest answer to "which one?" depends on who the
-user is and where the app will live.
+The comparison is about how the code is shaped, not about speed. Which one to pick depends on
+who the user is and where the app will live.
 
 Run it:   ./run 05.4/3          (Windows: run 05.4/3)
 """
@@ -78,7 +78,7 @@ def main(ctx):
     at = AppTest.from_function(streamlit_page, default_timeout=60)
     at.session_state["_client"], at.session_state["_model"] = ctx.client, ctx.model
     at.session_state["_usage"] = None
-    at.session_state["_system"] = SYSTEM  # AppTest runs the function as its own script: pass values in through session_state
+    at.session_state["_system"] = SYSTEM  # AppTest runs the function as its own script, so pass values in through session_state
     at.run()
     at.chat_input[0].set_value(QUESTION).run()
     if at.exception:

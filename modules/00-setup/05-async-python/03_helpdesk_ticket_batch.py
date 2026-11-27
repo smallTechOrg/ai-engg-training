@@ -1,9 +1,10 @@
 """00.5/3  The helpdesk assistant answers a batch of tickets
 
 Monday morning at Larkspur Labs: five tickets are waiting. Answering them one at a time
-keeps the fifth employee waiting for no reason; sending fifty at once would hit the
-provider's rate limit. This script answers the five concurrently, but never more than
-two at a time, using a semaphore. One ticket failing does not sink the rest.
+keeps the fifth employee waiting for no reason. Sending fifty at once would hit the
+provider's rate limit (the cap on how many requests you may send). This script answers the
+five concurrently, but never more than two at a time, using a semaphore. If one ticket
+fails, the rest are still answered.
 
 Run it:   ./run 00.5/3          (Windows: run 00.5/3)
 """

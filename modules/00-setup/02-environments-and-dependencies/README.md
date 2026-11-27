@@ -4,25 +4,26 @@
 
 ## What you will learn
 
-- What a **virtual environment** is, and why every Python project gets its own.
+- What a virtual environment is, and why every Python project gets its own.
 - What uv, venv, pip, pyenv and conda each do, and when you will meet each one at work.
-- The difference between a dependency **range** (`openai>=3.0`) and a **pinned** version
-  (`openai==3.60.0`), and why a **lockfile** (`uv.lock`) exists.
+- The difference between a version range (`openai>=3.0`) and a pinned version
+  (`openai==3.60.0`), and why a lockfile (`uv.lock`) exists.
 - How this repo's `pyproject.toml`, `uv.lock` and `.python-version` fit together.
-- A typical folder structure for a small AI application.
+- A typical folder layout for a small AI application.
 
 ## The idea
 
 When you type `pip install openai`, the package goes into a folder that belongs to one
-particular Python. If that Python is shared by every project on your machine, project A
-needing `openai` 1.x and project B needing 3.x is a conflict you cannot win. Upgrading for
-one breaks the other.
+particular Python. Suppose every project on your machine shares that Python. Project A
+needs `openai` 1.x and project B needs 3.x. You cannot satisfy both: upgrading for one
+breaks the other.
 
-A **virtual environment** is the fix. It is just a folder (here, `.venv/`) containing its
-own `site-packages` for installed libraries and a small `python` launcher that borrows an
-interpreter installed elsewhere. Packages installed into it stay there. Delete the folder
-and the environment is gone, with nothing else affected. You never commit it: it is large,
-machine-specific, and can be rebuilt in seconds from the files below.
+A virtual environment fixes this. It is just a folder (here, `.venv/`). Inside it is its own
+`site-packages` folder for installed libraries, and a small `python` launcher that borrows a
+Python installed somewhere else. Packages you install into it stay there. Delete the folder
+and the environment is gone, and nothing else is affected. You never commit it to git: it is
+large, it only works on your machine, and you can rebuild it in seconds from the files
+described below.
 
 ```mermaid
 flowchart LR
@@ -31,38 +32,40 @@ flowchart LR
     B --> V3[".venv of this course<br/>openai, pydantic, dotenv, rich"]
 ```
 
-"Activating" an environment (`source .venv/bin/activate`) only puts its `python` first on
-your `PATH`. Nothing else. `./run` and `uv run` skip that step and always use this repo's
-`.venv` directly, which is why they work whether or not you activated anything.
+"Activating" an environment (`source .venv/bin/activate`) does only one thing: it puts that
+environment's `python` first on your `PATH`, the list of folders your terminal searches for
+commands. `./run` and `uv run` skip that step and always use this repo's `.venv` directly.
+That is why they work whether or not you activated anything.
 
 ### The tools
 
 | Tool | What it does | When you meet it |
 |---|---|---|
-| **venv** | Built into Python (`python -m venv .venv`). Creates a virtual environment. Nothing more. | Everywhere; it is the baseline every other tool builds on or imitates. |
-| **pip** | Installs packages into whichever environment's Python runs it (`python -m pip install openai`). Resolves versions, but keeps no lockfile by default. | Older projects with `requirements.txt`; quick experiments; Docker images. |
-| **pyenv** | Installs and switches between several Python *versions* (3.11, 3.12, 3.13). Does not manage packages. | Teams that need a specific Python per project, often together with venv + pip. |
-| **conda** | A separate ecosystem: installs Python itself, Python packages *and* non-Python libraries (CUDA, MKL), into named environments. | Data science and GPU work; corporate laptops with Anaconda preinstalled. |
-| **uv** | One fast tool that does all of the above for pure-Python projects: installs Python versions, creates `.venv`, resolves and locks dependencies, runs commands. | Newer projects, including this one. Commands: `uv sync`, `uv add`, `uv run`. |
+| **venv** | Built into Python (`python -m venv .venv`). Creates a virtual environment, and nothing more. | Everywhere. It is the baseline the other tools build on or copy. |
+| **pip** | Installs packages into the environment of whichever Python runs it (`python -m pip install openai`). Works out versions, but by default keeps no lockfile. | Older projects with `requirements.txt`, quick experiments, Docker images. |
+| **pyenv** | Installs several Python *versions* (3.11, 3.12, 3.13) and switches between them. Does not manage packages. | Teams that need a specific Python per project, often together with venv and pip. |
+| **conda** | A separate ecosystem. Installs Python itself, Python packages *and* non-Python libraries (CUDA, MKL) into named environments. | Data science and GPU work, and company laptops that come with Anaconda installed. |
+| **uv** | One fast tool that does all of the above for pure-Python projects: installs Python versions, creates `.venv`, works out and locks dependencies, and runs commands. | Newer projects, including this one. Commands: `uv sync`, `uv add`, `uv run`. |
 
-You do not have to pick one forever. The concepts are the same in all of them:
+You do not have to pick one tool forever. The questions are the same in all of them:
 *which Python*, *which environment*, *which exact packages*.
 
 ### Ranges, pins and lockfiles
 
-`pyproject.toml` states what the project *needs*, as ranges: `openai>=3.0` means "3.0 or
-anything newer". Two people installing a month apart can get different versions, and one
-of them gets a bug the other cannot reproduce.
+`pyproject.toml` states what the project *needs*, as ranges. `openai>=3.0` means "3.0 or
+anything newer". Two people who install a month apart can get different versions, and one
+of them hits a bug the other cannot reproduce.
 
-A **pin** is an exact version (`openai==3.60.0`). Pinning only your direct dependencies is
-not enough, because `openai` itself depends on `anyio`, `pydantic` and others, each with
-their own ranges.
+A pin is an exact version (`openai==3.60.0`). Pinning only the packages you asked for is not
+enough. `openai` itself depends on `anyio`, `pydantic` and others, and each of those has its
+own ranges.
 
-A **lockfile** records the exact version of *every* package in the tree, direct and
-indirect, with hashes. `uv.lock` is that file. `uv sync` installs exactly what it lists, so
-everyone on the course has the same 26 packages. You commit the lockfile; you never edit it
-by hand. When you add or upgrade something (`uv add httpx`, `uv lock --upgrade`), uv
-rewrites it and you commit the change.
+A lockfile records the exact version of *every* package, both the ones you asked for and the
+ones they pull in, with hashes to check the downloads. `uv.lock` is that file. `uv sync`
+installs exactly what it lists, so everyone on the course has the same 26 packages.
+
+You commit the lockfile, and you never edit it by hand. When you add or upgrade something
+(`uv add httpx`, `uv lock --upgrade`), uv rewrites it and you commit the change.
 
 ### How this repo fits together
 
@@ -77,12 +80,13 @@ flowchart TD
 
 - `.python-version` tells uv which Python to use (3.12). uv downloads it if needed.
 - `pyproject.toml` lists the direct dependencies and declares the `labkit` package in
-  `src/`. `requires-python = ">=3.11"` is the minimum; `.python-version` is the choice.
-- `uv.lock` is the resolved, exact list. Committed.
-- `.venv/` is the result. Not committed (it is in `.gitignore`).
+  `src/`. `requires-python = ">=3.11"` is the minimum, and `.python-version` is the version
+  this repo picks.
+- `uv.lock` is the exact, worked-out list. It is committed.
+- `.venv/` is the result. It is not committed (it is listed in `.gitignore`).
 
 The setup script runs `uv sync`. If uv cannot be installed, the README's fallback is
-`python -m venv .venv` and `pip install -e .`, which works but ignores the lockfile.
+`python -m venv .venv` and `pip install -e .`. That works, but it ignores the lockfile.
 
 ### A typical AI app layout
 
@@ -105,8 +109,8 @@ helpdesk-assistant/
   data/                 sample documents (large or private data stays out of git)
 ```
 
-The pattern that matters: settings in one place, model calls in one place, prompts kept
-as data you can read and review, and tests that do not need a real key.
+The parts that matter: settings live in one place, model calls live in one place, prompts
+are kept as data you can read and review, and the tests do not need a real key.
 
 ## Scripts
 
@@ -118,9 +122,10 @@ Run both in order with `./run 00.2` (Windows: `run 00.2`), or one at a time.
 ./run 00.2/1
 ```
 
-Asks the running interpreter where it lives, compares `sys.prefix` with `sys.base_prefix`
-to decide whether it is a virtual environment, checks whether it is *this* repo's `.venv`,
-and lists `sys.path`, the folders `import` searches in order. No model calls.
+This script asks the running Python where it lives. It compares `sys.prefix` with
+`sys.base_prefix` to tell whether it is a virtual environment, and checks whether it is
+*this* repo's `.venv`. Then it lists `sys.path`, the folders that `import` searches, in
+order. It makes no model calls.
 
 **Expected output** (paths will differ):
 
@@ -134,7 +139,7 @@ The running interpreter
   "version": "3.12.10",
   "implementation": "CPython"
 }
-sys.executable is the truth. What `python` means in your terminal depends on PATH; this does not.
+sys.executable is the Python really running. What `python` means in a terminal depends on PATH.
 
 Step 2: Is it a virtual environment? ───────────────────────────────────────────────────
 A virtual environment is a folder with its own packages that borrows a Python installed elsewhere.
@@ -177,12 +182,12 @@ On Windows the executable is `.venv\Scripts\python.exe` and the folders use back
 ./run 00.2/2
 ```
 
-Reads the three layers this lesson describes: the ranges in `pyproject.toml`, the exact
-versions in `uv.lock`, and what is actually installed in `.venv`, then compares them. It
-ends by showing the file each `import` really loads, including `labkit` coming from `src/`
-because it is installed in editable mode. No model calls.
+This script reads the three layers this lesson describes: the ranges in `pyproject.toml`,
+the exact versions in `uv.lock`, and what is really installed in `.venv`. Then it compares
+them. It ends by showing the file each `import` really loads. That includes `labkit`, which
+comes from `src/` because it is installed in editable mode. It makes no model calls.
 
-**Expected output** (version numbers will move as the lockfile is updated):
+**Expected output** (version numbers will change as the lockfile is updated):
 
 ```
 ─────────────────── 00.2/2  What is installed, and why exactly that? ───────────────────
@@ -195,7 +200,7 @@ Step 1: What the project asks for: pyproject.toml ──────────
   "python-dotenv>=1.0",
   "rich>=13.7"
 ]
-These are ranges ('3.0 or newer'), not exact versions. Ranges alone give different people different installs.
+These are ranges ('3.0 or newer'), not exact versions. On their own, two people can get different installs.
 
 Step 2: What was chosen: uv.lock ───────────────────────────────────────────────────────
 uv.lock pins 26 packages: the 4 you asked for plus everything they need.
@@ -245,39 +250,43 @@ Log: logs/20260101T100000Z-00.2-2.jsonl
 2. **Activate, then compare.** Run `source .venv/bin/activate` (Windows:
    `.venv\Scripts\activate`), then `which python` (Windows: `where python`) and
    `python modules/00-setup/02-environments-and-dependencies/01_which_python.py`. The
-   `VIRTUAL_ENV` line now matches. Run `deactivate` afterwards.
+   `VIRTUAL_ENV` line now matches. Run `deactivate` when you are done.
 3. **Read the lockfile.** Open `uv.lock` and search for `name = "openai"`. Find its exact
    version and the packages listed under its `dependencies`. Those are the "everything they
    need" from Step 2.
 4. **Make a throwaway environment** in a scratch folder outside this repo:
    `python3 -m venv demo-env`, `demo-env/bin/python -m pip install rich`, then
-   `demo-env/bin/python -m pip list`. Delete the folder when done. Nothing else changed.
+   `demo-env/bin/python -m pip list`. Delete the folder when you are done. Nothing else
+   changed.
 5. **See uv do the same in one line.** In that scratch folder: `uv init demo && cd demo &&
    uv add rich`. Look at the `pyproject.toml` and `uv.lock` it created.
 6. **Add a package to the `PACKAGES` dict** in `02_installed_packages.py` (try
-   `"anyio": "anyio"`, an indirect dependency) and rerun. It is installed and locked even
-   though `pyproject.toml` never mentions it.
+   `"anyio": "anyio"`, a package that `openai` pulls in) and run it again. It is installed
+   and locked even though `pyproject.toml` never mentions it.
 
 ## If it does not work
 
-- **`the running Python is inside it: false`**: you ran the script with another Python.
-  Use `./run 00.2/1` or `uv run python <path>`, or activate `.venv` first.
-- **`Differs from the lockfile`** in script 2: run `./setup.sh` again (Windows: `setup`),
-  or `uv sync`. That reinstalls exactly what `uv.lock` lists.
-- **`No uv.lock found`**: you installed with the pip fallback. Things work, but your
-  versions may differ from everyone else's.
-- **conda is active** (your prompt starts with `(base)`): it can put its own Python first
-  on `PATH`. `./run` still uses `.venv`; for plain `python` commands, run
-  `conda deactivate` first.
+- `the running Python is inside it: false`: you ran the script with another Python. Use
+  `./run 00.2/1` or `uv run python <path>`, or activate `.venv` first.
+- `Differs from the lockfile` in script 2: run `./setup.sh` again (Windows: `setup`), or
+  `uv sync`. That reinstalls exactly what `uv.lock` lists.
+- `No uv.lock found`: you installed with the pip fallback. Things work, but your versions
+  may differ from everyone else's.
+- conda is active (your prompt starts with `(base)`): conda can put its own Python first on
+  `PATH`. `./run` still uses `.venv`. For plain `python` commands, run `conda deactivate`
+  first.
 - Anything else: `./run doctor` checks the Python version, your settings and the endpoint,
   and tells you the fix.
 
 ## In the running scenario
 
-The Larkspur Labs helpdesk assistant will be developed by several engineers, tested in CI
-and deployed to a server. All of those must run the same code against the same packages,
-or "the assistant answered fine on my laptop" becomes a weekly argument. A committed
-`pyproject.toml` and `uv.lock`, a pinned `.python-version` and an ignored `.venv` give the
-assistant a reproducible base: anyone can rebuild its exact environment with one command.
+Several engineers will work on the Larkspur Labs helpdesk assistant. CI (the automatic
+checks that run on every change) will test it, and a server will run it. All of them must
+run the same code with the same packages. Otherwise "the assistant answered fine on my
+laptop" becomes a weekly argument.
+
+A committed `pyproject.toml` and `uv.lock`, a pinned `.python-version` and an ignored
+`.venv` give the assistant a base anyone can rebuild: one command recreates its exact
+environment.
 
 **Next:** 00.3 · Secrets and configuration with .env (planned)

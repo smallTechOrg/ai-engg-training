@@ -1,11 +1,11 @@
 """14.2/3  Delegation inside a sequential crew
 
-Delegation is not only for hierarchical crews. Give an agent allow_delegation=True and CrewAI adds
-two tools to it: "Delegate work to coworker" and "Ask question to coworker". The agent may call
-them to hand a sub-question to another agent in the same crew. Whether it does is up to the model.
+Delegation also works in sequential crews. Give an agent allow_delegation=True and CrewAI adds two
+tools to it: "Delegate work to coworker" and "Ask question to coworker". The agent may call them to
+hand a sub-question to another agent in the same crew. The model decides whether it does.
 
-The script prints the tools each agent really received, then runs one task and reports whether
-a delegation happened. Compare allow_delegation=False: no such tools, no possibility.
+The script prints the tools each agent actually received, then runs one task and reports whether
+a delegation happened. With allow_delegation=False the agent gets no such tools, so it cannot delegate.
 
 Run it:   ./run 14.2/3          (Windows: run 14.2/3)
 """
@@ -58,7 +58,7 @@ def main(ctx):
         for role, name, args in seen:
             ctx.show_tool_call(name, {"agent": role, "args": str(args)[:200]}, "ok")
     else:
-        ctx.note("No delegation this run: the lead answered alone. Delegation is a model decision, so design for both outcomes.")
+        ctx.note("No delegation this run: the lead answered alone. The model decides whether to delegate, so plan for both outcomes.")
     ctx.show_data("Final reply", result.raw)
 
     ctx.step("Usage")

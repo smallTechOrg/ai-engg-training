@@ -1,9 +1,9 @@
 """09.2/2  A reviewer approves or rejects a model draft
 
-The model drafts a reply; the graph pauses for a human; a rejection carries feedback back
-to the model for another draft (a cycle, as in 09.1, but the checker is a person). The
-"person" here is a scripted list of decisions so the lesson runs unattended. In a real app
-the decision would come from a button in the UI, a Slack message or an email link.
+The model drafts a reply and the graph pauses for a person to review it. A rejection sends
+feedback back to the model for another draft. This is a cycle, as in 09.1, but the checker
+is a person. Here the "person" is a fixed list of decisions, so the lesson runs without you.
+In a real app the decision would come from a button in the UI, a Slack message or an email link.
 
 Run it:   ./run 09.2/2          (Windows: run 09.2/2)
 """
@@ -95,7 +95,7 @@ def main(ctx):
     ctx.step("Result")
     ctx.note(f"pauses: {pauses}, rejections: {graph.get_state(config).values['rejections']}")
     ctx.note(f"outcome: {graph.get_state(config).values['outcome']}")
-    ctx.note("Each rejection re-ran 'draft' with the feedback; each pause was one interrupt() on the same thread.")
+    ctx.note("Each rejection ran 'draft' again with the feedback. Each pause was one interrupt() on the same thread.")
 
 
 if __name__ == "__main__":

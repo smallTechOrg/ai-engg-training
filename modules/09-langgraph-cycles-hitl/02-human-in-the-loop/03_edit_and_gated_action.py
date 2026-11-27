@@ -1,9 +1,9 @@
 """09.2/3  Approve, edit or reject, then do the risky thing
 
-Three decisions instead of two: the reviewer may EDIT the proposed action before it runs.
-The model proposes an action for a helpdesk request; the graph pauses BEFORE the side
-effect; only an approved (possibly edited) action is executed. The side effect here is
-a print into a fake audit list, nothing real happens.
+The reviewer now has three choices instead of two: they can also EDIT the proposed action
+before it runs. The model proposes an action for a helpdesk request, and the graph pauses
+BEFORE the side effect. Only an approved (or edited) action is carried out. The side effect
+here just adds a line to a fake audit list. Nothing real happens.
 
 Run it:   ./run 09.2/3          (Windows: run 09.2/3)
 """
@@ -85,7 +85,7 @@ def main(ctx):
 
     ctx.step("What the pattern guarantees")
     ctx.note("'execute' is only reachable from the gate, and the gate only proceeds on approve or edit.")
-    ctx.note("A model cannot talk its way past the gate: the check is graph structure, not a prompt.")
+    ctx.note("A model cannot talk its way past the gate. The check is built into the graph, not written in a prompt.")
 
 
 if __name__ == "__main__":

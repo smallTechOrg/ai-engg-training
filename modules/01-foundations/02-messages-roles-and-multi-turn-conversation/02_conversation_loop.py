@@ -1,7 +1,7 @@
 """01.2/2  A conversation loop
 
-Every chat application runs this loop: append the user's message to a list, send the whole
-list, append the model's reply, repeat. Watch the list, and the prompt tokens, grow.
+Every chat application runs this loop: add the user's message to a list, send the whole
+list, add the model's reply, and repeat. Watch the list grow, and the prompt tokens with it.
 
 Run it:   ./run 01.2/2          (Windows: run 01.2/2)
 Chat with it yourself:   ./run 01.2/2 --chat     (type your own messages; empty line to stop)

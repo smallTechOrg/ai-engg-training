@@ -1,10 +1,10 @@
 """09.3/2  Threads, history and forking with a chat model
 
-With a checkpointer, `thread_id` IS the memory: call the graph again with the same
+With a checkpointer, the `thread_id` IS the memory. Call the graph again with the same
 thread_id and the earlier messages are already in the state. Every step is a numbered
-checkpoint, so you can list the history and branch from an earlier one ("time travel"):
-run again from that point with new input to create a branch. Nothing is overwritten:
-the old checkpoints stay in the history.
+checkpoint, so you can list the history and branch from an earlier one ("time travel").
+To create a branch, run again from that point with new input. Nothing is overwritten,
+and the old checkpoints stay in the history.
 
 Run it:   ./run 09.3/2          (Windows: run 09.3/2)
 """
@@ -63,16 +63,16 @@ def main(ctx):
             ctx.step("Fork: go back to just after turn 1 and ask something else")
             after_turn_1 = next(s for s in history if len(s.values.get("messages", [])) == 2 and not s.next)
             ctx.note(f"chosen checkpoint: step {after_turn_1.metadata.get('step')}, {len(after_turn_1.values['messages'])} messages")
-            ctx.note("Running from an OLD checkpoint's config with new input creates a branch; nothing is overwritten.")
+            ctx.note("Running from an OLD checkpoint's config with new input creates a branch. Nothing is overwritten.")
             graph.invoke({"messages": [HumanMessage("Never mind. How do I reset my VPN token?")]}, after_turn_1.config)
             show_thread(ctx, graph, a, "thread 'priya' now (latest checkpoint = the branch)")
 
             ctx.step("The old checkpoints are still there")
             show_thread(ctx, graph, after_turn_1.config, "the checkpoint we branched from")
             ctx.note(f"checkpoints in the thread now: {len(list(graph.get_state_history(a)))} (was {len(history)}); the branch added to the history")
-            ctx.note("update_state(config, values) writes a hand-made checkpoint the same way: the tool for a reviewer who corrects the state.")
+            ctx.note("update_state(config, values) writes a hand-made checkpoint. Use it when a reviewer corrects the state.")
 
-    ctx.note("Forking is how you replay a failure with a different input, or let a reviewer correct a state and carry on.")
+    ctx.note("Forking lets you replay a failure with a different input, or let a reviewer fix the state and carry on.")
 
 
 if __name__ == "__main__":

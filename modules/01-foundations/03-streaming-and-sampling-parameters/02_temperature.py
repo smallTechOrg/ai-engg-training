@@ -1,8 +1,9 @@
 """01.3/2  Temperature and other sampling parameters
 
-A model picks each next word by sampling from a list of likely candidates. `temperature`
-controls how adventurous that pick is. This script sends the same prompt several times at
-a low and a high temperature so you can see the difference, then demonstrates `stop`.
+A model picks each next word by drawing at random from a list of likely candidates.
+`temperature` controls how adventurous that pick is. This script sends the same prompt
+several times at a low and a high temperature so you can see the difference. Then it
+shows what `stop` does.
 
 Run it:   ./run 01.3/2          (Windows: run 01.3/2)
 """

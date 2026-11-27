@@ -4,26 +4,26 @@
 
 ## What you will learn
 
-- The everyday git loop: `init` or `clone`, `branch`, `commit`, `push`, and a **pull request**.
-- What an AI project must keep **out** of git (`.env`, `.venv`, logs, data, model files,
-  notebook checkpoints) and how `.gitignore` does it.
-- Why `.gitignore` does not help with a file that is already tracked.
-- How secret scanners find keys, and what to do, in which order, if a key is committed.
+- The everyday git loop: `init` or `clone`, `branch`, `commit`, `push`, and a pull request.
+- What an AI project must keep *out* of git (`.env`, `.venv`, logs, data, model files,
+  notebook checkpoints), and how `.gitignore` does it.
+- Why `.gitignore` does not help with a file git already tracks.
+- How secret scanners find keys, and what to do, and in which order, if you commit a key.
 
 ## The idea
 
-Git records snapshots of a folder (**commits**) and lets several people work on separate
-lines of change (**branches**) that are later merged. GitHub hosts a copy of the
-repository so a team can share it and review changes as **pull requests** before they
-reach the main branch.
+Git saves snapshots of a folder, called commits. It lets several people work on separate
+lines of change, called branches, and merge them later. GitHub keeps a copy of the
+repository online so a team can share it. Teammates review each change as a pull request
+before it reaches the main branch.
 
-For an AI project the dangerous part is not git itself but what you accidentally hand it.
+In an AI project, git itself is not the danger. The danger is what you hand it by accident.
 A single `git add .` can commit your API key, gigabytes of downloaded models, or logs full
-of employees' questions. Once pushed, assume it has been copied.
+of employees' questions. Once you push it, assume someone has copied it.
 
 > **Practise in your own repo.** The commands below are for a scratch practice repository
 > you create yourself (for example `~/git-practice`). Do not run commands that change
-> history, branches or remotes inside this course repo; the scripts in this lesson only
+> history, branches or remotes inside this course repo. The scripts in this lesson only
 > *read* it.
 
 ### The everyday loop
@@ -57,12 +57,13 @@ git remote add origin https://github.com/<you>/git-practice.git
 git push -u origin feature/greeting       # publish the branch
 ```
 
-Then on GitHub, open a **pull request** from `feature/greeting` into `main`. The PR shows
-the diff, lets teammates comment, and runs automated checks (CI) before anyone clicks
-merge. After merging, update your local copy with `git switch main` and `git pull`.
+Then, on GitHub, open a pull request from `feature/greeting` into `main`. The pull request
+shows the diff (what changed), lets teammates comment, and runs automatic checks (CI)
+before anyone clicks merge. After merging, update your local copy with `git switch main`
+and `git pull`.
 
-Two habits save most AI-project accidents: run `git status` before every commit, and
-`git add <file>` by name instead of `git add .` until your `.gitignore` is trustworthy.
+Two habits prevent most accidents in AI projects. Run `git status` before every commit. And
+add files by name with `git add <file>`, not `git add .`, until you trust your `.gitignore`.
 
 ### A .gitignore for AI projects
 
@@ -101,16 +102,17 @@ models/
 .vscode/
 ```
 
-Adjust the data lines to your project: small sample data that tests need can be committed;
-customer data and model weights never are. Large files that must be versioned belong in
-dedicated storage (object storage, Git LFS, a model registry), not in ordinary git.
+Adjust the data lines to fit your project. You can commit small sample data that tests
+need. Never commit customer data or model weights (the large files that hold a trained
+model). Large files that must be versioned belong in storage built for them (object
+storage, Git LFS, a model registry), not in ordinary git.
 
 ### Ignored is not the same as untracked
 
-`.gitignore` only stops git from **adding new** files. If `.env` was committed once, it
-stays tracked and every later change to it is committed too. `git ls-files` shows what is
-tracked; `git rm --cached .env` stops tracking it while leaving your local copy alone. Any
-key that was in it must still be treated as leaked.
+`.gitignore` only stops git from *adding new* files. If `.env` was committed once, git keeps
+tracking it, and every later change to it gets committed too. `git ls-files` shows what git
+tracks. `git rm --cached .env` stops tracking the file but leaves your local copy alone.
+Any key that was in it must still be treated as leaked.
 
 ### If a key is committed
 
@@ -123,22 +125,22 @@ flowchart TD
     H --> T["5. Tell your team / security contact"]
 ```
 
-Order matters. **Revoking is the only step that makes you safe.** Bots scan public GitHub
-for new keys within minutes; forks, clones, CI caches and the PR view may already hold the
-commit. Rewriting history afterwards keeps the key out of future clones, but it is
-cleanup, not protection.
+The order matters. **Revoking the key is the only step that makes you safe.** Bots scan
+public GitHub for new keys within minutes. Forks, clones, CI caches and the pull request
+page may already hold the commit. Rewriting history afterwards keeps the key out of future
+clones, but that is cleanup, not protection.
 
-GitHub helps: **secret scanning** recognises keys from many providers in public
-repositories (and in private ones where it is enabled) and alerts you or the provider, and
-**push protection** can block a push that contains a recognised key before it lands. Local
-tools (pre-commit hooks such as `gitleaks` or `detect-secrets`) catch it even earlier, on
-your machine. All of them work the way script 2 shows: patterns that match the *shape* of
-a key.
+GitHub helps in two ways. Secret scanning recognises keys from many providers in public
+repositories (and in private ones where it is turned on) and alerts you or the provider.
+Push protection can block a push that contains a recognised key before it lands. Local
+tools catch it even earlier, on your machine: pre-commit hooks such as `gitleaks` or
+`detect-secrets`. All of them work the way script 2 shows, with patterns that match the
+*shape* of a key.
 
 ## Scripts
 
 Run both in order with `./run 00.4` (Windows: `run 00.4`), or one at a time. Both only
-read; neither changes anything in git.
+read. Neither changes anything in git.
 
 ### 1. `01_is_my_repo_safe.py`: is my repo safe to push?
 
@@ -146,10 +148,11 @@ read; neither changes anything in git.
 ./run 00.4/1
 ```
 
-Asks git two questions about this repo: is each dangerous path (`.env`, `.venv/`, `logs/`,
-`.labkit/`, `__pycache__/`) **ignored**, naming the `.gitignore` rule responsible; and is
-any `.env` file already **tracked**. It also confirms the files others need (`.env.example`,
-`.gitignore`, `pyproject.toml`, `uv.lock`) are tracked. No model calls.
+This script asks git two questions about this repo. First, is each dangerous path (`.env`,
+`.venv/`, `logs/`, `.labkit/`, `__pycache__/`) ignored, and by which `.gitignore` rule?
+Second, is any `.env` file already tracked? It also confirms that the files others need
+(`.env.example`, `.gitignore`, `pyproject.toml`, `uv.lock`) are tracked. It makes no model
+calls.
 
 **Expected output** (your git version and branch name will differ):
 
@@ -183,8 +186,8 @@ Run summary: no model calls, 0.1s
 Log: logs/20260101T100000Z-00.4-1.jsonl
 ```
 
-If the course was downloaded as a zip rather than cloned, Step 1 says the folder is not a
-git repository and the script stops there.
+If you downloaded the course as a zip instead of cloning it, Step 1 says the folder is not
+a git repository and the script stops there.
 
 ### 2. `02_find_leaked_keys.py`: catching a key before it is committed
 
@@ -192,10 +195,11 @@ git repository and the script stops there.
 ./run 00.4/2
 ```
 
-Writes a deliberately bad `settings.py` for the helpdesk bot, full of **invented** keys, to
-a temporary folder, then scans it line by line with four regular expressions, the way a
-secret scanner does. Every hit is reported with the value masked. It finishes with what
-the scanner cannot see and the steps to take if a key is committed. No model calls.
+This script writes a deliberately bad `settings.py` for the helpdesk bot to a temporary
+folder. The file is full of *invented* keys. The script scans it line by line with four
+regular expressions (text patterns), the way a secret scanner does, and reports every hit
+with the value masked. It ends with what the scanner cannot see and the steps to take if a
+key is committed. It makes no model calls.
 
 **Expected output** (the keys are invented for this demo, so their masked forms are shown as they appear):
 
@@ -254,17 +258,17 @@ Log: logs/20260101T100000Z-00.4-2.jsonl
 
 ## Try this
 
-1. **Ask git yourself.** From the repo root run the read-only commands the script uses:
-   `git check-ignore -v .env`, `git check-ignore -v modules` (no output, exit code 1: not
-   ignored) and `git ls-files | head`.
+1. **Ask git yourself.** From the repo root, run the read-only commands the script uses:
+   `git check-ignore -v .env`, `git check-ignore -v modules` (no output and exit code 1
+   mean "not ignored") and `git ls-files | head`.
 2. **Extend the checklist.** Add `("notebooks/.ipynb_checkpoints/", "Jupyter autosaves")`
    and `("models/", "downloaded model weights")` to `MUST_BE_IGNORED` in
-   `01_is_my_repo_safe.py` and rerun. Which ones does this repo's `.gitignore` miss?
+   `01_is_my_repo_safe.py` and run it again. Which ones does this repo's `.gitignore` miss?
 3. **Run it on your own project.** Copy `01_is_my_repo_safe.py` next to another project,
    replace the `labkit` imports with `print`, and point `cwd` at that project.
 4. **Beat the scanner.** In `02_find_leaked_keys.py`, add a line to `SAMPLE_FILE` such as
-   `TOKEN = "lark_live_9f8e7d6c5b4a39281706"`. It is not flagged. Write a fifth pattern that
-   catches it without also matching the email on line 10.
+   `TOKEN = "lark_live_9f8e7d6c5b4a39281706"`. The scanner does not flag it. Write a fifth
+   pattern that catches it without also matching the email on line 10.
 5. **Practise the loop** in a scratch repo (not this one): `git init`, commit a file,
    create a branch, commit again, and look at `git log --oneline --graph --all`.
 6. **Practise the rescue** in that scratch repo: commit a fake `.env`, add `.env` to
@@ -273,24 +277,26 @@ Log: logs/20260101T100000Z-00.4-2.jsonl
 
 ## If it does not work
 
-- **`git is not installed`**: install it from https://git-scm.com/downloads, open a new
-  terminal and rerun.
-- **`This folder is not a git repository`**: you downloaded a zip. The scripts need a
-  clone (`git clone <course url>`) to have something to inspect; script 2 works either way.
-- **`NOT IGNORED`** in your own project: add the path to `.gitignore`. If it is also
-  `TRACKED`, run `git rm --cached <file>`, commit, and revoke any key it contained.
-- **`git push` asks for a password and rejects it**: GitHub no longer accepts account
+- `git is not installed`: install it from https://git-scm.com/downloads, open a new
+  terminal and run the script again.
+- `This folder is not a git repository`: you downloaded a zip. Script 1 needs a clone
+  (`git clone <course url>`) to have something to inspect. Script 2 works either way.
+- `NOT IGNORED` in your own project: add the path to `.gitignore`. If it is also `TRACKED`,
+  run `git rm --cached <file>`, commit, and revoke any key the file contained.
+- `git push` asks for a password and rejects it: GitHub no longer accepts account
   passwords over HTTPS. Use a personal access token, SSH keys, or the `gh auth login` CLI.
 - For anything about your Python setup or settings, run `./run doctor`.
 
 ## In the running scenario
 
 The Larkspur Labs helpdesk assistant will hold several credentials (a model key, a
-ticket-system token) and produce logs that contain employees' questions about their
-accounts and laptops. Its repository therefore starts with a `.gitignore` that excludes
-`.env`, logs and data, a committed `.env.example`, and a pre-push check like script 1.
-Changes arrive as pull requests with CI, so a key pasted "just to test" is caught by
-review or push protection before it reaches the main branch. And if one slips through,
-the team knows the order: revoke first, clean up second.
+ticket-system token). It will also write logs that contain employees' questions about
+their accounts and laptops. So its repository starts with a `.gitignore` that excludes
+`.env`, logs and data, a committed `.env.example`, and a check before each push like
+script 1.
+
+Changes arrive as pull requests with CI. A key pasted "just to test" gets caught by review
+or by push protection before it reaches the main branch. If one does slip through, the
+team knows the order: revoke first, clean up second.
 
 **Next:** 00.5 · Async Python: concurrent LLM calls (planned)

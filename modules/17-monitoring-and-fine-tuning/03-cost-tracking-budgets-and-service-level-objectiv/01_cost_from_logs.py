@@ -1,11 +1,12 @@
 """17.3/1  Cost tracking from run logs
 
-Every lesson run writes a JSON-lines log (logs/*.jsonl). Each model call leaves a `usage`
-event with token counts. That is enough to answer "what did we spend, and on what?" with no
-extra instrumentation: read the logs, multiply tokens by a price list, group by lesson.
+Every lesson run writes a JSON-lines log (logs/*.jsonl), one JSON object per line. Each model
+call leaves a `usage` event with token counts. That is enough to answer "what did we spend,
+and on what?" without adding any code to your app: read the logs, multiply tokens by a price
+list, and group by lesson.
 
-We make two small real calls first so there is always something in the logs, then read them.
-Prices are INVENTED constants: replace them with your provider's price list.
+The script makes two small real calls first, so the logs always have something in them.
+The prices are INVENTED constants. Replace them with your provider's price list.
 
 Run it:   ./run 17.3/1          (Windows: run 17.3/1)
      or:  python modules/17-monitoring-and-fine-tuning/03-cost-tracking-budgets-and-service-level-objectiv/01_cost_from_logs.py
@@ -91,7 +92,7 @@ def main(ctx):
         ctx.note(f"average per call: ${total / calls:.7f}; input is {t_in / max(t_in + t_out, 1):.0%} of all tokens.")
     if unreported:
         ctx.note(f"{unreported} call(s) reported no token counts, so the true spend is higher than shown. An endpoint that hides usage cannot be budgeted exactly: estimate from text length (script 2).")
-    ctx.note("Prices differ for input and output, so keep both counts. A cache hit or a batch discount would need another column.")
+    ctx.note("Input and output have different prices, so keep both counts. A cache hit or batch discount needs another column.")
 
 
 if __name__ == "__main__":

@@ -1,11 +1,11 @@
 """00.5/2  Sequential and concurrent model calls, timed
 
-The same idea as the previous script, now with real model calls. Three short questions
-are asked one after another, then the same three together with asyncio.gather, and the
-two timings are compared. Six small calls in total.
+The same idea as the previous script, now with real model calls. It asks three short
+questions one after another, then the same three together with asyncio.gather, and
+compares the two timings. That is six small calls in total.
 
-`ctx.async_client` is the asyncio form of the client (`openai.AsyncOpenAI`): identical
-methods, but each call is awaited.
+`ctx.async_client` is the asyncio version of the client (`openai.AsyncOpenAI`). It has the
+same methods, but you `await` each call.
 
 Run it:   ./run 00.5/2          (Windows: run 00.5/2)
 """

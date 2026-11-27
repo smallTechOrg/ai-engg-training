@@ -1,12 +1,12 @@
 """05.2/2  Stream a model reply through the API
 
-POST /reply/stream (see stream_api.py) opens a streaming chat call (the call from 01.3)
-and forwards every text delta as an SSE `token` event, then a final `done` event with the
-token usage. The client reassembles the reply.
+POST /reply/stream (see stream_api.py) opens a streaming chat call (the call from 01.3).
+It passes on every new piece of text as an SSE `token` event, then sends a final `done`
+event with the token usage. The client joins the reply back together.
 
-Honest note on timing: FastAPI's TestClient runs the app in-process and hands the body
-over when the response is complete, so the user-visible "first words" delay cannot be
-measured from this side. The server measures it itself and reports it in the `done` event.
+A note on timing: FastAPI's TestClient runs the app in-process and hands over the body
+only when the response is complete. So this side cannot measure how long a user waits
+for the first words. The server measures it and reports it in the `done` event.
 
 Run it:   ./run 05.2/2          (Windows: run 05.2/2)
 """
@@ -73,14 +73,14 @@ def main(ctx):
         ctx.note(f"{count} events: {len(pieces)} token events plus one done event, in {elapsed:.1f}s.")
         ctx.show_data("Reply, joined from the token events", "".join(pieces))
         ctx.show_data("The done event", done)
-        ctx.note("first_token_s is measured on the server: it is how long a real browser would have stared at a blank page.")
+        ctx.note("The server measures first_token_s: how long a real browser would have shown a blank page.")
 
         ctx.step("Tokens")
-        # The model call happened inside the route, out of ctx's sight. The `done` event carries
-        # the usage the model reported, so we add it to this run's totals ourselves.
+        # The model call happened inside the route, where ctx cannot see it. The `done` event
+        # carries the usage the model reported, so we add it to this run's totals ourselves.
         ctx.record_usage(done["usage"])
         if done["usage"] is None:
-            ctx.note("This provider sent no usage chunk; the done event says null instead of inventing numbers.")
+            ctx.note("This provider sent no usage chunk. The done event says null instead of making up numbers.")
     finally:
         app.dependency_overrides.clear()
 

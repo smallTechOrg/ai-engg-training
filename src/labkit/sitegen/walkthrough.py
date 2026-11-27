@@ -178,7 +178,7 @@ def extract(source: str) -> Walkthrough:
     for number, call in enumerate(calls, start=1):
         parts = _title_parts(call.args[0])
         dynamic = parts is None
-        title, label, pattern = parts or ("", "Step titled at run time", re.compile(r".+", re.DOTALL))
+        title, label, pattern = parts or ("", "A step whose name is set while the script runs", re.compile(r".+", re.DOTALL))
         comments, comment_start = _leading_comments(lines, call.lineno)
         step = Step(len(steps) + 1, title or f"Step {len(steps) + 1}", label or f"Step {len(steps) + 1}", pattern, call.lineno, main_end, comments=comments, dynamic=dynamic)
         steps.append(step)
