@@ -47,3 +47,20 @@ Each phase is user-testable. Gate commands run from the repo root.
 
 Per module: full lesson set, scenario application in every lesson, module capstones,
 module 20 capstone. One module per phase, order chosen by the instructor.
+
+
+## Status (2026-11-27)
+
+All 99 lessons across modules 00-20 are written and marked ready in `curriculum.toml`.
+Phases 1-5 delivered the tooling, skeleton, foundations, one lesson per module, the
+infrastructure modules and `run check`. Phase 6 deepened every module to its full lesson set
+and added the capstone (module 20).
+
+Known limits, by design:
+
+- Docker, Redis, Jaeger, Prometheus, Grafana and n8n lessons were not run on the author's
+  machine; their compose files, Dockerfiles and workflow exports are structure-tested in CI.
+- Several lessons depend on live framework APIs (LangChain 1.5, LangGraph 1.2, mcp 2.x,
+  CrewAI 1.6). Run `./run check` before each cohort and after any dependency upgrade.
+- Model-dependent results (judges, critics, attack resistance) vary by model; READMEs report
+  what the author's model did and invite learners to try a smaller one.

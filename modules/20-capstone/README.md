@@ -10,10 +10,10 @@ Design, build, deploy and present a complete agentic system.
 
 | Lesson | Title | Status |
 |---|---|---|
-| 20.1 | Choosing a problem and designing the architecture | ⬜ planned |
-| 20.2 | Building the core: retrieval, graph, tools, guardrails | ⬜ planned |
-| 20.3 | Deploying, monitoring and securing | ⬜ planned |
-| 20.4 | Documenting and demonstrating | ⬜ planned |
+| 20.1 | [Choosing a problem and designing the architecture](01-choosing-a-problem-and-designing-the-architectur/README.md) | ✅ ready |
+| 20.2 | [Building the core: retrieval, graph, tools, guardrails](02-building-the-core/README.md) | ✅ ready |
+| 20.3 | [Deploying, monitoring and securing](03-deploying-monitoring-and-securing/README.md) | ✅ ready |
+| 20.4 | [Documenting and demonstrating](04-documenting-and-demonstrating/README.md) | ✅ ready |
 
 <!-- lessons:end -->
 

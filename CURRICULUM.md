@@ -2,7 +2,7 @@
 
 <!-- Generated from curriculum.toml by `./run map`. Do not edit by hand. -->
 
-21 modules, 99 lessons, 95 ready. Each lesson shows a concept on its own, then applies it to the running scenario: **IT helpdesk assistant**.
+21 modules, 99 lessons, 99 ready. Each lesson shows a concept on its own, then applies it to the running scenario: **IT helpdesk assistant**.
 
 | Status | Meaning |
 |---|---|
@@ -34,7 +34,7 @@
 | 17 | [Monitoring, evaluation and fine-tuning](modules/17-monitoring-and-fine-tuning/README.md) | 5 / 5 |
 | 18 | [Guardrails and safety](modules/18-guardrails/README.md) | 5 / 5 |
 | 19 | [Workflow automation with n8n](modules/19-workflow-automation-n8n/README.md) | 4 / 4 |
-| 20 | [Capstone](modules/20-capstone/README.md) | 0 / 4 |
+| 20 | [Capstone](modules/20-capstone/README.md) | 4 / 4 |
 
 ## 00 · Setup and Python for AI work
 
@@ -313,7 +313,7 @@ Optional packages: `all`
 
 | Lesson | Title | Status | Model needs |
 |---|---|---|---|
-| 20.1 | Choosing a problem and designing the architecture | ⬜ planned | - |
-| 20.2 | Building the core: retrieval, graph, tools, guardrails | ⬜ planned | chat, tools, embeddings |
-| 20.3 | Deploying, monitoring and securing | ⬜ planned | chat |
-| 20.4 | Documenting and demonstrating | ⬜ planned | - |
+| 20.1 | [Choosing a problem and designing the architecture](modules/20-capstone/01-choosing-a-problem-and-designing-the-architectur/README.md) | ✅ ready | - |
+| 20.2 | [Building the core: retrieval, graph, tools, guardrails](modules/20-capstone/02-building-the-core/README.md) | ✅ ready | chat, tools, embeddings |
+| 20.3 | [Deploying, monitoring and securing](modules/20-capstone/03-deploying-monitoring-and-securing/README.md) | ✅ ready | chat |
+| 20.4 | [Documenting and demonstrating](modules/20-capstone/04-documenting-and-demonstrating/README.md) | ✅ ready | - |

@@ -8,7 +8,7 @@ plus small Python scripts you run and change.
 - **Any provider.** Lessons talk to any OpenAI-compatible endpoint: a hosted model or one on your laptop.
 - **One running example.** Each lesson shows an idea on its own, then applies it to an IT helpdesk assistant that grows through the course.
 
-See the whole journey in the **[curriculum map](CURRICULUM.md)**.
+21 modules and 99 lessons, from a first model call to a capstone project. See the whole journey in the **[curriculum map](CURRICULUM.md)**.
 
 ## Get started
 
@@ -77,6 +77,15 @@ python -m venv .venv
 ./run doctor
 ```
 </details>
+
+## Before a cohort
+
+1. `./setup.sh --all` (Windows: `setup -All`) to install every optional framework.
+2. `./run doctor` to check settings, packages, services and model capabilities.
+3. `./run check` to run every ready lesson against your endpoint (about 10 minutes; `--module 04` or
+   `--lesson 04.1` narrow it; `--report` writes `check-report.txt`). Scripts that need Docker,
+   Redis, n8n or other services you have not set up are skipped, not failed.
+4. After upgrading any dependency, repeat step 3.
 
 ## For instructors and contributors
 

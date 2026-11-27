@@ -840,26 +840,26 @@ services = []
   id = "20.1"
   slug = "01-choosing-a-problem-and-designing-the-architectur"
   title = "Choosing a problem and designing the architecture"
-  status = "planned"
+  status = "ready"
   needs = []
 
   [[module.lesson]]
   id = "20.2"
   slug = "02-building-the-core"
   title = "Building the core: retrieval, graph, tools, guardrails"
-  status = "planned"
+  status = "ready"
   needs = ["chat", "tools", "embeddings"]
 
   [[module.lesson]]
   id = "20.3"
   slug = "03-deploying-monitoring-and-securing"
   title = "Deploying, monitoring and securing"
-  status = "planned"
+  status = "ready"
   needs = ["chat"]
 
   [[module.lesson]]
   id = "20.4"
   slug = "04-documenting-and-demonstrating"
   title = "Documenting and demonstrating"
-  status = "planned"
+  status = "ready"
   needs = []
