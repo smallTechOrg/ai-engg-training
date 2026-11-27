@@ -42,6 +42,8 @@ def run(stub, tmp_path):
                 LLM_MODEL=model,
                 LLM_TIMEOUT="10",
             )
-        return subprocess.run([sys.executable, *args], cwd=ROOT, env=env, capture_output=True, text=True, encoding="utf-8", timeout=120)
+        # input="" gives the child a pipe for stdin. Without it Windows hands over the NUL
+        # device, which reports itself as a terminal and would start the interactive menu.
+        return subprocess.run([sys.executable, *args], cwd=ROOT, env=env, input="", capture_output=True, text=True, encoding="utf-8", timeout=120)
 
     return _run

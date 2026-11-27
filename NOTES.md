@@ -36,3 +36,8 @@ Each entry: symptom -> what was done -> durable lesson.
 
 7. **Docker not installed on the build machine.** Infra modules (16-19) cannot be gated
    locally. -> Deferred to their phase; flagged to the user.
+
+8. **A test passed on macOS/Linux and failed on Windows.** A subprocess with no stdin got
+   the NUL device, which Windows reports as a terminal, so the launcher opened its menu.
+   -> Tests now pass an empty pipe as stdin. -> Lesson: "is this a terminal?" checks need a
+   three-OS CI run; local green is not evidence for Windows.
