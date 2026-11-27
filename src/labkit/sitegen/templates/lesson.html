@@ -5,8 +5,9 @@
 {% block main %}
 <nav class="crumbs" aria-label="Breadcrumb"><ol>{% for label, url in crumbs %}<li><a href="{{ href(url) }}">{{ label }}</a></li>{% endfor %}<li aria-current="page">{{ lesson.id }}</li></ol></nav>
 <header class="pagehead lessonhead">
-  <p class="eyebrow"><span class="lesson-id">Lesson {{ lesson.id }}</span> {{ m.badge(lesson.status) }}</p>
+  <p class="eyebrow"><span class="lesson-id">Lesson {{ lesson.id }}</span> {{ m.badge(lesson.status) }}{% if lesson.caution %} <span class="badge badge-caution">caution</span>{% endif %}</p>
   <h1>{{ lesson.title }}</h1>
+  {% if lesson.caution %}<p class="caution" role="note"><strong>Caution before running live:</strong> {{ lesson.caution }}</p>{% endif %}
   <dl class="facts">
     {% if meta.time %}<div><dt>Time</dt><dd>{{ meta.time }}</dd></div>{% endif %}
     <div><dt>Model needs</dt><dd>{{ m.need_chips(lesson.needs) }}</dd></div>

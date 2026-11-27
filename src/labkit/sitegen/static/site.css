@@ -336,3 +336,6 @@ dialog.palette::backdrop { background: rgba(8,12,20,.5); }
   *, *::before, *::after { transition-duration: .001ms !important; animation-duration: .001ms !important; }
 }
 @media print { .topbar, .sidebar, .toc, .toc-inline, .pager, .copy, .tabbar { display: none !important; } .shell { display: block; } .tabpanel[hidden] { display: block !important; } }
+
+.badge-caution { color: var(--warn); background: var(--warn-soft); }
+.caution { margin: 12px 0 4px; padding: 10px 14px; border-left: 4px solid var(--warn); background: var(--warn-soft); border-radius: 8px; line-height: 1.5; }

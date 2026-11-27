@@ -22,7 +22,7 @@
     {% if r.url %}<a class="lessonrow" href="{{ href(r.url) }}">{% else %}<div class="lessonrow is-planned">{% endif %}
       <span class="lessonrow-id">{{ r.lesson.id }}</span>
       <span class="lessonrow-title">{{ r.lesson.title }}</span>
-      <span class="lessonrow-meta">{{ m.need_chips(r.lesson.needs) if r.lesson.status != 'planned' }}{{ m.badge(r.lesson.status) }}</span>
+      <span class="lessonrow-meta">{{ m.need_chips(r.lesson.needs) if r.lesson.status != 'planned' }}{{ m.badge(r.lesson.status) }}{% if r.lesson.caution %} <span class="badge badge-caution" title="{{ r.lesson.caution }}">caution</span>{% endif %}</span>
     {% if r.url %}</a>{% else %}</div>{% endif %}
     </li>
   {% endfor %}

@@ -10,10 +10,10 @@ Use existing MCP servers and plug them into agent frameworks.
 
 | Lesson | Title | Status |
 |---|---|---|
-| 12.1 | [Ready-made servers: SQLite and filesystem](01-ready-made-servers/README.md) | ✅ ready |
-| 12.2 | [Chaining several servers in one session](02-chaining-several-servers-in-one-session/README.md) | ✅ ready |
+| 12.1 | [Ready-made servers: SQLite and filesystem](01-ready-made-servers/README.md)<br>⚠️ *Needs internet on first run: uvx downloads the published SQLite MCP server.* | ✅ ready ⚠️ |
+| 12.2 | [Chaining several servers in one session](02-chaining-several-servers-in-one-session/README.md)<br>⚠️ *Script 3 needs internet on first run: uvx downloads the published SQLite MCP server.* | ✅ ready ⚠️ |
 | 12.3 | [MCP tools inside LangChain, LangGraph and CrewAI](03-mcp-tools-inside-langchain-langgraph-and-crewai/README.md) | ✅ ready |
-| 12.4 | [Capstone: query-to-report pipeline for the helpdesk](04-capstone-query-to-report-pipeline-for-the-helpde/README.md) | ✅ ready |
+| 12.4 | [Capstone: query-to-report pipeline for the helpdesk](04-capstone-query-to-report-pipeline-for-the-helpde/README.md)<br>⚠️ *Needs internet on first run: uvx downloads the published SQLite MCP server.* | ✅ ready ⚠️ |
 
 <!-- lessons:end -->
 

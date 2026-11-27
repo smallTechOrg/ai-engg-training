@@ -64,10 +64,14 @@ def cmd_list(modules: list[ModuleInfo]) -> int:
         table.add_row(f"[bold]{module.id}[/bold]", f"[bold]{escape(module.title)}[/bold]", f"[dim]{module.count('ready')}/{len(module.lessons)} ready[/dim]", "")
         for item in module.lessons:
             style = STATUS_STYLE[item.status]
-            table.add_row(f"  {item.id}", f"  {escape(item.title)}", f"[{style}]{item.status}[/{style}]", needs_text(item, cache))
+            setup = needs_text(item, cache) + ("  [yellow]⚠ caution[/yellow]" if item.caution else "")
+            table.add_row(f"  {item.id}", f"  {escape(item.title)}", f"[{style}]{item.status}[/{style}]", setup)
     console.print(table)
     ready = sum(module.count("ready") for module in modules)
+    cautions = sum(1 for module in modules for item in module.lessons if item.caution)
     console.print(f"\n{ready} lesson(s) ready. Run one with its id, for example: ./run 01.1")
+    if cautions:
+        console.print(f"[yellow]⚠ caution[/yellow] marks {cautions} lessons to check before running live (services never run here, slow, or downloads). The launcher shows the note and asks first.")
     return 0
 
 
@@ -127,16 +131,34 @@ def run_course(modules: list[ModuleInfo], item: LessonInfo, extra: list[str]) ->
     """Run a whole lesson, then keep offering the next one until the learner stops."""
     while item is not None:
         code = run_lesson(item, None, extra)
-        if code:
+        if code and not (code == EXIT_SKIPPED and item.caution):
             return code
         item = offer_next(modules, item)
     return 0
+
+
+def confirm_caution(item: LessonInfo) -> bool:
+    """Show a lesson's caution note. In a terminal, ask before running (default: no)."""
+    console.print(f"\n[bold yellow]⚠ Caution, lesson {item.id}:[/bold yellow] {escape(item.caution)}")
+    if not interactive():
+        return True  # scripted runs (tests, run check) carry on; the note is still printed
+    try:
+        answer = input("Run it anyway? [y/N] ").strip().lower()
+    except (EOFError, KeyboardInterrupt):
+        print()
+        return False
+    if answer not in ("y", "yes"):
+        console.print("[dim]Skipped.[/dim]")
+        return False
+    return True
 
 
 def run_lesson(item: LessonInfo, script_number: int | None, extra: list[str]) -> int:
     if not item.runnable:
         console.print(f"[yellow]Lesson {item.id} ({escape(item.title)}) is planned but not written yet.[/yellow]")
         console.print("See CURRICULUM.md for what is ready, or run: ./run list")
+        return EXIT_SKIPPED
+    if item.caution and not confirm_caution(item):
         return EXIT_SKIPPED
     scripts = item.scripts()
     if not scripts:
@@ -406,7 +428,8 @@ def cmd_menu(modules: list[ModuleInfo]) -> int:
             console.print(f"\n[bold]{module.id}  {escape(module.title)}[/bold]\n[dim]{escape(module.summary)}[/dim]")
             for item in module.lessons:
                 style = STATUS_STYLE[item.status]
-                console.print(f"  {item.id}  {escape(item.title)}  [{style}]{item.status}[/{style}]")
+                flag = "  [yellow]⚠ caution[/yellow]" if item.caution else ""
+                console.print(f"  {item.id}  {escape(item.title)}  [{style}]{item.status}[/{style}]{flag}")
             answer = _ask(f"\nLesson number (e.g. 1 or {module.id}.1), Enter to go back: ")
             if answer in (None, "", "b", "q"):
                 break

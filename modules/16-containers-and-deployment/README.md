@@ -12,11 +12,11 @@ Package an agent and ship it.
 
 | Lesson | Title | Status |
 |---|---|---|
-| 16.1 | [Docker fundamentals and a production Dockerfile](01-docker-fundamentals-and-a-production-dockerfile/README.md) | ✅ ready |
-| 16.2 | [Docker Compose: API, vector store, Redis, worker](02-docker-compose/README.md) | ✅ ready |
-| 16.3 | [Health checks, configuration and secrets](03-health-checks-configuration-and-secrets/README.md) | ✅ ready |
-| 16.4 | [CI/CD and rollout strategies](04-ci-cd-and-rollout-strategies/README.md) | ✅ ready |
-| 16.5 | [Capstone: the helpdesk stack in containers](05-capstone-the-helpdesk-stack-in-containers/README.md) | ✅ ready |
+| 16.1 | [Docker fundamentals and a production Dockerfile](01-docker-fundamentals-and-a-production-dockerfile/README.md)<br>⚠️ *Script 3 needs Docker. The Dockerfile and compose file were never built or run.* | ✅ ready ⚠️ |
+| 16.2 | [Docker Compose: API, vector store, Redis, worker](02-docker-compose/README.md)<br>⚠️ *Script 3 needs Redis. The compose stack was never run (no Docker on the author's machine).* | ✅ ready ⚠️ |
+| 16.3 | [Health checks, configuration and secrets](03-health-checks-configuration-and-secrets/README.md)<br>⚠️ *The compose file and Docker secrets setup were never run on real Docker; the scripts themselves run offline.* | ✅ ready ⚠️ |
+| 16.4 | [CI/CD and rollout strategies](04-ci-cd-and-rollout-strategies/README.md)<br>⚠️ *The CI workflow and rollout steps were never run for real; the scripts are offline simulations.* | ✅ ready ⚠️ |
+| 16.5 | [Capstone: the helpdesk stack in containers](05-capstone-the-helpdesk-stack-in-containers/README.md)<br>⚠️ *The containerised stack was never run on real Docker; the scripts run it in-process instead.* | ✅ ready ⚠️ |
 
 <!-- lessons:end -->
 

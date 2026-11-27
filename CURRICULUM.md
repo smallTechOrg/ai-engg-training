@@ -9,6 +9,7 @@
 | ✅ ready | Written, tested, runnable |
 | 🚧 draft | Runnable but still being refined |
 | ⬜ planned | Outlined; not written yet |
+| ⚠️ caution | Read the note before running it live (services never run here, slow, or downloads) |
 
 ## Modules
 
@@ -166,7 +167,7 @@ Optional packages: `langchain`, `langgraph` · Services: `REDIS_URL`
 |---|---|---|---|
 | 09.1 | [Cycles and self-correction loops](modules/09-langgraph-cycles-hitl/01-cycles-and-self-correction-loops/README.md) | ✅ ready | chat |
 | 09.2 | [Human-in-the-loop: interrupt, approve, resume](modules/09-langgraph-cycles-hitl/02-human-in-the-loop/README.md) | ✅ ready | chat |
-| 09.3 | [Checkpointers: SQLite and Redis persistence](modules/09-langgraph-cycles-hitl/03-checkpointers/README.md) | ✅ ready | chat |
+| 09.3 | [Checkpointers: SQLite and Redis persistence](modules/09-langgraph-cycles-hitl/03-checkpointers/README.md)<br>⚠️ *Script 3 needs Redis (redis-stack image) and was never run against a real Redis. Scripts 1-2 are safe.* | ✅ ready ⚠️ | chat |
 | 09.4 | [Parallel workers and sub-graphs](modules/09-langgraph-cycles-hitl/04-parallel-workers-and-sub-graphs/README.md) | ✅ ready | chat |
 | 09.5 | [Capstone: helpdesk change request with an approval gate](modules/09-langgraph-cycles-hitl/05-capstone-helpdesk-change-request-with-an-approva/README.md) | ✅ ready | chat |
 
@@ -205,10 +206,10 @@ Optional packages: `mcp`, `langchain`, `langgraph`, `crewai`
 
 | Lesson | Title | Status | Model needs |
 |---|---|---|---|
-| 12.1 | [Ready-made servers: SQLite and filesystem](modules/12-mcp-ecosystem/01-ready-made-servers/README.md) | ✅ ready | chat, tools |
-| 12.2 | [Chaining several servers in one session](modules/12-mcp-ecosystem/02-chaining-several-servers-in-one-session/README.md) | ✅ ready | chat, tools |
+| 12.1 | [Ready-made servers: SQLite and filesystem](modules/12-mcp-ecosystem/01-ready-made-servers/README.md)<br>⚠️ *Needs internet on first run: uvx downloads the published SQLite MCP server.* | ✅ ready ⚠️ | chat, tools |
+| 12.2 | [Chaining several servers in one session](modules/12-mcp-ecosystem/02-chaining-several-servers-in-one-session/README.md)<br>⚠️ *Script 3 needs internet on first run: uvx downloads the published SQLite MCP server.* | ✅ ready ⚠️ | chat, tools |
 | 12.3 | [MCP tools inside LangChain, LangGraph and CrewAI](modules/12-mcp-ecosystem/03-mcp-tools-inside-langchain-langgraph-and-crewai/README.md) | ✅ ready | chat, tools |
-| 12.4 | [Capstone: query-to-report pipeline for the helpdesk](modules/12-mcp-ecosystem/04-capstone-query-to-report-pipeline-for-the-helpde/README.md) | ✅ ready | chat, tools |
+| 12.4 | [Capstone: query-to-report pipeline for the helpdesk](modules/12-mcp-ecosystem/04-capstone-query-to-report-pipeline-for-the-helpde/README.md)<br>⚠️ *Needs internet on first run: uvx downloads the published SQLite MCP server.* | ✅ ready ⚠️ | chat, tools |
 
 ## 13 · Deep agents: reflection, planning, long-term memory
 
@@ -231,10 +232,10 @@ Optional packages: `crewai`, `langgraph`, `mcp`
 
 | Lesson | Title | Status | Model needs |
 |---|---|---|---|
-| 14.1 | [Agents, tasks, crews and processes](modules/14-crewai/01-agents-tasks-crews-and-processes/README.md) | ✅ ready | chat |
-| 14.2 | [Sequential and hierarchical processes; delegation](modules/14-crewai/02-sequential-and-hierarchical-processes-delegation/README.md) | ✅ ready | chat, tools |
-| 14.3 | [Tools, MCP and LangGraph alongside a crew](modules/14-crewai/03-tools-mcp-and-langgraph-alongside-a-crew/README.md) | ✅ ready | chat, tools |
-| 14.4 | [Capstone: a helpdesk incident-response crew](modules/14-crewai/04-capstone-a-helpdesk-incident-response-crew/README.md) | ✅ ready | chat, tools |
+| 14.1 | [Agents, tasks, crews and processes](modules/14-crewai/01-agents-tasks-crews-and-processes/README.md)<br>⚠️ *Slow: CrewAI makes several model calls per task (script 3 about 12). Allow a minute per script.* | ✅ ready ⚠️ | chat |
+| 14.2 | [Sequential and hierarchical processes; delegation](modules/14-crewai/02-sequential-and-hierarchical-processes-delegation/README.md)<br>⚠️ *Slow and costly: the hierarchical crew in script 2 made about 15 model calls in testing.* | ✅ ready ⚠️ | chat, tools |
+| 14.3 | [Tools, MCP and LangGraph alongside a crew](modules/14-crewai/03-tools-mcp-and-langgraph-alongside-a-crew/README.md)<br>⚠️ *Slow: crews make several model calls per run.* | ✅ ready ⚠️ | chat, tools |
+| 14.4 | [Capstone: a helpdesk incident-response crew](modules/14-crewai/04-capstone-a-helpdesk-incident-response-crew/README.md)<br>⚠️ *Slow: the incident crew makes about 12 model calls per run.* | ✅ ready ⚠️ | chat, tools |
 
 ## 15 · Agentic RAG and GraphRAG
 
@@ -248,7 +249,7 @@ Optional packages: `rag`, `langgraph`
 | 15.2 | [Agentic, self- and corrective RAG](modules/15-agentic-rag/02-agentic-self-and-corrective-rag/README.md) | ✅ ready | chat, tools, embeddings |
 | 15.3 | [Re-ranking, HyDE and query expansion](modules/15-agentic-rag/03-re-ranking-hyde-and-query-expansion/README.md) | ✅ ready | chat, embeddings |
 | 15.4 | [GraphRAG: knowledge graphs and multi-hop questions](modules/15-agentic-rag/04-graphrag/README.md) | ✅ ready | chat, embeddings |
-| 15.5 | [Capstone: benchmark agentic against plain RAG on helpdesk questions](modules/15-agentic-rag/05-capstone-benchmark-agentic-against-plain-rag-on/README.md) | ✅ ready | chat, embeddings |
+| 15.5 | [Capstone: benchmark agentic against plain RAG on helpdesk questions](modules/15-agentic-rag/05-capstone-benchmark-agentic-against-plain-rag-on/README.md)<br>⚠️ *Slow: the benchmark in script 3 makes about 28 model calls.* | ✅ ready ⚠️ | chat, embeddings |
 
 ## 16 · Containers and deployment
 
@@ -258,11 +259,11 @@ Optional packages: `apps` · Services: `DOCKER`, `REDIS_URL`
 
 | Lesson | Title | Status | Model needs |
 |---|---|---|---|
-| 16.1 | [Docker fundamentals and a production Dockerfile](modules/16-containers-and-deployment/01-docker-fundamentals-and-a-production-dockerfile/README.md) | ✅ ready | - |
-| 16.2 | [Docker Compose: API, vector store, Redis, worker](modules/16-containers-and-deployment/02-docker-compose/README.md) | ✅ ready | chat |
-| 16.3 | [Health checks, configuration and secrets](modules/16-containers-and-deployment/03-health-checks-configuration-and-secrets/README.md) | ✅ ready | - |
-| 16.4 | [CI/CD and rollout strategies](modules/16-containers-and-deployment/04-ci-cd-and-rollout-strategies/README.md) | ✅ ready | - |
-| 16.5 | [Capstone: the helpdesk stack in containers](modules/16-containers-and-deployment/05-capstone-the-helpdesk-stack-in-containers/README.md) | ✅ ready | chat |
+| 16.1 | [Docker fundamentals and a production Dockerfile](modules/16-containers-and-deployment/01-docker-fundamentals-and-a-production-dockerfile/README.md)<br>⚠️ *Script 3 needs Docker. The Dockerfile and compose file were never built or run.* | ✅ ready ⚠️ | - |
+| 16.2 | [Docker Compose: API, vector store, Redis, worker](modules/16-containers-and-deployment/02-docker-compose/README.md)<br>⚠️ *Script 3 needs Redis. The compose stack was never run (no Docker on the author's machine).* | ✅ ready ⚠️ | chat |
+| 16.3 | [Health checks, configuration and secrets](modules/16-containers-and-deployment/03-health-checks-configuration-and-secrets/README.md)<br>⚠️ *The compose file and Docker secrets setup were never run on real Docker; the scripts themselves run offline.* | ✅ ready ⚠️ | - |
+| 16.4 | [CI/CD and rollout strategies](modules/16-containers-and-deployment/04-ci-cd-and-rollout-strategies/README.md)<br>⚠️ *The CI workflow and rollout steps were never run for real; the scripts are offline simulations.* | ✅ ready ⚠️ | - |
+| 16.5 | [Capstone: the helpdesk stack in containers](modules/16-containers-and-deployment/05-capstone-the-helpdesk-stack-in-containers/README.md)<br>⚠️ *The containerised stack was never run on real Docker; the scripts run it in-process instead.* | ✅ ready ⚠️ | chat |
 
 ## 17 · Monitoring, evaluation and fine-tuning
 
@@ -272,8 +273,8 @@ Optional packages: `observability` · Services: `OTEL_EXPORTER_OTLP_ENDPOINT`, `
 
 | Lesson | Title | Status | Model needs |
 |---|---|---|---|
-| 17.1 | [Logs, metrics and traces with OpenTelemetry](modules/17-monitoring-and-fine-tuning/01-logs-metrics-and-traces-with-opentelemetry/README.md) | ✅ ready | chat |
-| 17.2 | [Prometheus metrics and Grafana dashboards](modules/17-monitoring-and-fine-tuning/02-prometheus-metrics-and-grafana-dashboards/README.md) | ✅ ready | chat |
+| 17.1 | [Logs, metrics and traces with OpenTelemetry](modules/17-monitoring-and-fine-tuning/01-logs-metrics-and-traces-with-opentelemetry/README.md)<br>⚠️ *Script 3 needs Jaeger. The Jaeger/Prometheus/Grafana compose stack was never run.* | ✅ ready ⚠️ | chat |
+| 17.2 | [Prometheus metrics and Grafana dashboards](modules/17-monitoring-and-fine-tuning/02-prometheus-metrics-and-grafana-dashboards/README.md)<br>⚠️ *Script 3 needs Prometheus. The compose stack and Grafana dashboard were never run.* | ✅ ready ⚠️ | chat |
 | 17.3 | [Cost tracking, budgets and service-level objectives](modules/17-monitoring-and-fine-tuning/03-cost-tracking-budgets-and-service-level-objectiv/README.md) | ✅ ready | chat |
 | 17.4 | [Fine-tuning: when it is warranted; LoRA and QLoRA](modules/17-monitoring-and-fine-tuning/04-fine-tuning/README.md) | ✅ ready | - |
 | 17.5 | [Capstone: a monitored helpdesk assistant](modules/17-monitoring-and-fine-tuning/05-capstone-a-monitored-helpdesk-assistant/README.md) | ✅ ready | chat |
@@ -286,9 +287,9 @@ Optional packages: `guardrails`
 
 | Lesson | Title | Status | Model needs |
 |---|---|---|---|
-| 18.1 | [The risk landscape and prompt injection](modules/18-guardrails/01-the-risk-landscape-and-prompt-injection/README.md) | ✅ ready | chat |
+| 18.1 | [The risk landscape and prompt injection](modules/18-guardrails/01-the-risk-landscape-and-prompt-injection/README.md)<br>⚠️ *Script 3 downloads a ~380 MB model, but only if you set LABKIT_ALLOW_DOWNLOADS=1.* | ✅ ready ⚠️ | chat |
 | 18.2 | [Input and output rails](modules/18-guardrails/02-input-and-output-rails/README.md) | ✅ ready | chat |
-| 18.3 | [Validators and detecting personal data](modules/18-guardrails/03-validators-and-detecting-personal-data/README.md) | ✅ ready | chat |
+| 18.3 | [Validators and detecting personal data](modules/18-guardrails/03-validators-and-detecting-personal-data/README.md)<br>⚠️ *Script 3 downloads a ~380 MB model, but only if you set LABKIT_ALLOW_DOWNLOADS=1.* | ✅ ready ⚠️ | chat |
 | 18.4 | [Red-teaming a safety stack](modules/18-guardrails/04-red-teaming-a-safety-stack/README.md) | ✅ ready | chat |
 | 18.5 | [Capstone: a guarded helpdesk assistant](modules/18-guardrails/05-capstone-a-guarded-helpdesk-assistant/README.md) | ✅ ready | chat |
 
@@ -300,10 +301,10 @@ Services: `N8N_URL`
 
 | Lesson | Title | Status | Model needs |
 |---|---|---|---|
-| 19.1 | [n8n concepts: workflows, nodes, triggers, credentials](modules/19-workflow-automation-n8n/01-n8n-concepts/README.md) | ✅ ready | - |
-| 19.2 | [Webhooks, HTTP requests and model nodes](modules/19-workflow-automation-n8n/02-webhooks-http-requests-and-model-nodes/README.md) | ✅ ready | chat |
-| 19.3 | [Error handling, schedules and expressions](modules/19-workflow-automation-n8n/03-error-handling-schedules-and-expressions/README.md) | ✅ ready | - |
-| 19.4 | [Capstone: a helpdesk ticket workflow calling an agent](modules/19-workflow-automation-n8n/04-capstone-a-helpdesk-ticket-workflow-calling-an-a/README.md) | ✅ ready | chat |
+| 19.1 | [n8n concepts: workflows, nodes, triggers, credentials](modules/19-workflow-automation-n8n/01-n8n-concepts/README.md)<br>⚠️ *Script 3 needs n8n. The workflow JSON was never imported into a live n8n.* | ✅ ready ⚠️ | - |
+| 19.2 | [Webhooks, HTTP requests and model nodes](modules/19-workflow-automation-n8n/02-webhooks-http-requests-and-model-nodes/README.md)<br>⚠️ *Script 3 needs n8n. The workflow JSON was never imported into a live n8n.* | ✅ ready ⚠️ | chat |
+| 19.3 | [Error handling, schedules and expressions](modules/19-workflow-automation-n8n/03-error-handling-schedules-and-expressions/README.md)<br>⚠️ *The workflow JSON files were never imported into a live n8n; the scripts run offline.* | ✅ ready ⚠️ | - |
+| 19.4 | [Capstone: a helpdesk ticket workflow calling an agent](modules/19-workflow-automation-n8n/04-capstone-a-helpdesk-ticket-workflow-calling-an-a/README.md)<br>⚠️ *Script 3 needs n8n. The workflow JSON was never imported into a live n8n.* | ✅ ready ⚠️ | chat |
 
 ## 20 · Capstone
 

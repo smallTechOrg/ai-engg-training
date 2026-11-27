@@ -14,7 +14,7 @@ Retrieval that decides, checks and corrects itself.
 | 15.2 | [Agentic, self- and corrective RAG](02-agentic-self-and-corrective-rag/README.md) | ✅ ready |
 | 15.3 | [Re-ranking, HyDE and query expansion](03-re-ranking-hyde-and-query-expansion/README.md) | ✅ ready |
 | 15.4 | [GraphRAG: knowledge graphs and multi-hop questions](04-graphrag/README.md) | ✅ ready |
-| 15.5 | [Capstone: benchmark agentic against plain RAG on helpdesk questions](05-capstone-benchmark-agentic-against-plain-rag-on/README.md) | ✅ ready |
+| 15.5 | [Capstone: benchmark agentic against plain RAG on helpdesk questions](05-capstone-benchmark-agentic-against-plain-rag-on/README.md)<br>⚠️ *Slow: the benchmark in script 3 makes about 28 model calls.* | ✅ ready ⚠️ |
 
 <!-- lessons:end -->
 

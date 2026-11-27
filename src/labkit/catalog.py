@@ -49,6 +49,7 @@ class LessonInfo:
     status: str
     needs: list[str]
     module: "ModuleInfo" = field(repr=False)
+    caution: str = ""  # shown before running: services never run here, slow lessons, downloads
 
     @property
     def path(self) -> Path:
@@ -98,7 +99,7 @@ def load_catalog(path: Path | None = None) -> list[ModuleInfo]:
             if item["status"] not in STATUSES:
                 raise ValueError(f"Lesson {item['id']}: unknown status '{item['status']}'")
             module.lessons.append(
-                LessonInfo(item["id"], item["slug"], item["title"], item["status"], list(item.get("needs", [])), module)
+                LessonInfo(item["id"], item["slug"], item["title"], item["status"], list(item.get("needs", [])), module, item.get("caution", ""))
             )
         modules.append(module)
     return modules
@@ -156,6 +157,7 @@ def render_map(modules: list[ModuleInfo], scenario_name: str = "") -> str:
         "| ✅ ready | Written, tested, runnable |",
         "| 🚧 draft | Runnable but still being refined |",
         "| ⬜ planned | Outlined; not written yet |",
+        "| ⚠️ caution | Read the note before running it live (services never run here, slow, or downloads) |",
         "",
         "## Modules",
         "",
@@ -177,7 +179,10 @@ def render_map(modules: list[ModuleInfo], scenario_name: str = "") -> str:
         for item in module.lessons:
             title = f"[{item.title}](modules/{module.slug}/{item.slug}/README.md)" if item.runnable else item.title
             needs = ", ".join(item.needs) or "-"
-            lines.append(f"| {item.id} | {title} | {BADGE[item.status]} | {needs} |")
+            status = BADGE[item.status] + (" ⚠️" if item.caution else "")
+            if item.caution:
+                title += f"<br>⚠️ *{item.caution}*"
+            lines.append(f"| {item.id} | {title} | {status} | {needs} |")
     return "\n".join(lines) + "\n"
 
 
@@ -188,7 +193,10 @@ def render_lesson_table(module: ModuleInfo) -> str:
     lines = [START, "", "| Lesson | Title | Status |", "|---|---|---|"]
     for item in module.lessons:
         title = f"[{item.title}]({item.slug}/README.md)" if item.runnable else item.title
-        lines.append(f"| {item.id} | {title} | {BADGE[item.status]} |")
+        status = BADGE[item.status] + (" ⚠️" if item.caution else "")
+        if item.caution:
+            title += f"<br>⚠️ *{item.caution}*"
+        lines.append(f"| {item.id} | {title} | {status} |")
     lines += ["", END]
     return "\n".join(lines)
 
