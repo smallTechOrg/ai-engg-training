@@ -98,3 +98,33 @@ if __name__ == "__main__":
     result = run([str(script)])
     assert result.returncode == 0, result.stdout + result.stderr
     assert "3 model call(s)" in result.stdout  # 1 embeddings call + 2 chat calls: the tool loop ended
+
+
+def test_service_probe_and_require(monkeypatch):
+    import socket
+    import threading
+
+    from labkit.errors import ServiceUnavailable, explain
+    from labkit.services import SERVICES, probe, require
+
+    monkeypatch.delenv("REDIS_URL", raising=False)
+    assert probe(SERVICES["REDIS_URL"])[0] == "unset"
+    try:
+        require("REDIS_URL")
+    except ServiceUnavailable as exc:
+        explained = explain(exc)
+        assert explained.exit_code == 3 and "redis" in " ".join(explained.fixes).lower()
+    else:
+        raise AssertionError("an unset service must stop the lesson")
+
+    listener = socket.socket()
+    listener.bind(("127.0.0.1", 0))
+    listener.listen(1)
+    port = listener.getsockname()[1]
+    threading.Thread(target=lambda: listener.accept(), daemon=True).start()
+    monkeypatch.setenv("REDIS_URL", f"redis://127.0.0.1:{port}/0")
+    assert probe(SERVICES["REDIS_URL"])[0] == "ok"
+    assert require("REDIS_URL").endswith("/0")
+    listener.close()
+    monkeypatch.setenv("REDIS_URL", f"redis://127.0.0.1:{port}/0")
+    assert probe(SERVICES["REDIS_URL"])[0] == "down"

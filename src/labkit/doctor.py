@@ -66,6 +66,28 @@ def check_extras() -> list[Check]:
     return checks
 
 
+def check_services() -> list[Check]:
+    """Infrastructure services: each is optional and only matters to the lessons that name it."""
+    from labkit.services import SERVICES, probe
+
+    used_by: dict[str, list[str]] = {}
+    for module in load_catalog():
+        for env in module.services:
+            used_by.setdefault(env, []).append(module.id)
+    checks = []
+    for env, service in SERVICES.items():
+        state, detail = probe(service)
+        modules = ("module " + ", ".join(used_by[env])) if env in used_by else "no module yet"
+        label = f"Service: {service.name}"
+        if state == "ok":
+            checks.append(Check(PASS, label, f"{detail} (used by {modules})"))
+        elif state == "unset":
+            checks.append(Check(SKIP, label, f"not set up (used by {modules})", [f"To use it: {service.start}"] if env in used_by else []))
+        else:
+            checks.append(Check(WARN, label, f"{detail} (used by {modules})", [f"Start it: {service.start}"]))
+    return checks
+
+
 def check_settings(settings: Settings) -> Check:
     missing = settings.missing()
     source = ".env file" if settings.env_file_exists else "environment variables (no .env file)"
@@ -203,6 +225,9 @@ def run_checks(offline: bool = False, on_check=None) -> tuple[list[Check], dict]
         add(check)
     settings = load_settings()
     configured = add(check_settings(settings))
+    if not offline:
+        for check in check_services():
+            add(check)
 
     if offline:
         add(Check(SKIP, "Endpoint and capability checks", "skipped (--offline)"))

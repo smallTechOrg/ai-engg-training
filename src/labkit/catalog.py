@@ -19,6 +19,8 @@ EXTRAS = {
     "langgraph": ("langgraph", "langchain_openai"),
     "mcp": ("mcp",),
     "crewai": ("crewai",),
+    "observability": ("opentelemetry", "prometheus_client"),
+    "guardrails": ("presidio_analyzer", "presidio_anonymizer"),
 }
 # Which extra provides an importable top-level module (for friendly "install this" errors).
 MODULE_TO_EXTRA: dict[str, str] = {}
