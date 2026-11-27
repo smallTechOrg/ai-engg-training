@@ -35,9 +35,10 @@ Type `./run` on macOS/Linux and `run` on Windows.
 
 | Command | What it does |
 |---|---|
-| `run` | Menu: pick a module, then a lesson |
+| `run` | Menu: type a module id (`1` or `01`), then a lesson (`3` or `01.3`) |
+| `run next` | Run the lesson after the last one you ran |
 | `run list` | Every lesson, its status, and whether your model can run it |
-| `run 01.1` | Run all scripts of lesson 01.1, in order |
+| `run 01.1` | Run all scripts of lesson 01.1, then offer the next lesson (press Enter) |
 | `run 01.1/2` | Run only its second script |
 | `run 01.1 --raw` | Also show the HTTP requests and responses |
 | `run doctor` | Check your machine, settings, endpoint and model capabilities |

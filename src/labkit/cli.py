@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import json
 import subprocess
 import sys
 
@@ -11,7 +12,7 @@ from rich.table import Table
 
 from labkit import doctor
 from labkit.catalog import LessonInfo, ModuleInfo, find_lesson, find_module, load_catalog, looks_like_target, render_map, scenario, sync_module_readme
-from labkit.config import repo_root, use_utf8_output
+from labkit.config import repo_root, state_dir, use_utf8_output
 from labkit.errors import EXIT_FAILED, EXIT_SKIPPED
 
 console = Console(highlight=False, soft_wrap=True)
@@ -24,9 +25,11 @@ HELP = """[bold]AI engineering training: launcher[/bold]
   run 01.1            run all scripts of lesson 01.1, in order
   run 01.1/2          run only the second script of lesson 01.1
   run 01.1 --raw      also show the HTTP requests and responses
+  run next            run the lesson after the last one you ran
   run doctor          check your setup    (--report writes a file to send, --offline skips the endpoint)
   run map             regenerate CURRICULUM.md from curriculum.toml
 
+After a lesson finishes, press Enter to go straight to the next one.
 On macOS/Linux type ./run, on Windows type run."""
 
 
@@ -64,6 +67,68 @@ def cmd_list(modules: list[ModuleInfo]) -> int:
     return 0
 
 
+PROGRESS = "progress.json"
+
+
+def interactive() -> bool:
+    return sys.stdin.isatty() and sys.stdout.isatty()
+
+
+def save_progress(item: LessonInfo) -> None:
+    try:
+        path = state_dir(".labkit") / PROGRESS
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text(json.dumps({"last_lesson": item.id}), encoding="utf-8")
+    except OSError:
+        pass
+
+
+def last_lesson_id() -> str | None:
+    try:
+        return json.loads((state_dir(".labkit") / PROGRESS).read_text(encoding="utf-8")).get("last_lesson")
+    except (OSError, ValueError):
+        return None
+
+
+def next_lesson(modules: list[ModuleInfo], current: LessonInfo | None) -> LessonInfo | None:
+    """The next runnable lesson after `current` in course order (the first one if None)."""
+    ordered = [item for module in modules for item in module.lessons]
+    start = 0
+    if current is not None:
+        ids = [item.id for item in ordered]
+        start = ids.index(current.id) + 1 if current.id in ids else 0
+    return next((item for item in ordered[start:] if item.runnable), None)
+
+
+def offer_next(modules: list[ModuleInfo], item: LessonInfo) -> LessonInfo | None:
+    """Ask whether to continue to the next ready lesson. Returns it, or None to stop."""
+    upcoming = next_lesson(modules, item)
+    if upcoming is None:
+        console.print("\n[green]That was the last ready lesson.[/green] See what is coming in CURRICULUM.md.")
+        return None
+    if not interactive():
+        console.print(f"\n[dim]Next: ./run {upcoming.id}  ({escape(upcoming.title)})[/dim]")
+        return None
+    crossing = "" if upcoming.module.id == item.module.id else f" [dim](module {upcoming.module.id}: {escape(upcoming.module.title)})[/dim]"
+    console.print(f"\n[bold]Next lesson:[/bold] {upcoming.id}  {escape(upcoming.title)}{crossing}")
+    try:
+        answer = input("Press Enter to start it, or q to stop: ").strip().lower()
+    except (EOFError, KeyboardInterrupt):
+        print()
+        return None
+    return None if answer == "q" else upcoming
+
+
+def run_course(modules: list[ModuleInfo], item: LessonInfo, extra: list[str]) -> int:
+    """Run a whole lesson, then keep offering the next one until the learner stops."""
+    while item is not None:
+        code = run_lesson(item, None, extra)
+        if code:
+            return code
+        item = offer_next(modules, item)
+    return 0
+
+
 def run_lesson(item: LessonInfo, script_number: int | None, extra: list[str]) -> int:
     if not item.runnable:
         console.print(f"[yellow]Lesson {item.id} ({escape(item.title)}) is planned but not written yet.[/yellow]")
@@ -78,9 +143,9 @@ def run_lesson(item: LessonInfo, script_number: int | None, extra: list[str]) ->
             console.print(f"[red]Lesson {item.id} has {len(scripts)} script(s); there is no script {script_number}.[/red]")
             return EXIT_FAILED
         scripts = [scripts[script_number - 1]]
-    interactive = sys.stdin.isatty() and sys.stdout.isatty()
+    whole = script_number is None
     for index, script in enumerate(scripts):
-        if index and interactive:
+        if index and interactive():
             try:
                 answer = input(f"\nPress Enter for the next script ({script.name}), or q to stop: ").strip().lower()
             except EOFError:
@@ -91,12 +156,16 @@ def run_lesson(item: LessonInfo, script_number: int | None, extra: list[str]) ->
         code = subprocess.run([sys.executable, str(script), *extra], cwd=repo_root()).returncode
         if code:
             return code
+    if whole:
+        save_progress(item)
     return 0
 
 
 def cmd_run(modules: list[ModuleInfo], target: str, extra: list[str]) -> int:
     item, script_number = find_lesson(modules, target)
     if item is not None:
+        if script_number is None and item.runnable:
+            return run_course(modules, item, extra)
         return run_lesson(item, script_number, extra)
     module = find_module(modules, target) if target.isdigit() else None
     if module is not None:
@@ -108,6 +177,20 @@ def cmd_run(modules: list[ModuleInfo], target: str, extra: list[str]) -> int:
         return 0
     console.print(f"[red]There is no lesson '{escape(target)}'.[/red] See what exists with: ./run list")
     return EXIT_FAILED
+
+
+def cmd_next(modules: list[ModuleInfo], extra: list[str]) -> int:
+    last = last_lesson_id()
+    current, _ = find_lesson(modules, last) if last else (None, None)
+    upcoming = next_lesson(modules, current)
+    if upcoming is None:
+        console.print("[green]You have run every ready lesson.[/green] See what is coming in CURRICULUM.md.")
+        return 0
+    if last:
+        console.print(f"[dim]Last lesson you ran: {last}. Continuing with {upcoming.id}.[/dim]")
+    else:
+        console.print(f"[dim]No lessons run yet. Starting with {upcoming.id}.[/dim]")
+    return run_course(modules, upcoming, extra)
 
 
 def cmd_map(modules: list[ModuleInfo]) -> int:
@@ -125,43 +208,56 @@ def cmd_map(modules: list[ModuleInfo]) -> int:
     return 0
 
 
-def _choose(prompt: str, count: int) -> int | None:
-    """Ask for a number between 1 and count. None means back/quit."""
-    while True:
-        try:
-            answer = input(prompt).strip().lower()
-        except (EOFError, KeyboardInterrupt):
-            print()
-            return None
-        if answer in ("", "q", "b"):
-            return None
-        if answer.isdigit() and 1 <= int(answer) <= count:
-            return int(answer)
-        console.print(f"[yellow]Type a number from 1 to {count}, or q.[/yellow]")
+def _ask(prompt: str) -> str | None:
+    try:
+        return input(prompt).strip().lower()
+    except (EOFError, KeyboardInterrupt):
+        print()
+        return None
 
 
 def cmd_menu(modules: list[ModuleInfo]) -> int:
-    if not sys.stdin.isatty():
+    """Pick by the real ids: module 4 (or 04), then lesson 3 (or 04.3)."""
+    if not interactive():
         return cmd_list(modules)
     while True:
         console.print("\n[bold]Modules[/bold]")
-        for index, module in enumerate(modules, 1):
+        for module in modules:
             ready = module.count("ready")
             style = "green" if ready else "dim"
-            console.print(f"  {index:>2}. {module.id}  {escape(module.title)}  [{style}]{ready}/{len(module.lessons)} ready[/{style}]")
-        picked = _choose("\nModule number (q to quit): ", len(modules))
-        if picked is None:
+            console.print(f"  {module.id}  {escape(module.title)}  [{style}]{ready}/{len(module.lessons)} ready[/{style}]")
+        last = last_lesson_id()
+        hint = f", n for the lesson after {last}" if last else ""
+        answer = _ask(f"\nModule number (e.g. 1 or 01){hint}, q to quit: ")
+        if answer in (None, "", "q"):
             return 0
-        module = modules[picked - 1]
+        if answer == "n":
+            cmd_next(modules, [])
+            continue
+        if looks_like_target(answer) and "." in answer:
+            cmd_run(modules, answer, [])
+            continue
+        module = find_module(modules, answer) if answer.isdigit() else None
+        if module is None:
+            console.print(f"[yellow]There is no module '{escape(answer)}'. Type a number from 0 to {int(modules[-1].id)}.[/yellow]")
+            continue
         while True:
             console.print(f"\n[bold]{module.id}  {escape(module.title)}[/bold]\n[dim]{escape(module.summary)}[/dim]")
-            for index, item in enumerate(module.lessons, 1):
+            for item in module.lessons:
                 style = STATUS_STYLE[item.status]
-                console.print(f"  {index:>2}. {item.id}  {escape(item.title)}  [{style}]{item.status}[/{style}]")
-            picked = _choose("\nLesson number (Enter to go back): ", len(module.lessons))
-            if picked is None:
+                console.print(f"  {item.id}  {escape(item.title)}  [{style}]{item.status}[/{style}]")
+            answer = _ask(f"\nLesson number (e.g. 1 or {module.id}.1), Enter to go back: ")
+            if answer in (None, "", "b", "q"):
                 break
-            run_lesson(module.lessons[picked - 1], None, [])
+            target = answer if "." in answer else f"{module.id}.{answer}"
+            item, script = find_lesson(modules, target) if looks_like_target(target) else (None, None)
+            if item is None:
+                console.print(f"[yellow]There is no lesson '{escape(answer)}' in module {module.id}.[/yellow]")
+                continue
+            if script is None and item.runnable:
+                run_course(modules, item, [])
+            else:
+                run_lesson(item, script, [])
 
 
 def main(argv: list[str] | None = None) -> None:
@@ -180,6 +276,8 @@ def main(argv: list[str] | None = None) -> None:
         code = cmd_list(modules)
     elif command == "map":
         code = cmd_map(modules)
+    elif command == "next":
+        code = cmd_next(modules, args[1:])
     elif command == "run" and len(args) > 1:
         code = cmd_run(modules, args[1], args[2:])
     elif looks_like_target(command):

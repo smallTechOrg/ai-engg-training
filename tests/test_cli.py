@@ -73,3 +73,22 @@ def test_doctor_explains_a_bad_key_and_missing_settings(run):
 def test_doctor_offline_skips_the_endpoint(run):
     result = run([*LABKIT, "doctor", "--offline"], base_url="http://127.0.0.1:9/v1")
     assert result.returncode == 0 and "skipped (--offline)" in result.stdout
+
+
+def test_next_follows_course_order_across_modules(run, tmp_path):
+    first = run([*LABKIT, "next"])
+    assert first.returncode == 0, first.stdout + first.stderr
+    assert "Starting with 00.1" in first.stdout
+    assert "Next: ./run 00.2" in first.stdout  # no terminal: it names the next lesson instead of asking
+    (tmp_path / ".labkit" / "progress.json").write_text('{"last_lesson": "00.5"}', encoding="utf-8")
+    crossing = run([*LABKIT, "next"])
+    assert "Continuing with 01.1" in crossing.stdout
+    assert "Next: ./run 01.2" in crossing.stdout
+
+
+def test_whole_lesson_records_progress_but_one_script_does_not(run, tmp_path):
+    progress = tmp_path / ".labkit" / "progress.json"
+    run([*LABKIT, "01.1/1"])
+    assert not progress.exists()
+    run([*LABKIT, "01.1"])
+    assert '"01.1"' in progress.read_text(encoding="utf-8")
