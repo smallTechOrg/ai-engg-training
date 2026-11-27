@@ -28,6 +28,8 @@ HELP = """[bold]AI engineering training: launcher[/bold]
   run next            run the lesson after the last one you ran
   run doctor          check your setup    (--report writes a file to send, --offline skips the endpoint)
   run map             regenerate CURRICULUM.md from curriculum.toml
+  run check           run every ready lesson against YOUR endpoint and report pass/fail/skip
+                      (before a cohort: --module 04, --lesson 04.1, --report writes check-report.txt)
 
 After a lesson finishes, press Enter to go straight to the next one.
 On macOS/Linux type ./run, on Windows type run."""
@@ -202,6 +204,78 @@ def cmd_next(modules: list[ModuleInfo], extra: list[str]) -> int:
     return run_course(modules, upcoming, extra)
 
 
+CHECK_REPORT = "check-report.txt"
+CHECK_TIMEOUT = 300
+
+
+def _tidy(line: str) -> str:
+    """Strip panel borders from a captured message line."""
+    import re
+
+    return re.sub(r"[\u2500-\u257f|\s]+$", "", re.sub(r"^[^A-Za-z]+", "", line)).strip()
+
+
+def _option(args: list[str], name: str) -> str | None:
+    for index, arg in enumerate(args):
+        if arg == name and index + 1 < len(args):
+            return args[index + 1]
+        if arg.startswith(name + "="):
+            return arg.split("=", 1)[1]
+    return None
+
+
+def cmd_check(modules: list[ModuleInfo], args: list[str]) -> int:
+    """Run every ready script for real and summarise. Exit 0 only if nothing failed."""
+    import time
+
+    from labkit.catalog import extra_installed
+
+    only_module, only_lesson = _option(args, "--module"), _option(args, "--lesson")
+    rows: list[tuple[str, str, str, float, str]] = []  # (status, script id, lesson, seconds, note)
+    console.print("[bold]Live check[/bold]: running every ready lesson script against your endpoint.")
+    console.print("[dim]This makes real model calls. Scripts that need a missing package or service are skipped, not failed.[/dim]\n")
+    for module in modules:
+        if only_module and module.id != only_module.zfill(2):
+            continue
+        for item in module.lessons:
+            if not item.runnable or (only_lesson and item.id != only_lesson):
+                continue
+            missing = [extra for extra in module.extras if extra != "all" and not extra_installed(extra)]
+            for number, script in enumerate(item.scripts(), 1):
+                script_id = f"{item.id}/{number}"
+                if missing:
+                    rows.append(("SKIP", script_id, item.title, 0.0, "packages not installed: " + ", ".join(missing)))
+                    console.print(f"[dim]SKIP[/dim]  {script_id:8} {escape(item.title)}  [dim](install: {', '.join(missing)})[/dim]")
+                    continue
+                started = time.perf_counter()
+                try:
+                    done = subprocess.run([sys.executable, str(script)], cwd=repo_root(), capture_output=True, text=True, encoding="utf-8", errors="replace", stdin=subprocess.DEVNULL, timeout=CHECK_TIMEOUT)
+                    code, text = done.returncode, done.stdout + done.stderr
+                except subprocess.TimeoutExpired:
+                    code, text = 124, "timed out"
+                seconds = time.perf_counter() - started
+                if code == 0:
+                    rows.append(("PASS", script_id, item.title, seconds, ""))
+                    console.print(f"[green]PASS[/green]  {script_id:8} {escape(item.title)}  [dim]{seconds:.1f}s[/dim]")
+                elif code == EXIT_SKIPPED:
+                    note = next((_tidy(line) for line in text.splitlines() if "needs" in line.lower()), "needs something not set up")
+                    rows.append(("SKIP", script_id, item.title, seconds, note[:100]))
+                    console.print(f"[dim]SKIP[/dim]  {script_id:8} {escape(item.title)}  [dim]{escape(note[:90])}[/dim]")
+                else:
+                    reason = next((_tidy(line) for line in text.splitlines() if "stopped" in line or "rejected" in line or "Could not" in line or "model lacks" in line or "not found" in line), "exit code " + str(code))
+                    rows.append(("FAIL", script_id, item.title, seconds, reason[:100]))
+                    console.print(f"[red]FAIL[/red]  {script_id:8} {escape(item.title)}  [red]{escape(reason[:90])}[/red]  [dim](re-run: ./run {script_id})[/dim]")
+    counts = {name: sum(1 for row in rows if row[0] == name) for name in ("PASS", "FAIL", "SKIP")}
+    console.print(f"\n[bold]{counts['PASS']} passed, {counts['FAIL']} failed, {counts['SKIP']} skipped[/bold] of {len(rows)} scripts.")
+    if counts["FAIL"]:
+        console.print("[red]Fix the FAIL lines before the cohort. Start with ./run doctor if several fail at once.[/red]")
+    if "--report" in args:
+        lines = [f"{status:4} {sid:8} {title}  {note}".rstrip() for status, sid, title, _, note in rows]
+        (repo_root() / CHECK_REPORT).write_text("\n".join(lines) + "\n", encoding="utf-8")
+        console.print(f"[dim]Wrote {CHECK_REPORT} (no secrets).[/dim]")
+    return 1 if counts["FAIL"] or not rows else 0
+
+
 def cmd_map(modules: list[ModuleInfo]) -> int:
     path = repo_root() / "CURRICULUM.md"
     path.write_text(render_map(modules, scenario()), encoding="utf-8", newline="\n")
@@ -285,6 +359,8 @@ def main(argv: list[str] | None = None) -> None:
         code = cmd_list(modules)
     elif command == "map":
         code = cmd_map(modules)
+    elif command == "check":
+        code = cmd_check(modules, args[1:])
     elif command == "next":
         code = cmd_next(modules, args[1:])
     elif command == "run" and len(args) > 1:

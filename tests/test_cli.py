@@ -101,3 +101,13 @@ def test_a_script_that_needs_a_missing_service_is_skipped_not_fatal(run, tmp_pat
     assert whole.returncode == 0, whole.stdout + whole.stderr
     assert "Skipped (needs something not set up): 03_call_the_webhook.py" in whole.stdout
     assert '"19.1"' in (tmp_path / ".labkit" / "progress.json").read_text(encoding="utf-8")
+
+
+def test_live_check_reports_pass_fail_and_skip(run):
+    one = run([*LABKIT, "check", "--lesson", "01.1"])
+    assert one.returncode == 0, one.stdout + one.stderr
+    assert "PASS  01.1/1" in one.stdout and "2 passed, 0 failed, 0 skipped" in one.stdout
+    broken = run([*LABKIT, "check", "--lesson", "01.1"], key="bad-key")
+    assert broken.returncode == 1 and "FAIL  01.1/1" in broken.stdout and "rejected the API key" in broken.stdout
+    infra = run([*LABKIT, "check", "--lesson", "19.1"])
+    assert "SKIP  19.1/3" in infra.stdout and infra.returncode == 0

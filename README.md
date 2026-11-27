@@ -43,6 +43,7 @@ Type `./run` on macOS/Linux and `run` on Windows.
 | `run 01.1 --raw` | Also show the HTTP requests and responses |
 | `run doctor` | Check your machine, settings, endpoint and model capabilities |
 | `run doctor --report` | Same, and write `doctor-report.txt` to send to your instructor |
+| `run check` | Instructors: run every ready lesson against your endpoint and report pass / fail / skip (`--module 04`, `--lesson 04.1`, `--report`) |
 
 Every script is also an ordinary Python file. With the environment active
 (`source .venv/bin/activate`, or `.venv\Scripts\activate` on Windows) you can run

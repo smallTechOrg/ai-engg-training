@@ -37,7 +37,7 @@ Each phase is user-testable. Gate commands run from the repo root.
 - **Gate:** `uv run pytest -q && uv run labkit doctor` (services SKIP or PASS, never crash)
 - **User test:** with a service down the lesson explains what to start; with it up, it runs.
 
-## Phase 5 — Live check and upkeep
+## Phase 5 — Live check and upkeep (live check done: `run check`)
 
 - **Goal:** `run check` runs every ready lesson against the real endpoint and reports
   pass/fail per lesson; dependency-upgrade procedure documented.

@@ -16,6 +16,7 @@ build/
 logs/
 .labkit/
 doctor-report.txt
+check-report.txt
 
 # local planning material, never versioned
 *.xlsx
