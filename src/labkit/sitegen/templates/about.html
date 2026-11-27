@@ -1,0 +1,5 @@
+{% extends "base.html" %}
+{% block main %}
+<nav class="crumbs" aria-label="Breadcrumb"><ol><li><a href="{{ href('index.html') }}">Course</a></li><li aria-current="page">About</li></ol></nav>
+<article class="prose about">{{ body }}</article>
+{% endblock %}

@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% import "_macros.html" as m %}
+{% block description %}{{ module.summary }}{% endblock %}
+{% block main %}
+<nav class="crumbs" aria-label="Breadcrumb"><ol>{% for label, url in crumbs %}<li><a href="{{ href(url) }}">{{ label }}</a></li>{% endfor %}<li aria-current="page">Module {{ module.id }}</li></ol></nav>
+<header class="pagehead">
+  <p class="eyebrow">Module {{ module.id }}</p>
+  <h1>{{ module.title }}</h1>
+  <p class="lead">{{ module.summary }}</p>
+  <div class="chips">
+    {% for e in extras %}<span class="chip chip-pkg" title="Optional package group">{{ e }}</span>{% endfor %}
+    {% if all_extras %}<span class="chip chip-pkg">all packages</span>{% endif %}
+    {% for s in module.services %}<span class="chip chip-svc" title="Optional service setting">{{ s }}</span>{% endfor %}
+    <span class="chip">{{ module.count('ready') }} of {{ module.lessons|length }} ready</span>
+  </div>
+</header>
+<section>
+  <h2>Lessons</h2>
+  <ol class="lessonlist">
+  {% for r in rows %}
+    <li>
+    {% if r.url %}<a class="lessonrow" href="{{ href(r.url) }}">{% else %}<div class="lessonrow is-planned">{% endif %}
+      <span class="lessonrow-id">{{ r.lesson.id }}</span>
+      <span class="lessonrow-title">{{ r.lesson.title }}</span>
+      <span class="lessonrow-meta">{{ m.need_chips(r.lesson.needs) if r.lesson.status != 'planned' }}{{ m.badge(r.lesson.status) }}{% if r.lesson.caution %} <span class="badge badge-caution" title="{{ r.lesson.caution }}">caution</span>{% endif %}</span>
+    {% if r.url %}</a>{% else %}</div>{% endif %}
+    </li>
+  {% endfor %}
+  </ol>
+</section>
+{% if body %}<section class="prose module-prose">{{ body }}</section>{% endif %}
+<nav class="pager" aria-label="Modules">
+  {% if prev_module %}<a class="pager-prev" href="{{ href(module_url[prev_module.id]) }}"><span>Previous module</span><strong>{{ prev_module.id }} · {{ prev_module.title }}</strong></a>{% else %}<span></span>{% endif %}
+  {% if next_module %}<a class="pager-next" href="{{ href(module_url[next_module.id]) }}"><span>Next module</span><strong>{{ next_module.id }} · {{ next_module.title }}</strong></a>{% endif %}
+</nav>
+{% endblock %}

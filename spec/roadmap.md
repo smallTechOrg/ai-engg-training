@@ -64,3 +64,14 @@ Known limits, by design:
   CrewAI 1.6). Run `./run check` before each cohort and after any dependency upgrade.
 - Model-dependent results (judges, critics, attack resistance) vary by model; READMEs report
   what the author's model did and invite learners to try a smaller one.
+
+## Phase 7 — Course site (read-only follow-along)
+
+- **Goal:** a generated website that explains every lesson in depth; always in sync with the repo.
+  See `spec/capabilities/site.md`.
+- **Slices:** (a) generator core: parse curriculum, READMEs, scripts (AST walkthrough), render pages;
+  (b) templates, CSS, JS: layout, walkthrough cards, tabs, search, themes; (c) launcher commands
+  `site build|serve`; (d) sync tests + CI + opt-in Pages workflow.
+- **Gate:** `uv run labkit site build --strict && uv run pytest tests/test_site.py`
+- **User test:** `./run site serve`, open the URL, read lesson 04.1, step through a script, search,
+  switch to dark mode, resize to phone width.

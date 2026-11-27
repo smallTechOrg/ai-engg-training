@@ -21,6 +21,7 @@ mcp = ["mcp>=1.2"]
 crewai = ["crewai>=0.80"]
 observability = ["opentelemetry-sdk>=1.27", "opentelemetry-exporter-otlp-proto-http>=1.27", "prometheus-client>=0.20"]
 guardrails = ["presidio-analyzer>=2.2", "presidio-anonymizer>=2.2"]
+docs = ["markdown-it-py>=3.0", "mdit-py-plugins>=0.4", "jinja2>=3.1", "pygments>=2.17"]
 
 [project.scripts]
 labkit = "labkit.cli:main"

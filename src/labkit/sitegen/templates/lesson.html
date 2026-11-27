@@ -1,0 +1,136 @@
+{% extends "base.html" %}
+{% import "_macros.html" as m %}
+{% block description %}{{ lesson.title }}: lesson {{ lesson.id }} of the {{ module.title }} module.{% endblock %}
+{% block shellclass %} has-toc{% endblock %}
+{% block main %}
+<nav class="crumbs" aria-label="Breadcrumb"><ol>{% for label, url in crumbs %}<li><a href="{{ href(url) }}">{{ label }}</a></li>{% endfor %}<li aria-current="page">{{ lesson.id }}</li></ol></nav>
+<header class="pagehead lessonhead">
+  <p class="eyebrow"><span class="lesson-id">Lesson {{ lesson.id }}</span> {{ m.badge(lesson.status) }}{% if lesson.caution %} <span class="badge badge-caution">caution</span>{% endif %}</p>
+  <h1>{{ lesson.title }}</h1>
+  {% if lesson.caution %}<p class="caution" role="note"><strong>Caution before running live:</strong> {{ lesson.caution }}</p>{% endif %}
+  <dl class="facts">
+    {% if meta.time %}<div><dt>Time</dt><dd>{{ meta.time }}</dd></div>{% endif %}
+    <div><dt>Model needs</dt><dd>{{ m.need_chips(lesson.needs) }}</dd></div>
+    <div><dt>Packages</dt><dd>{% if meta.packages %}{% for p in meta.packages %}<span class="chip chip-pkg" title="{{ meta.packages_text }}">{{ p }}</span>{% endfor %}{% else %}<span class="chip chip-pkg" title="{{ meta.packages_text }}">base install</span>{% endif %}</dd></div>
+    {% if meta.services %}<div><dt>Services</dt><dd>{% for s in meta.services %}<span class="chip chip-svc">{{ s }}</span>{% endfor %}</dd></div>{% endif %}
+  </dl>
+  {% if github %}<p class="gh"><a href="{{ github }}">View this lesson's folder on GitHub</a></p>{% endif %}
+</header>
+
+<details class="toc-inline"><summary>On this page</summary>{{ m.toc_list(toc) }}</details>
+
+{% if lead %}<div class="prose">{{ lead }}</div>{% endif %}
+
+{% for part in parts %}
+  {% if part.kind == 'prose' %}
+  <section class="sec sec-{{ part.cls }} prose">{{ part.html }}</section>
+  {% else %}
+  <section class="sec sec-scripts">
+    <h2 id="{{ part.id }}">{{ part.title }}<a class="anchor" href="#{{ part.id }}" aria-label="Link to this section">#</a></h2>
+    <div class="prose">{{ part.intro }}</div>
+    {% for s in part.cards %}
+    {% if s.kind == 'prose' %}<div class="prose script-extra">{{ s.html }}</div>{% else %}
+    <article class="script" id="{{ s.id }}" data-sha256="{{ s.sha }}" data-script="{{ s.file }}">
+      <header class="script-head">
+        <span class="script-num" aria-hidden="true">{{ s.n }}</span>
+        <div>
+          <h3>{{ s.title }}</h3>
+          <p class="script-file"><code>{{ s.file }}</code> <span>{{ s.lines }} lines</span>{% if s.github %} <a href="{{ s.github }}">View on GitHub</a>{% endif %}</p>
+        </div>
+      </header>
+      {% for p in s.intro %}<p class="script-intro">{{ p }}</p>{% endfor %}
+      {% if s.prose %}<div class="prose">{{ s.prose }}</div>{% endif %}
+      <div class="runrow">
+        <div><span class="runlabel">macOS, Linux, WSL</span><div class="cmd"><code>{{ s.run_unix }}</code><button class="copy" type="button" aria-label="Copy command">Copy</button></div></div>
+        <div><span class="runlabel">Windows</span><div class="cmd"><code>{{ s.run_windows }}</code><button class="copy" type="button" aria-label="Copy command">Copy</button></div></div>
+      </div>
+      <div class="tabs" data-tabs>
+        <div class="tabbar">
+          <div class="tablist" role="tablist" aria-label="Ways to read {{ s.file }}">
+            <button role="tab" type="button" id="{{ s.id }}-t1" aria-controls="{{ s.id }}-p1" aria-selected="true">Walkthrough</button>
+            <button role="tab" type="button" id="{{ s.id }}-t2" aria-controls="{{ s.id }}-p2" aria-selected="false" tabindex="-1">Full code</button>
+            <button role="tab" type="button" id="{{ s.id }}-t3" aria-controls="{{ s.id }}-p3" aria-selected="false" tabindex="-1">Output</button>
+          </div>
+          {% if s.steps %}<div class="tabtools"><button type="button" class="linkbtn" data-expand="all">Expand all</button><button type="button" class="linkbtn" data-expand="none">Collapse all</button></div>{% endif %}
+        </div>
+
+        <div class="tabpanel" role="tabpanel" id="{{ s.id }}-p1" aria-labelledby="{{ s.id }}-t1">
+          <h4 class="panel-title">Walkthrough</h4>
+          {% if s.steps %}
+            {% if s.before %}
+            <details class="before">
+              <summary><span class="step-num step-num-before" aria-hidden="true">&middot;</span><span class="step-title">Before the steps</span><span class="step-meta">imports, constants and helpers ({{ s.before_lines }} lines)</span></summary>
+              <div class="step-body">{{ s.before }}</div>
+            </details>
+            {% endif %}
+            <ol class="steps">
+            {% for st in s.steps %}
+              <li class="step">
+                <details open>
+                  <summary><span class="step-num">{{ st.number }}</span><span class="step-title">{{ st.label }}</span><span class="step-meta">{{ st.lines }} line{{ '' if st.lines == 1 else 's' }}</span></summary>
+                  <div class="step-body">
+                    {% for c in st.comments %}<p class="narr comment">{{ c }}</p>{% endfor %}
+                    {% for n in st.notes %}<p class="narr note">{{ n }}</p>{% endfor %}
+                    {{ st.code }}
+                    {% if st.output %}{{ st.output }}{% endif %}
+                  </div>
+                </details>
+              </li>
+            {% endfor %}
+            </ol>
+            {% if s.fallback_output %}
+              <div class="fallback"><h5>What you will see</h5><p class="muted">The README shows this output for the whole script, not step by step.</p>{% for o in s.fallback_output %}{{ o }}{% endfor %}</div>
+            {% endif %}
+          {% else %}
+            <div class="single">
+              {{ s.single }}
+              {% for o in s.single_output %}{{ o }}{% endfor %}
+            </div>
+          {% endif %}
+        </div>
+
+        <div class="tabpanel" role="tabpanel" id="{{ s.id }}-p2" aria-labelledby="{{ s.id }}-t2">
+          <h4 class="panel-title">Full code</h4>
+          {{ s.full }}
+        </div>
+
+        <div class="tabpanel" role="tabpanel" id="{{ s.id }}-p3" aria-labelledby="{{ s.id }}-t3">
+          <h4 class="panel-title">Output</h4>
+          {% if s.outputs %}
+            {% for label, block in s.outputs %}<p class="output-label">{{ label }}</p>{{ block }}{% endfor %}
+          {% else %}
+            <p class="muted">The README does not show output for this script.</p>
+          {% endif %}
+        </div>
+      </div>
+    </article>
+    {% endif %}
+    {% endfor %}
+
+    {% if support %}
+    <div class="support" id="supporting-files">
+      <h3>Supporting files<a class="anchor" href="#supporting-files" aria-label="Link to this section">#</a></h3>
+      <p class="muted">Data, configuration and helper code the scripts use. Shown exactly as in the repository.</p>
+      {% for f in support %}
+      <details class="supportfile">
+        <summary><code>{{ f.name }}</code><span class="step-meta">{{ f.lines }} line{{ '' if f.lines == 1 else 's' }}</span></summary>
+        <div class="step-body">
+          {{ f.html }}
+          {% if f.truncated %}<p class="muted">Showing the first {{ f.cap }} of {{ f.lines }} lines.{% if f.github %} <a href="{{ f.github }}">See the full file on GitHub</a>.{% endif %}</p>{% endif %}
+        </div>
+      </details>
+      {% endfor %}
+    </div>
+    {% endif %}
+  </section>
+  {% endif %}
+{% endfor %}
+
+<nav class="pager" aria-label="Lessons">
+  {% if prev %}<a class="pager-prev" href="{{ href(prev.url) }}"><span>Previous lesson</span><strong>{{ prev.id }} · {{ prev.title }}</strong></a>{% else %}<span></span>{% endif %}
+  {% if next %}<a class="pager-next" href="{{ href(next.url) }}"><span>Next lesson</span><strong>{{ next.id }} · {{ next.title }}</strong></a>{% endif %}
+</nav>
+{% endblock %}
+{% block aside %}
+<aside class="toc" aria-label="On this page"><p class="sidebar-title">On this page</p>{{ m.toc_list(toc) }}</aside>
+{% endblock %}

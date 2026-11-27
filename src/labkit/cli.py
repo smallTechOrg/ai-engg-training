@@ -30,6 +30,8 @@ HELP = """[bold]AI engineering training: launcher[/bold]
   run map             regenerate CURRICULUM.md from curriculum.toml
   run check           run every ready lesson against YOUR endpoint and report pass/fail/skip
                       (before a cohort: --module 04, --lesson 04.1, --report writes check-report.txt)
+  run site build      build the read-only course website into site-dist/  (--out DIR, --strict)
+  run site serve      serve it on http://127.0.0.1:8000  (--port N; 0 picks a free port)
 
 After a lesson finishes, press Enter to go straight to the next one.
 On macOS/Linux type ./run, on Windows type run."""
@@ -62,10 +64,14 @@ def cmd_list(modules: list[ModuleInfo]) -> int:
         table.add_row(f"[bold]{module.id}[/bold]", f"[bold]{escape(module.title)}[/bold]", f"[dim]{module.count('ready')}/{len(module.lessons)} ready[/dim]", "")
         for item in module.lessons:
             style = STATUS_STYLE[item.status]
-            table.add_row(f"  {item.id}", f"  {escape(item.title)}", f"[{style}]{item.status}[/{style}]", needs_text(item, cache))
+            setup = needs_text(item, cache) + ("  [yellow]⚠ caution[/yellow]" if item.caution else "")
+            table.add_row(f"  {item.id}", f"  {escape(item.title)}", f"[{style}]{item.status}[/{style}]", setup)
     console.print(table)
     ready = sum(module.count("ready") for module in modules)
+    cautions = sum(1 for module in modules for item in module.lessons if item.caution)
     console.print(f"\n{ready} lesson(s) ready. Run one with its id, for example: ./run 01.1")
+    if cautions:
+        console.print(f"[yellow]⚠ caution[/yellow] marks {cautions} lessons to check before running live (services never run here, slow, or downloads). The launcher shows the note and asks first.")
     return 0
 
 
@@ -125,16 +131,34 @@ def run_course(modules: list[ModuleInfo], item: LessonInfo, extra: list[str]) ->
     """Run a whole lesson, then keep offering the next one until the learner stops."""
     while item is not None:
         code = run_lesson(item, None, extra)
-        if code:
+        if code and not (code == EXIT_SKIPPED and item.caution):
             return code
         item = offer_next(modules, item)
     return 0
+
+
+def confirm_caution(item: LessonInfo) -> bool:
+    """Show a lesson's caution note. In a terminal, ask before running (default: no)."""
+    console.print(f"\n[bold yellow]⚠ Caution, lesson {item.id}:[/bold yellow] {escape(item.caution)}")
+    if not interactive():
+        return True  # scripted runs (tests, run check) carry on; the note is still printed
+    try:
+        answer = input("Run it anyway? [y/N] ").strip().lower()
+    except (EOFError, KeyboardInterrupt):
+        print()
+        return False
+    if answer not in ("y", "yes"):
+        console.print("[dim]Skipped.[/dim]")
+        return False
+    return True
 
 
 def run_lesson(item: LessonInfo, script_number: int | None, extra: list[str]) -> int:
     if not item.runnable:
         console.print(f"[yellow]Lesson {item.id} ({escape(item.title)}) is planned but not written yet.[/yellow]")
         console.print("See CURRICULUM.md for what is ready, or run: ./run list")
+        return EXIT_SKIPPED
+    if item.caution and not confirm_caution(item):
         return EXIT_SKIPPED
     scripts = item.scripts()
     if not scripts:
@@ -291,6 +315,82 @@ def cmd_map(modules: list[ModuleInfo]) -> int:
     return 0
 
 
+SITE_DEFAULT_DIR = "site-dist"
+
+
+def cmd_site(args: list[str]) -> int:
+    """`site build [--out DIR] [--strict]` and `site serve [--port N]`: the generated course website."""
+    from pathlib import Path
+
+    action = args[0] if args else ""
+    if action not in ("build", "serve"):
+        console.print("[red]Usage:[/red] run site build [--out DIR] [--strict]    |    run site serve [--port N]")
+        return EXIT_FAILED
+    try:
+        from labkit.sitegen.build import build_site
+    except ImportError:
+        console.print("[red]The course site needs the 'docs' extra.[/red] Install it with: uv sync --extra docs   (or everything: ./setup.sh --all)")
+        return EXIT_FAILED
+    out_option = _option(args, "--out")
+    out = Path(out_option) if out_option else repo_root() / SITE_DEFAULT_DIR
+    if action == "serve":
+        return _site_serve(out, _option(args, "--port"), build_site)
+    strict = "--strict" in args
+    result = build_site(out, strict=strict)
+    for message in result.errors:
+        console.print(f"[red]{'error' if strict else 'problem'}[/red] {escape(message)}")
+    total = len(result.scripts)
+    counts = {kind: sum(1 for value in result.scripts.values() if value == kind) for kind in ("aligned", "no-output", "helper-steps", "no-steps")}
+    console.print(
+        f"{result.pages} pages in {result.seconds:.1f}s. Scripts: {total}; "
+        f"{counts['aligned']} with step-aligned output, {counts['no-output']} with steps but whole-script output only, "
+        f"{counts['helper-steps'] + counts['no-steps']} without step cards."
+    )
+    if result.warnings:
+        console.print(f"[yellow]{len(result.warnings)} warning(s)[/yellow] [dim](scripts with steps whose README shows no per-step output)[/dim]")
+    if strict and result.errors:
+        console.print(f"[red]Site build failed: {len(result.errors)} problem(s) above.[/red] Fix the README or the script so they agree.")
+        return EXIT_FAILED
+    console.print(f"Wrote {out}" + ("" if strict or not result.errors else f" [yellow](with {len(result.errors)} problem(s))[/yellow]"))
+    return 0
+
+
+def _site_serve(out, port_text: str | None, build_site) -> int:
+    import functools
+    import http.server
+
+    try:
+        port = int(port_text) if port_text is not None else 8000
+    except ValueError:
+        console.print(f"[red]--port needs a number, not '{escape(port_text or '')}'.[/red]")
+        return EXIT_FAILED
+    if not (out / "index.html").is_file():
+        console.print("[dim]No built site yet; building it first.[/dim]")
+        result = build_site(out)
+        if result.errors:
+            console.print(f"[yellow]Built with {len(result.errors)} problem(s); run: ./run site build --strict[/yellow]")
+
+    class Quiet(http.server.SimpleHTTPRequestHandler):
+        def log_message(self, *args):  # keep the terminal clean
+            pass
+
+    handler = functools.partial(Quiet, directory=str(out))
+    try:
+        server = http.server.ThreadingHTTPServer(("127.0.0.1", port), handler)
+    except OSError as error:
+        console.print(f"[red]Could not listen on 127.0.0.1:{port}: {escape(str(error))}[/red] Try another port, or --port 0 for any free one.")
+        return EXIT_FAILED
+    console.print(f"Serving the course site at [bold]http://127.0.0.1:{server.server_address[1]}/[/bold]  (Ctrl+C to stop)", soft_wrap=False)
+    sys.stdout.flush()
+    try:
+        server.serve_forever()
+    except KeyboardInterrupt:
+        console.print("\nStopped.")
+    finally:
+        server.server_close()
+    return 0
+
+
 def _ask(prompt: str) -> str | None:
     try:
         return input(prompt).strip().lower()
@@ -328,7 +428,8 @@ def cmd_menu(modules: list[ModuleInfo]) -> int:
             console.print(f"\n[bold]{module.id}  {escape(module.title)}[/bold]\n[dim]{escape(module.summary)}[/dim]")
             for item in module.lessons:
                 style = STATUS_STYLE[item.status]
-                console.print(f"  {item.id}  {escape(item.title)}  [{style}]{item.status}[/{style}]")
+                flag = "  [yellow]⚠ caution[/yellow]" if item.caution else ""
+                console.print(f"  {item.id}  {escape(item.title)}  [{style}]{item.status}[/{style}]{flag}")
             answer = _ask(f"\nLesson number (e.g. 1 or {module.id}.1), Enter to go back: ")
             if answer in (None, "", "b", "q"):
                 break
@@ -352,6 +453,8 @@ def main(argv: list[str] | None = None) -> None:
         raise SystemExit(0)
     if command == "doctor":
         raise SystemExit(doctor.main(args[1:], console))
+    if command == "site":
+        raise SystemExit(cmd_site(args[1:]))
     modules = load_catalog()
     if command == "menu":
         code = cmd_menu(modules)

@@ -2026,6 +2026,12 @@ apps = [
 crewai = [
     { name = "crewai" },
 ]
+docs = [
+    { name = "jinja2" },
+    { name = "markdown-it-py" },
+    { name = "mdit-py-plugins" },
+    { name = "pygments" },
+]
 guardrails = [
     { name = "presidio-analyzer" },
     { name = "presidio-anonymizer" },
@@ -2075,6 +2081,7 @@ requires-dist = [
     { name = "fastembed", marker = "extra == 'rag'", specifier = ">=0.4" },
     { name = "gradio", marker = "extra == 'apps'", specifier = ">=4.44" },
     { name = "httpx", marker = "extra == 'apps'", specifier = ">=0.27" },
+    { name = "jinja2", marker = "extra == 'docs'", specifier = ">=3.1" },
     { name = "langchain", marker = "extra == 'langchain'", specifier = ">=0.3" },
     { name = "langchain-community", marker = "extra == 'langchain'", specifier = ">=0.3" },
     { name = "langchain-openai", marker = "extra == 'langchain'", specifier = ">=0.2" },
@@ -2083,7 +2090,9 @@ requires-dist = [
     { name = "langgraph", marker = "extra == 'langgraph'", specifier = ">=0.2" },
     { name = "langgraph-checkpoint-redis", marker = "extra == 'langgraph'", specifier = ">=0.1" },
     { name = "langgraph-checkpoint-sqlite", marker = "extra == 'langgraph'", specifier = ">=2.0" },
+    { name = "markdown-it-py", marker = "extra == 'docs'", specifier = ">=3.0" },
     { name = "mcp", marker = "extra == 'mcp'", specifier = ">=1.2" },
+    { name = "mdit-py-plugins", marker = "extra == 'docs'", specifier = ">=0.4" },
     { name = "networkx", marker = "extra == 'rag'", specifier = ">=3.2" },
     { name = "numpy", marker = "extra == 'rag'", specifier = ">=1.26" },
     { name = "openai", specifier = ">=3.0" },
@@ -2093,13 +2102,14 @@ requires-dist = [
     { name = "presidio-anonymizer", marker = "extra == 'guardrails'", specifier = ">=2.2" },
     { name = "prometheus-client", marker = "extra == 'observability'", specifier = ">=0.20" },
     { name = "pydantic", specifier = ">=2.7" },
+    { name = "pygments", marker = "extra == 'docs'", specifier = ">=2.17" },
     { name = "python-dotenv", specifier = ">=1.0" },
     { name = "rank-bm25", marker = "extra == 'rag'", specifier = ">=0.2" },
     { name = "rich", specifier = ">=13.7" },
     { name = "streamlit", marker = "extra == 'apps'", specifier = ">=1.38" },
     { name = "uvicorn", marker = "extra == 'apps'", specifier = ">=0.30" },
 ]
-provides-extras = ["rag", "apps", "langchain", "langgraph", "mcp", "crewai", "observability", "guardrails"]
+provides-extras = ["rag", "apps", "langchain", "langgraph", "mcp", "crewai", "observability", "guardrails", "docs"]
 
 [package.metadata.requires-dev]
 dev = [
@@ -2524,6 +2534,18 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/9e/2d/7c251e34207f6c51000312fc8839111ac45cfe02023f90b44e7f1051dd8e/mcp_types-2.3.0.tar.gz", hash = "sha256:d1e46549edb35ee19a94940fcee6d1addd7e589ab7ea92dda83f5d84781fc362", size = 65898, upload-time = "2026-10-02T22:06:57.863Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/ce/48/32583066b155bb5d4507e7887dc88ee23118cc4de8e2a12870c49719e2a8/mcp_types-2.3.0-py3-none-any.whl", hash = "sha256:968efdbdaedfab06adae40d378a34395f1090c5921d4be3c9cde283aaf76d91d", size = 69108, upload-time = "2026-10-02T22:06:54.099Z" },
+]
+
+[[package]]
+name = "mdit-py-plugins"
+version = "0.7.0"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "markdown-it-py" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/ad/a4/77a4e1be19fd9b08993c76d5e54979ac836b327754f1f5fecfed1b56cc67/mdit_py_plugins-0.7.0.tar.gz", hash = "sha256:26d2179227aaf4d1dc7acffe7a738cbd15cade6b5a61cff0a2cbf9fed93efede", size = 51268, upload-time = "2026-11-10T16:29:31.081Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/4d/d3/d07e61326f150944ead0da9d0b39fb20d7fa367bbc951b10fca6bb1c7382/mdit_py_plugins-0.7.0-py3-none-any.whl", hash = "sha256:7f8e30403f3dd8bfe3afcdcbc6e61066d3f2e714167507b9c26eb385ec399353", size = 72937, upload-time = "2026-11-10T16:29:29.847Z" },
 ]
 
 [[package]]

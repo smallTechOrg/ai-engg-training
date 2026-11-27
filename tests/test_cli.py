@@ -116,3 +116,10 @@ def test_live_check_reports_pass_fail_and_skip(run):
     assert broken.returncode == 1 and "FAIL  01.1/1" in broken.stdout and "rejected the API key" in broken.stdout
     infra = run([*LABKIT, "check", "--lesson", "19.1"])
     assert "SKIP  19.1/3" in infra.stdout and infra.returncode == 0
+
+
+def test_caution_lessons_are_marked_and_announced(run):
+    listing = run([*LABKIT, "list"])
+    assert "⚠ caution" in listing.stdout
+    result = run([*LABKIT, "19.1/1"])
+    assert "Caution, lesson 19.1" in result.stdout and result.returncode == 0  # no terminal: note shown, run continues

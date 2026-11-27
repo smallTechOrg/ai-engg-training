@@ -10,10 +10,10 @@ Role-based agents working as a team.
 
 | Lesson | Title | Status |
 |---|---|---|
-| 14.1 | [Agents, tasks, crews and processes](01-agents-tasks-crews-and-processes/README.md) | ✅ ready |
-| 14.2 | [Sequential and hierarchical processes; delegation](02-sequential-and-hierarchical-processes-delegation/README.md) | ✅ ready |
-| 14.3 | [Tools, MCP and LangGraph alongside a crew](03-tools-mcp-and-langgraph-alongside-a-crew/README.md) | ✅ ready |
-| 14.4 | [Capstone: a helpdesk incident-response crew](04-capstone-a-helpdesk-incident-response-crew/README.md) | ✅ ready |
+| 14.1 | [Agents, tasks, crews and processes](01-agents-tasks-crews-and-processes/README.md)<br>⚠️ *Slow: CrewAI makes several model calls per task (script 3 about 12). Allow a minute per script.* | ✅ ready ⚠️ |
+| 14.2 | [Sequential and hierarchical processes; delegation](02-sequential-and-hierarchical-processes-delegation/README.md)<br>⚠️ *Slow and costly: the hierarchical crew in script 2 made about 15 model calls in testing.* | ✅ ready ⚠️ |
+| 14.3 | [Tools, MCP and LangGraph alongside a crew](03-tools-mcp-and-langgraph-alongside-a-crew/README.md)<br>⚠️ *Slow: crews make several model calls per run.* | ✅ ready ⚠️ |
+| 14.4 | [Capstone: a helpdesk incident-response crew](04-capstone-a-helpdesk-incident-response-crew/README.md)<br>⚠️ *Slow: the incident crew makes about 12 model calls per run.* | ✅ ready ⚠️ |
 
 <!-- lessons:end -->
 

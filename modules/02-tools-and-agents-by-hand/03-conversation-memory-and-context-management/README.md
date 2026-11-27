@@ -56,10 +56,10 @@ full history, and a window of the last four messages.
 assistant | I do not have access to your previous conversation history, so please provide the asset tag again.
 tokens: 28 in + 19 out = 47
 ...
-Step 3: Full history: the question is answerable
+Step 3: 3. Full history: the question is answerable
 assistant | You provided asset tag LL-L-0412.
 tokens: 87 in + 13 out = 100
-Step 4: A sliding window ...
+Step 4: 4. A sliding window ...
 assistant | You have not yet provided an asset tag for this device.
 tokens: 53 in + 12 out = 65
 The tag is gone: it was in turn 1, which fell out of the window. A window is cheap and predictable, and it forgets silently.
