@@ -1,9 +1,9 @@
 """00.2/2  What is installed, and why exactly that?
 
-Three files decide which packages you get: pyproject.toml says what the project needs
-("openai, version 3 or newer"), uv.lock records the exact versions that were chosen, and
-the .venv folder holds what is actually installed. This script reads all three and
-compares them. No model calls.
+Three things decide which packages you get. pyproject.toml says what the project needs
+("openai, version 3 or newer"). uv.lock records the exact versions that were chosen. The
+.venv folder holds what is really installed. This script reads all three and compares
+them. It makes no model calls.
 
 Run it:   ./run 00.2/2          (Windows: run 00.2/2)
 """
@@ -42,7 +42,7 @@ def main(ctx):
     with (root / "pyproject.toml").open("rb") as handle:
         project = tomllib.load(handle)["project"]
     ctx.show_data("[project] dependencies", project.get("dependencies", []))
-    ctx.note("These are ranges ('3.0 or newer'), not exact versions. Ranges alone give different people different installs.")
+    ctx.note("These are ranges ('3.0 or newer'), not exact versions. On their own, two people can get different installs.")
 
     ctx.step("What was chosen: uv.lock")
     locked = {}

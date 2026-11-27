@@ -1,8 +1,9 @@
 """00.1/1  Where am I?
 
-A tour of the machine and the repo you are about to learn in. It prints which Python is
-running, where the course lives on disk, and whether a model endpoint is configured. If
-one is, it finishes with a single "hello" call to prove the whole chain works.
+A quick look at your computer and the course folder before you start. It prints which
+Python is running, where the course lives on disk, and whether you have set up a model
+endpoint (the web address of the AI model you will call). If you have, it ends with one
+"hello" call to the model to prove that everything is connected.
 
 Run it:   ./run 00.1/1          (Windows: run 00.1/1)
      or:  python modules/00-setup/01-the-ai-engineering-landscape-and-this-repo/01_where_am_i.py
@@ -14,7 +15,7 @@ import sys
 from labkit import lesson, repo_root
 from labkit.config import mask
 
-# The files and folders at the top of the repo that you will actually touch.
+# The files and folders at the top of the repo that you will use.
 LANDMARKS = [
     ("README.md", "start here: setup and everyday commands"),
     ("CURRICULUM.md", "the whole journey: every module and lesson, with status"),

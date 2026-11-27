@@ -4,40 +4,41 @@
 
 ## What you will learn
 
-- Why an LLM call is **I/O-bound**: your program spends almost all of it waiting.
-- What the **event loop**, a **coroutine** and **`await`** are, in plain terms.
-- How **`asyncio.gather`** runs several calls concurrently, and why the total time becomes
-  the longest call instead of the sum.
-- How a **semaphore** caps how many calls are in flight, so a batch stays inside the
+- Why an LLM call is "I/O-bound": your program spends almost all of it waiting.
+- What the event loop, a coroutine and `await` are, in plain terms.
+- How `asyncio.gather` runs several calls at the same time, and why the total time becomes
+  the time of the longest call instead of the sum of all of them.
+- How a semaphore limits how many calls are running at once, so a batch stays inside the
   provider's rate limit.
 - How to keep one failed call from sinking the whole batch.
 
 ## The idea
 
-A model call is a network round trip: your program sends a request, the provider generates
-a reply, and the reply comes back a second or several later. During that time your CPU
-does nothing. Work like this, where the time goes into waiting for something outside the
-program (network, disk, a database), is called **I/O-bound**. Work that keeps the CPU busy
-(resizing images, training a model) is **CPU-bound**.
+A model call is a round trip over the network. Your program sends a request, the provider
+writes a reply, and the reply comes back one or several seconds later. During that time your
+CPU does nothing. Work like this, where the time goes into waiting for something outside
+the program (the network, a disk, a database), is called I/O-bound. Work that keeps the CPU
+busy (resizing images, training a model) is called CPU-bound.
 
-If you have ten tickets to answer and call the model for each one in turn, you wait ten
-times. Nothing about the second ticket depends on the first, so the waits could overlap.
-That is what `asyncio` is for.
+Say you have ten tickets to answer, and you call the model for each one in turn. You wait
+ten times. Yet nothing about the second ticket depends on the first, so the waits could
+overlap. That is what `asyncio` is for.
 
 ### Event loop, coroutines, await
 
-- A **coroutine** is a function defined with `async def`. Calling it does not run it; it
-  returns a coroutine object, a piece of work that is ready to start.
-- The **event loop** is the scheduler that runs coroutines. `asyncio.run(main())` starts one
-  (the `@lesson` decorator does this for you when `main` is `async`).
-- **`await`** means "pause me here until this finishes, and let the loop run something else
-  in the meantime". Every `await` is a point where control can be handed over.
-- **`asyncio.gather(a, b, c)`** starts several coroutines and waits until all of them have
-  finished. Results come back in the order you passed them, not the order they completed.
+- A coroutine is a function defined with `async def`. Calling it does not run it. It
+  returns a coroutine object: a piece of work that is ready to start.
+- The event loop is the scheduler that runs coroutines. `asyncio.run(main())` starts one.
+  (The `@lesson` decorator does this for you when `main` is `async`.)
+- `await` means "pause me here until this finishes, and let the loop run something else
+  meanwhile". Every `await` is a point where the loop can switch to other work.
+- `asyncio.gather(a, b, c)` starts several coroutines and waits until all of them have
+  finished. The results come back in the order you passed them in, not the order in which
+  they finished.
 
-It is all **one thread**. Nothing runs on several CPU cores; the loop simply never sits
-idle while there is another coroutine ready to make progress. That is why asyncio helps
-with model calls and does nothing for heavy computation.
+It all happens in **one thread**. Nothing runs on several CPU cores. The loop simply never
+sits idle while another coroutine is ready to make progress. That is why asyncio helps with
+model calls and does nothing for heavy computation.
 
 ```mermaid
 sequenceDiagram
@@ -74,17 +75,21 @@ gantt
     call C :0, 5
 ```
 
-(The bars are script 1's pretend calls, in tenths of a second.) Sequential time is the sum of the calls; concurrent time is roughly the longest one.
-Concurrency changes how long **you** wait. It does not change the number of tokens or the
+(The bars are script 1's pretend calls, in tenths of a second.) Sequential time is the sum
+of the calls. Concurrent time is roughly the longest one.
+
+Concurrency changes how long *you* wait. It does not change the number of tokens or the
 cost: three calls are still three calls.
 
 ### Semaphores for rate limits
 
-Providers limit how many requests (and tokens) you may send per minute, and some limit how
-many may be open at once. `gather` over 500 tickets would fire 500 requests together and
-most would come back as `429 Too Many Requests`. An **`asyncio.Semaphore(n)`** is a counter
-with `n` slots: `async with limit:` takes a slot or waits until one is free, and gives it
-back on the way out. Everything still runs concurrently, but never more than `n` at a time.
+Providers limit how many requests (and tokens) you can send per minute. Some also limit how
+many can be open at once. A `gather` over 500 tickets would fire 500 requests together, and
+most would come back as `429 Too Many Requests`.
+
+An `asyncio.Semaphore(n)` is a counter with `n` slots. `async with limit:` takes a slot, or
+waits until one is free, and gives it back when the block ends. Everything still runs
+concurrently, but never more than `n` at a time.
 
 ```python
 limit = asyncio.Semaphore(2)
@@ -96,17 +101,17 @@ async def answer(ticket):
 results = await asyncio.gather(*(answer(t) for t in tickets), return_exceptions=True)
 ```
 
-`return_exceptions=True` makes a failed call come back as an exception object in its slot
-of the results list, instead of cancelling the rest. You then decide what to do with each
-failure (retry, report, skip).
+With `return_exceptions=True`, a failed call comes back as an exception object in its place
+in the results list, instead of cancelling the rest. You then decide what to do with each
+failure: retry it, report it or skip it.
 
 The async client is `openai.AsyncOpenAI`, available in lessons as `ctx.async_client`. It
-has exactly the same methods as the normal client; each call is just awaited.
+has exactly the same methods as the normal client. You just `await` each call.
 
 ## Scripts
 
 Run all three in order with `./run 00.5` (Windows: `run 00.5`), or one at a time. Script 1
-makes no model calls; scripts 2 and 3 make 6 and 5 small calls.
+makes no model calls. Scripts 2 and 3 make 6 and 5 small calls.
 
 ### 1. `01_asyncio_basics.py`: waiting for several things at once
 
@@ -115,8 +120,8 @@ makes no model calls; scripts 2 and 3 make 6 and 5 small calls.
 ```
 
 Three pretend calls (`asyncio.sleep` for 0.6, 0.4 and 0.5 seconds) run one after another,
-then together with `asyncio.gather`. Timestamps show when each was sent and answered. No
-model, no cost, and the timings are almost exactly reproducible.
+then together with `asyncio.gather`. Timestamps show when each one was sent and answered.
+There is no model and no cost, and the timings come out almost the same every run.
 
 **Expected output:**
 
@@ -151,7 +156,7 @@ Comparison
   "all at once": "0.6s",
   "speed-up": "2.5x"
 }
-Nothing ran in parallel on several CPU cores. One thread simply stopped waiting idly.
+Nothing ran in parallel on several CPU cores. One thread just stopped sitting idle while it waited.
 That is why asyncio suits model calls (waiting) and does nothing for heavy computation.
 
 Run summary: no model calls, 2.1s
@@ -164,8 +169,9 @@ Log: logs/20260101T100000Z-00.5-1.jsonl
 ./run 00.5/2
 ```
 
-The same comparison with real calls: three one-sentence questions asked one after another,
-then the same three with `gather`, and the two timings compared. Six calls in total.
+The same comparison with real calls. The script asks three one-sentence questions one after
+another, then the same three with `gather`, and compares the two timings. That is six calls
+in total.
 
 **Expected output** (answers, timings and token counts will differ):
 
@@ -201,8 +207,8 @@ Run summary: 6 model call(s), 66 in + 154 out = 220 tokens, 3.8s
 Log: logs/20260101T100000Z-00.5-2.jsonl
 ```
 
-A local model on a laptop often shows little or no speed-up: it may process one request
-at a time, so "concurrent" requests simply queue on the server side.
+A local model on a laptop often shows little or no speed-up. It may handle one request at
+a time, so "concurrent" requests simply wait in line on the server.
 
 ### 3. `03_helpdesk_ticket_batch.py`: the helpdesk assistant answers a batch
 
@@ -210,11 +216,11 @@ at a time, so "concurrent" requests simply queue on the server side.
 ./run 00.5/3
 ```
 
-Five Monday-morning tickets at Larkspur Labs, answered concurrently but never more than two
-at a time (`asyncio.Semaphore(2)`). Timestamps show a new ticket starting only when a slot
-frees up. `return_exceptions=True` means one failed ticket is reported as `FAILED` while
-the rest are still answered. `MAX_TICKETS` caps the batch so a mistake cannot send hundreds
-of calls.
+Five Monday-morning tickets at Larkspur Labs are answered concurrently, but never more than
+two at a time (`asyncio.Semaphore(2)`). The timestamps show that a new ticket starts only
+when a slot frees up. Because of `return_exceptions=True`, a ticket that fails is reported
+as `FAILED` while the rest are still answered. `MAX_TICKETS` caps the batch size, so a
+mistake cannot send hundreds of calls.
 
 **Expected output** (the replies, timings and order of completion will differ):
 
@@ -268,41 +274,42 @@ Log: logs/20260101T100000Z-00.5-3.jsonl
    both totals before you run it.
 2. **Block the loop.** In `pretend_call`, replace `await asyncio.sleep(seconds)` with
    `time.sleep(seconds)` (no `await`). Run it. Why is the "all at once" section now as slow
-   as the sequential one? This is what happens if you use the normal, non-async client
+   as the sequential one? The same thing happens if you use the normal, non-async client
    inside async code.
 3. **Forget the await.** In `02_sequential_vs_concurrent.py`, remove the `await` in front of
-   `client.chat.completions.create` inside `ask`. Read the error and the warning about a
+   `client.chat.completions.create` inside `ask`. Read the error, and the warning about a
    coroutine that was never awaited.
 4. **Turn the knob.** In `03_helpdesk_ticket_batch.py`, set `MAX_AT_ONCE` to 1, then to 5.
    Compare the timestamps and the total time. Which setting would you choose for 500
    tickets on a provider that allows 60 requests per minute?
 5. **Make one ticket fail.** In `answer`, add `if ticket_id == "#5003": raise RuntimeError("ticket system down")`
    as the first line. The other four are still answered. Then remove
-   `return_exceptions=True` from the `gather` call and run again.
+   `return_exceptions=True` from the `gather` call and run it again.
 6. **Count the cost.** Run `./run 00.5/2` twice and compare the token totals in the run
-   summary. Concurrency saved time; did it save tokens?
+   summary. Concurrency saved time. Did it save tokens?
 
 ## If it does not work
 
-- **`RuntimeError: asyncio.run() cannot be called from a running event loop`**: you are in
-  a Jupyter notebook, which already runs a loop. There, use `await main()` directly instead
+- `RuntimeError: asyncio.run() cannot be called from a running event loop`: you are in a
+  Jupyter notebook, which already runs a loop. There, use `await main()` directly instead
   of `asyncio.run(main())`.
-- **Some tickets show `FAILED (RateLimitError)`**: your provider allows fewer concurrent
-  requests than `MAX_AT_ONCE`. Lower it to 1 and rerun. Free tiers are often strict.
-- **No speed-up at all**: common with local models and some free tiers that process one
-  request at a time. The code is right; the server is serialising the requests.
-- **All tickets fail**: the script re-raises the first error so the lesson can explain it
+- Some tickets show `FAILED (RateLimitError)`: your provider allows fewer requests at once
+  than `MAX_AT_ONCE`. Lower it to 1 and run again. Free tiers are often strict.
+- No speed-up at all: this is common with local models and some free tiers that handle one
+  request at a time. Your code is right. The server is handling the requests one by one.
+- All tickets fail: the script raises the first error again so the lesson can explain it
   (wrong key, wrong model, endpoint unreachable). Run `./run doctor` to check your settings
   and make a test call.
 
 ## In the running scenario
 
-On a Monday morning the Larkspur Labs helpdesk queue holds dozens of tickets, and later in
-the course the assistant will call the model, the ticket system and the knowledge base for
-each one. Done one at a time, the last employee waits for everyone else's replies; done
-all at once, the provider starts refusing requests. With `async` calls, `gather` and a
-semaphore, the assistant works through the queue concurrently at a rate the provider
-accepts, and a single failed ticket is reported instead of stopping the batch. Every
-serving lesson in module 05 builds on this.
+On a Monday morning the Larkspur Labs helpdesk queue holds dozens of tickets. Later in the
+course, the assistant will call the model, the ticket system and the knowledge base for
+each one. If it handles them one at a time, the last employee waits for everyone else's
+replies. If it sends them all at once, the provider starts refusing requests.
+
+With `async` calls, `gather` and a semaphore, the assistant works through the queue
+concurrently, at a rate the provider accepts. A single failed ticket gets reported instead
+of stopping the batch. Every serving lesson in module 05 builds on this.
 
 **Next:** 01.1 · Your first LLM call

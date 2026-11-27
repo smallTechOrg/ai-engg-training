@@ -2,15 +2,17 @@
 
 POST /reply takes a ticket and returns the assistant's reply plus the token counts. The
 route (in helpdesk_api.py) makes one ordinary `llm.chat.completions.create(...)` call, the
-same call as lesson 01.1, and wraps the result in a Pydantic response model.
+same call as lesson 01.1. It wraps the result in a Pydantic response model.
 
-Two FastAPI ideas are new:
+Two FastAPI ideas are new here:
 
-  1. Dependency injection: the route asks for an `llm` client and a `model` name with
-     `Depends(...)`. This script swaps both for the lesson's own client with
-     `app.dependency_overrides`, the same way a test suite would swap in a fake.
-  2. Mapping failures to status codes: a bad ticket is a 422 (the caller's fault, no model
-     call is made), a failing model endpoint is a 502 (an upstream fault).
+  1. Dependency injection. The route asks for an `llm` client and a `model` name with
+     `Depends(...)` instead of building them itself. This script swaps both for the
+     lesson's own client with `app.dependency_overrides`, the way a test suite swaps in
+     a fake.
+  2. Turning failures into status codes. A bad ticket gets a 422: the caller made the
+     mistake, and no model call happens. A failing model endpoint gets a 502: a service
+     further up the chain failed.
 
 Run it:   ./run 05.1/2          (Windows: run 05.1/2)
 """
@@ -32,7 +34,7 @@ TICKET = {
 @lesson("05.1/2", "An LLM-backed route: POST /reply")
 def main(ctx):
     ctx.step("Inject the lesson's client into the app")
-    ctx.note("In production get_llm() builds a client from .env. Here we override it with ctx.client,")
+    ctx.note("In production get_llm() builds a client from .env. Here we replace it with ctx.client,")
     ctx.note("so the route uses the course's client and --raw shows the model call made inside the route.")
     app.dependency_overrides[get_llm] = lambda: ctx.client
     app.dependency_overrides[get_model] = lambda: ctx.model
@@ -49,8 +51,8 @@ def main(ctx):
         if response.status_code != 200:
             ctx.note("The route could not reach the model. Check your settings with ./run doctor.")
             return
-        # The model call happened inside the route, out of ctx's sight. The route reports the
-        # tokens in its response, so we add them to this run's totals ourselves.
+        # The model call happened inside the route, where ctx cannot see it. The route reports
+        # the tokens in its response, so we add them to this run's totals ourselves.
         ctx.record_usage(body["usage"])
         ctx.note(f"The caller got plain JSON: a reply of {len(body['reply'])} characters and the token counts.")
         ctx.note("A front end (lesson 05.3) or another service can use this without knowing anything about LLMs.")
@@ -65,7 +67,7 @@ def main(ctx):
         ctx.note("Rejected by TicketIn before the route ran, so no model call and no tokens spent.")
 
         ctx.step("When the model endpoint is down")
-        ctx.note("Override get_llm again, this time with a client pointed at a port where nothing listens.")
+        ctx.note("Replace get_llm again, this time with a client that points at a port where nothing listens.")
         dead = openai.OpenAI(base_url="http://127.0.0.1:9/v1", api_key="not-used", max_retries=0, timeout=3)
         app.dependency_overrides[get_llm] = lambda: dead
         response = client.post("/reply", json=TICKET)

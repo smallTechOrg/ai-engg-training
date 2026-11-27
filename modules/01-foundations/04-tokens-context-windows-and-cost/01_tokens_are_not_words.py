@@ -1,16 +1,16 @@
 """01.4/1  Tokens are not words
 
-Models do not read characters or words; they read tokens, pieces of text from a fixed
-vocabulary. The endpoint tells you how many it counted in `response.usage`, and that count
-is what you are billed for and what fills the context window.
+Models do not read characters or words. They read tokens: pieces of text from a fixed
+vocabulary. The endpoint tells you how many tokens it counted in `response.usage`. That
+count is what you pay for, and what fills the context window.
 
-This script first sends a short instruction on its own (the baseline, which also shows the
-fixed overhead every request carries), then four short texts after that same instruction,
-one per call, and puts three guesses (characters, words, characters / 4) next to the real
-prompt_tokens. Five calls in all.
+This script first sends a short instruction on its own. That is the baseline, and it also
+shows the fixed overhead that every request carries. Then it sends four short texts after
+that same instruction, one per call. It puts three guesses (characters, words,
+characters / 4) next to the real prompt_tokens. Five calls in all.
 
-No tokenizer package is used: tokenizers differ between providers, and the endpoint's own
-count is the only number that is always right for the model you are using.
+The script uses no tokenizer package. Tokenizers differ between providers, and the
+endpoint's own count is the only number that is always right for the model you are using.
 
 Run it:   ./run 01.4/1          (Windows: run 01.4/1)
      or:  python modules/01-foundations/04-tokens-context-windows-and-cost/01_tokens_are_not_words.py

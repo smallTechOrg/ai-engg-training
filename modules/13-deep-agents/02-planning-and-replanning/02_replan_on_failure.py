@@ -5,9 +5,10 @@ step 4 will fail. The fix is a loop around the executor:
 
   plan -> run steps -> a step fails -> REPLAN the remaining work given what happened -> keep going
 
-The new plan sees the task, the steps already done (with their results) and the failure. A cap of
-MAX_REPLANS keeps the loop finite (a replan is also used for a final "is anything left?" review after a replanned stretch finishes); when it is spent, the run stops and hands over to a human. The
-task asks for a laptop that is out of stock, so a replan is expected.
+The planner gets the task, the steps already done (with their results) and the failure. MAX_REPLANS
+caps the loop so it always ends. A replan is also used for a final "is anything left?" review after
+a replanned stretch finishes. When the cap is spent, the run stops and hands over to a person. The
+task asks for a laptop that is out of stock, so you should expect a replan.
 
 Run it:   ./run 13.2/2          (Windows: run 13.2/2)
 """
@@ -83,7 +84,7 @@ TOOLS = [
     tool("send_welcome_email", "Send the welcome email with first-day instructions.", {"full_name": "Full name"}),
 ]
 
-# The FIRST JSON object in the planner's prompt is a format example (different person, different steps).
+# The FIRST JSON object in the planner's prompt only shows the format (a different person and different steps).
 PLANNER_SYSTEM = (
     'Write a plan as JSON only, shaped like this example: {"steps": [{"tool": "create_account", "args": {"full_name": "Alex Example"}}, '
     '{"tool": "send_welcome_email", "args": {"full_name": "Alex Example"}}]}\n'
@@ -127,7 +128,7 @@ def main(ctx):
     ctx.note(TASK)
     plan = ask_for_plan(TASK)
     if plan is None:
-        ctx.note("The planner did not return a usable plan. Nothing runs; a real system would retry or escalate.")
+        ctx.note("The planner did not return a usable plan, so nothing runs. A real system would retry or escalate.")
         return
     ctx.show_data("Plan 1", [{"tool": n, "args": a} for n, a in plan])
 
@@ -181,7 +182,7 @@ def main(ctx):
     ctx.step("Outcome")
     ctx.show_data("Steps that succeeded", [f"{d['tool']} {json.dumps(d['args'])}" for d in done])
     ctx.note(f"Replans used: {replans} of {MAX_REPLANS}. Outcome: {outcome}.")
-    ctx.note("The plan changed because of a result, which is the whole point. 13.2/3 adds a validation gate in front of every plan.")
+    ctx.note("The plan changed because of what a step returned. 13.2/3 adds a check that every plan must pass before it runs.")
 
 
 if __name__ == "__main__":

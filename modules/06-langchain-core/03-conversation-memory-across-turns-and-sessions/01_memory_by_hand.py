@@ -1,14 +1,15 @@
 """06.3/1  Memory is just a message list: with and without history
 
-A chat model remembers nothing between calls. "Memory" means: store the earlier messages and
-send them again. The prompt has a `MessagesPlaceholder` slot to receive them.
+A chat model remembers nothing between calls. "Memory" means you store the earlier messages
+and send them again. The prompt has a `MessagesPlaceholder` slot to receive them.
 
-This script does it BY HAND, with a plain Python list, so the next script's automation is no mystery:
+This script does it by hand, with a plain Python list, so you can see what the next script
+does for you automatically:
   1. ask a follow-up with no history  -> the model cannot know what "it" is
   2. keep the history yourself and pass it in the placeholder -> it can
 
-(LangChain 1.x deprecates its older history classes such as InMemoryChatMessageHistory and
-RunnableWithMessageHistory in favour of LangGraph persistence, which is script 2.)
+(LangChain 1.x deprecates its older history classes, such as InMemoryChatMessageHistory and
+RunnableWithMessageHistory, in favour of LangGraph persistence. Script 2 uses that.)
 
 Run it:   ./run 06.3/1          (Windows: run 06.3/1)
 """
@@ -54,8 +55,8 @@ def main(ctx):
     ctx.step("What the model saw on the last turn")
     sent = prompt.invoke({"history": history[:-2], "question": TURNS[2]}).to_messages()
     ctx.show_data("messages sent", [f"{m.type}: {str(m.content)[:70]}" for m in sent])
-    ctx.note("Every turn re-sends the whole history, so tokens per call grow with the conversation (script 3 caps that).")
-    ctx.note("You also own the bookkeeping: one list per conversation, saved somewhere, trimmed somewhere. Script 2 hands that to LangGraph.")
+    ctx.note("Every turn sends the whole history again, so tokens per call grow with the chat (script 3 caps that).")
+    ctx.note("You also do the bookkeeping: one list per chat, saved and trimmed somewhere. Script 2 hands that to LangGraph.")
 
 
 if __name__ == "__main__":

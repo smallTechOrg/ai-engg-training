@@ -1,18 +1,18 @@
 """13.3/2  An episodic memory store in SQLite, recalled in a new session
 
-Script 1 kept memories in a list, which vanishes when the program ends. A real agent needs a store
-that survives. This script uses SQLite (stdlib, one file) with the embedding saved as JSON next to
-the text, which is plenty for thousands of memories; a vector database (module 04) is the same idea
-at larger scale.
+Script 1 kept memories in a list, which is gone when the program ends. A real agent needs a store
+that lasts. This script uses SQLite (in the standard library, one file) and saves each embedding as
+JSON next to its text. That is plenty for thousands of memories. A vector database (module 04) is
+the same idea at a larger scale.
 
-Two "sessions" are simulated by opening the database file twice:
+The script simulates two "sessions" by opening the database file twice:
 
-  session 1: the agent resolves four tickets and WRITES one episode per ticket;
-  session 2: a new connection, a new ticket. The agent RECALLS the closest episodes and answers
-             with them, and we compare with an answer that had no memory.
+  session 1: the agent resolves four tickets and WRITES one episode per ticket.
+  session 2: a new connection and a new ticket. The agent RECALLS the closest episodes and answers
+             with them. You compare that with an answer that had no memory.
 
-Recall has a relevance floor: when nothing is close enough, the agent should say it has no
-experience instead of pretending. The file is created in a temporary folder and deleted after.
+Recall has a relevance floor. When nothing is close enough, the agent should say it has no
+experience instead of pretending. The file lives in a temporary folder that is deleted afterwards.
 
 Run it:   ./run 13.3/2          (Windows: run 13.3/2)
 """
@@ -71,7 +71,7 @@ def main(ctx):
             remember(db, ctx, ticket, problem, fix)
             ctx.note(f"remembered {ticket}: {problem}")
         db.close()
-        ctx.note("Connection closed. Nothing is held in Python any more; the memory is the file.")
+        ctx.note("Connection closed. Python holds nothing now: the memory lives only in the file.")
 
         ctx.step("Session 2: a new connection, a new ticket")
         db = connect(path)

@@ -1,10 +1,11 @@
 """17.1/1  Logs, metrics and traces, in one process
 
-The three pillars of observability, with no service running:
-  logs    - what happened (structured JSON lines, stdlib logging)
-  traces  - where the time went (OpenTelemetry spans, parent and child)
-  metrics - how much, how often (see script 2)
-We wrap a two-step helpdesk call (classify, then reply) and print the spans as a tree.
+Observability means being able to see what your app is doing from the outside. It rests on three
+kinds of record, and this script shows two of them with no service running:
+  logs    - what happened (one JSON line per event, using Python's standard logging)
+  traces  - where the time went (OpenTelemetry spans, each with a parent and children)
+  metrics - how much and how often (see script 2)
+You wrap a two-step helpdesk call (classify, then reply) and print the spans as a tree.
 
 Run it:   ./run 17.1/1          (Windows: run 17.1/1)
      or:  python modules/17-monitoring-and-fine-tuning/01-logs-metrics-and-traces-with-opentelemetry/01_logs_metrics_traces.py
@@ -54,7 +55,7 @@ def print_tree(spans, console):
 @lesson("17.1/1", "Logs, metrics and traces, in one process")
 def main(ctx):
     ctx.step("Set up structured logging (pillar 1)")
-    ctx.note("Plain stdlib logging, but every record is one JSON object. We keep it in memory so we can print it neatly.")
+    ctx.note("Standard Python logging, but each record is one JSON object. It stays in memory so we can print it neatly.")
     buffer = io.StringIO()
     handler = logging.StreamHandler(buffer)
     handler.setFormatter(JsonFormatter())
@@ -64,7 +65,7 @@ def main(ctx):
     log.propagate = False
 
     ctx.step("Set up an OpenTelemetry tracer (pillar 2)")
-    ctx.note("A TracerProvider creates spans; a SpanProcessor hands finished spans to an exporter. Here the exporter is an in-memory list.")
+    ctx.note("A TracerProvider makes spans. A SpanProcessor passes finished spans to an exporter, here an in-memory list.")
     exporter = InMemorySpanExporter()
     provider = TracerProvider()
     provider.add_span_processor(SimpleSpanProcessor(exporter))
@@ -104,12 +105,12 @@ def main(ctx):
         root.set_attribute("ticket.category", category)
 
     ctx.step("Read the logs")
-    ctx.note("Each line is machine-readable and carries the trace_id, so you can jump from a log line to its trace.")
+    ctx.note("Each line is easy for a program to read and carries the trace_id, so a log line leads you to its trace.")
     for line in buffer.getvalue().splitlines():
         ctx.console.print(line, markup=False, highlight=False)
 
     ctx.step("Read the trace")
-    ctx.note("Spans share one trace id; child spans point at their parent. Durations show where the time went.")
+    ctx.note("All spans share one trace id, and each child points at its parent. The durations show where the time went.")
     spans = exporter.get_finished_spans()
     print_tree(spans, ctx.console)
     ctx.note(f"{len(spans)} spans, {len({s.context.trace_id for s in spans})} trace. Metrics (pillar 3) come next in 17.1/2.")

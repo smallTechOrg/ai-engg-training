@@ -1,9 +1,9 @@
 """09.4/2  Parallel model workers: triage five tickets at once
 
-The same Send pattern as 09.4/1, but each worker is a model call that classifies one
-ticket. A reducer collects the answers; a final node (plain Python) counts them per
-category. Five tickets = five model calls, made concurrently. By hand (module 02) this
-would be a loop of five `create()` calls, or `asyncio.gather` (module 05).
+This is the same Send pattern as 09.4/1, but each worker is a model call that classifies
+one ticket. A reducer collects the answers, and a final node in plain Python counts them
+per category. Five tickets means five model calls, all made at the same time. By hand
+(module 02) this would be a loop of five `create()` calls, or `asyncio.gather` (module 05).
 
 Run it:   ./run 09.4/2          (Windows: run 09.4/2)
 """
@@ -86,7 +86,7 @@ def main(ctx):
     ctx.step("Result")
     ctx.show_data("labels sorted by ticket id", sorted(out["labels"], key=lambda x: x["ticket_id"]))
     ctx.show_data("summary", out["summary"])
-    ctx.note("Arrival order of the workers is not guaranteed; sort by an id when order matters.")
+    ctx.note("The workers can finish in any order. Sort by an id when the order matters.")
 
 
 if __name__ == "__main__":

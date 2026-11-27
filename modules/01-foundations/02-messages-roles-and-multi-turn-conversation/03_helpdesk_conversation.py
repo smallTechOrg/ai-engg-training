@@ -1,8 +1,8 @@
 """01.2/3  A helpdesk conversation that remembers
 
-The running scenario: the helpdesk assistant handles a ticket over three turns. In turn 3
-it must use a detail (the asset tag) that the employee mentioned only in turn 1. It can,
-because the script resends the whole conversation each time.
+The running example: the helpdesk assistant handles a ticket over three turns. In turn 3
+it must use a detail (the laptop's asset tag) that the employee gave only in turn 1. It
+can, because the script sends the whole conversation again each time.
 
 Run it:   ./run 01.2/3          (Windows: run 01.2/3)
 """
@@ -40,7 +40,7 @@ def main(ctx):
     if used:
         ctx.note("The model 'remembered' because turn 1 was resent as part of the turn-3 request.")
     else:
-        ctx.note("The model had turn 1 in front of it but did not use the tag. Having the context is necessary, not sufficient.")
+        ctx.note("The model had turn 1 in front of it but did not use the tag. Having the context does not guarantee use.")
     ctx.note("Remove the line that appends the assistant reply, or send only the last message, and this breaks.")
 
 

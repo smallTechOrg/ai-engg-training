@@ -4,7 +4,7 @@ Three agents in a sequential crew (14.1, 14.2/1), one with a tool (14.1/3):
 
   Triager (typed Severity output)  ->  Runbook researcher (search_runbook tool)  ->  Comms writer
 
-The brief and acceptance criteria are in the README. This script is the reference crew; scripts 2
+The brief and acceptance criteria are in the README. This script is the reference crew. Scripts 2
 and 3 reuse its shape inside a graph and an acceptance check.
 
 Run it:   ./run 14.4/1          (Windows: run 14.4/1)

@@ -4,15 +4,15 @@
 
 ## What you will learn
 
-- What a prompt template still needs from you (`input_variables`) and how `.partial(...)` fixes the rest.
+- What a prompt template still needs from you (`input_variables`), and how `.partial(...)` fills in some values ahead of time.
 - How `MessagesPlaceholder` takes a whole list of messages, such as a chat history.
-- What `StrOutputParser`, `JsonOutputParser` and `PydanticOutputParser` return, and what happens when the reply is not valid.
+- What `StrOutputParser`, `JsonOutputParser` and `PydanticOutputParser` return (a parser turns the model's reply into something your code can use), and what happens when the reply is not valid.
 - How `get_format_instructions()` tells the model the shape you want, and how to handle a parse failure.
 
 ## The idea
 
-**What is new since 06.1:** there you used a template and a parser as given. Now you open both up. The template
-is the *input* end of a chain, the parser is the *output* end, and both are Runnables you can test without a model.
+In 06.1 you used a template and a parser as they came. Now you open both up. The template is the input end of
+a chain and the parser is the output end. Both are Runnables, so you can test them without a model.
 
 ```mermaid
 flowchart LR
@@ -25,9 +25,9 @@ flowchart LR
     X -. invalid .-> E[OutputParserException]
 ```
 
-A parser reads the reply *text*, so it works on any chat endpoint. That is the difference from
-`with_structured_output` (06.1), which needs JSON-schema or tool-call support on the endpoint. The price is that
-the model may ignore the format, so the parse step can fail and you must plan for that.
+A parser reads the text of the reply, so it works on any chat endpoint. That is how it differs from
+`with_structured_output` (06.1), which needs the endpoint to support JSON-schema output or tool calls. The
+downside is that the model may ignore the format. Then the parse step fails, and you must plan for that.
 
 ## Scripts
 
@@ -39,8 +39,9 @@ Run all three with `./run 06.2` (Windows: `run 06.2`), or one at a time.
 ./run 06.2/1
 ```
 
-Shows the variables a template needs, the error for a missing one, `partial` with fixed values, and a
-`MessagesPlaceholder("history", optional=True)` rendered with and without history. One model call at the end.
+Shows the variables a template needs and the error you get when one is missing. Then `partial` with fixed
+values, and a `MessagesPlaceholder("history", optional=True)` filled in with and without history. It makes
+one model call at the end.
 
 **Expected output** (trimmed):
 
@@ -75,8 +76,8 @@ Run summary: 1 model call(s), 45 in + 25 out = 70 tokens
 ./run 06.2/2
 ```
 
-First feeds the three parsers a hand-made `AIMessage` (a fenced JSON reply) and two bad ones, so you see the
-exceptions without a model. Then runs the same ticket through three prompt/parser pairs.
+First it gives the three parsers a hand-made `AIMessage` (a JSON reply wrapped in a code fence) and two bad
+ones, so you see the errors without a model. Then it runs the same ticket through three prompt and parser pairs.
 
 **Expected output** (trimmed):
 
@@ -99,9 +100,9 @@ pydantic -> Ticket       { "category": "printer", "urgency": "high", "summary": 
 Run summary: 3 model call(s), 373 in + 108 out = 481 tokens
 ```
 
-Look at the three replies. The `str` run answered as if it were the helpdesk (it even claims an action it never
-took). The plain `json` prompt gave `"Hardware"` and `"High"`: valid JSON, but *not* the vocabulary your code
-expects. Only the Pydantic version, whose instructions carry the schema, returned the allowed values.
+Look at the three replies. The `str` run answered as if it were the helpdesk, and it even claims an action it
+never took. The plain `json` prompt gave `"Hardware"` and `"High"`. That is valid JSON, but not the words your
+code expects. Only the Pydantic version returned the allowed values, because its instructions include the schema.
 
 ### 3. `03_helpdesk_triage_chain.py`: a triage chain with a retry
 
@@ -109,8 +110,8 @@ expects. Only the Pydantic version, whose instructions carry the schema, returne
 ./run 06.2/3
 ```
 
-A partial prompt with format instructions, a `PydanticOutputParser`, one `batch` call for three tickets, and a
-retry loop (capped at 2 attempts) that sends the parse error back to the model. A ticket that never parses is routed to a person.
+A partial prompt with format instructions, a `PydanticOutputParser` and one `batch` call for three tickets. A
+retry loop (at most 2 attempts) sends the parse error back to the model. A ticket that never parses goes to a person.
 
 **Expected output** (trimmed):
 
@@ -125,27 +126,29 @@ I locked myself out of my account after changing m...
 Run summary: 3 model call(s), 951 in + 155 out = 1106 tokens
 ```
 
-The real model parsed on the first attempt every time here, so the retry branch did not run; on the stub
-it does. Notice that a software licence request is marked `needs_human`: an approval is a human act.
+Here the real model's reply parsed on the first attempt every time, so the retry branch did not run. On the
+stub it does. Notice that the software licence request is marked `needs_human`, because only a person can
+approve it.
 
 ## Try this
 
-1. **Break a partial.** Make `today` a function: `.partial(today=lambda: date.today().isoformat())`. When is it called?
-2. **Make the placeholder required.** Remove `optional=True` and call without `history`. What error appears?
-3. **Tighten the parser.** In script 3 remove `"other"` from the `category` `Literal` and add a ticket that fits no category. What happens?
-4. **Add few-shot examples.** Put two example human/AI message pairs in the `history` slot of script 1. Does the style of the answer change?
-5. **Force a failure.** In script 3 set the prompt's format instructions to an empty string. How often does the retry branch run?
-6. **Compare with 06.1.** Replace the parser in script 3 with `model.with_structured_output(Triage)`. What do you gain, and what do you lose (token counts, portability)?
+1. Break a partial. Make `today` a function: `.partial(today=lambda: date.today().isoformat())`. When is it called?
+2. Make the placeholder required. Remove `optional=True` and call without `history`. What error appears?
+3. Tighten the parser. In script 3 remove `"other"` from the `category` `Literal` and add a ticket that fits no category. What happens?
+4. Add few-shot examples (sample questions and answers that show the model what you want). Put two example human/AI message pairs in the `history` slot of script 1. Does the style of the answer change?
+5. Force a failure. In script 3 set the prompt's format instructions to an empty string. How often does the retry branch run?
+6. Compare with 06.1. Replace the parser in script 3 with `model.with_structured_output(Triage)`. What do you gain, and what do you lose (token counts, portability)?
 
 ## If it does not work
 
-Run `./run doctor`; install the packages with `uv sync --extra langchain`. If script 3 says it is giving up on a
-ticket, your model is not following the JSON format: try `temperature=0`, a stronger model, or shorter
-instructions. `401` or `404` errors are settings problems as in lesson 01.1: check `LLM_API_KEY` and `LLM_MODEL`.
+Run `./run doctor`, and install the packages with `uv sync --extra langchain`. If script 3 says it is giving up
+on a ticket, your model is not following the JSON format. Try `temperature=0`, a stronger model, or shorter
+instructions. `401` or `404` errors are settings problems, as in lesson 01.1. Check `LLM_API_KEY` and `LLM_MODEL`.
 
 ## In the running scenario
 
-The helpdesk's triage step is now a chain with a typed result and a safety net: the next stages of the system
-(queue routing, replies) can trust a `Triage` object instead of parsing prose. Next the assistant learns to remember the conversation.
+The helpdesk's triage step is now a chain with a typed result and a safety net. The later stages of the system,
+such as queue routing and replies, can trust a `Triage` object instead of parsing free text. Next the assistant
+learns to remember the conversation.
 
 **Next:** 06.3 · Conversation memory across turns and sessions (planned)

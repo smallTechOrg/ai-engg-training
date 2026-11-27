@@ -4,25 +4,25 @@
 
 ## What you will learn
 
-- How to combine logs, traces, metrics and a budget guard around one small assistant.
-- How to make a budget stop a degrade (a `blocked` status), not a crash.
-- How to check acceptance criteria for an operated service, and evaluate alert rules on scraped metrics.
+- How to put logs, traces, metrics and a budget guard around one small assistant.
+- How to make a spent budget step the service down (a `blocked` status) instead of crashing it.
+- How to check acceptance criteria for a service you run, and test alert rules against scraped metrics.
 
 ## The idea
 
-**What is new since 17.4.** Nothing new is introduced: this capstone combines 17.1 (logs, traces), 17.2 (served and scraped metrics, same names as the dashboard), and 17.3 (budget guard, SLO). 17.4's lesson applies to what you would do next: the logs these scripts produce are the raw material for a dataset.
+This capstone adds nothing new. It combines 17.1 (logs and traces), 17.2 (served and scraped metrics, with the same names as the dashboard) and 17.3 (budget guard and SLO). The lesson from 17.4 applies to what you would do next, because the logs these scripts write are the raw material for a dataset.
 
-**The brief.** The Larkspur Labs helpdesk assistant classifies a ticket and replies (two model calls). Make it operable: whoever is on call must be able to see what happened, how much it cost, and be protected from a runaway bill.
+**The brief.** The Larkspur Labs helpdesk assistant classifies a ticket and then replies, which takes two model calls. Make it something a team can run. Whoever is on call must be able to see what happened and what it cost, and must be protected from a runaway bill.
 
 **Acceptance criteria.**
 
 1. Every ticket produces a JSON log line with a trace id, and one trace with `classify` and `reply` spans.
 2. Metrics `helpdesk_requests_total`, `_llm_latency_seconds`, `_llm_tokens_total`, `_llm_cost_dollars_total` and `helpdesk_budget_remaining_dollars` are exposed and match the 17.2 dashboard.
-3. A budget guard checks before each model call; an exhausted budget gives status `blocked`, never an exception to the caller, and no call is made.
-4. Blocked tickets are visible in metrics and alertable.
+3. A budget guard checks before each model call. A spent budget gives the status `blocked`, never an exception to the caller, and no call is made.
+4. Blocked tickets show up in the metrics, and you can alert on them.
 5. Availability on attempted tickets meets a 99% SLO.
 
-**Stretch goals.** Run Jaeger (17.1) and set `OTEL_EXPORTER_OTLP_ENDPOINT` so script 3 exports the traces. Serve on port 8000 with the 17.2 compose stack and watch the dashboard. Turn the alert rules into a Prometheus rules file. Add a cheaper-model fallback when the budget is 80% spent.
+**Stretch goals.** Run Jaeger (17.1) and set `OTEL_EXPORTER_OTLP_ENDPOINT` so script 3 exports the traces. Serve on port 8000 with the 17.2 compose stack and watch the dashboard. Turn the alert rules into a Prometheus rules file. Add a fallback to a cheaper model once 80% of the budget is spent.
 
 ```mermaid
 flowchart LR
@@ -37,11 +37,11 @@ flowchart LR
 
 ## Scripts
 
-All three contain the same `Assistant` wrapper (lessons never import each other); read it in script 1.
+All three scripts contain the same `Assistant` wrapper, because lessons never import each other. Read it in script 1.
 
-### 1. `01_monitored_assistant.py` — the wrapper and its three outputs
+### 1. `01_monitored_assistant.py`: the wrapper and its three outputs
 
-Run: `./run 17.5/1`. Handles six tickets with a comfortable budget, then prints log lines, one trace and the metrics.
+Run: `./run 17.5/1`. The script handles six tickets with plenty of budget, then prints the log lines, one trace and the metrics.
 
 **Expected output** (trimmed, real run):
 
@@ -60,9 +60,9 @@ helpdesk_budget_remaining_dollars 0.009374
 6 of 6 tickets ok.
 ```
 
-### 2. `02_budget_and_slo.py` — the budget runs out; acceptance criteria
+### 2. `02_budget_and_slo.py`: the budget runs out; acceptance criteria
 
-Run: `./run 17.5/2`. A cap of 5 model calls cannot cover six tickets. The guard blocks the rest and the script prints PASS/FAIL per criterion.
+Run: `./run 17.5/2`. A cap of 5 model calls cannot cover six tickets. The guard blocks the rest, and the script prints PASS or FAIL for each criterion.
 
 **Expected output** (trimmed, real run):
 
@@ -82,11 +82,11 @@ PASS  blocked tickets are visible in metrics
 PASS  availability meets the SLO on attempted tickets
 ```
 
-Ticket 3 was classified (call 5) but its reply was blocked, so it is `blocked` with category `access`; the others never called the model and fall back to `other`.
+Ticket 3 was classified (call 5), but its reply was blocked. So it shows `blocked` with the category `access`. The others never called the model and fall back to `other`.
 
-### 3. `03_serve_scrape_and_alert.py` — scrape and alert
+### 3. `03_serve_scrape_and_alert.py`: scrape and alert
 
-Run: `./run 17.5/3`. Runs the batch, serves metrics on a free loopback port, scrapes them with `urllib`, and evaluates three alert rules with the PromQL beside each. If `OTEL_EXPORTER_OTLP_ENDPOINT` is reachable it also exports traces; otherwise it says so and continues (exit 0, no service required).
+Run: `./run 17.5/3`. The script runs the batch, serves the metrics on a free local port and scrapes them with `urllib`. It then checks three alert rules, with the PromQL beside each. If `OTEL_EXPORTER_OTLP_ENDPOINT` is reachable, it also exports traces. If not, it says so and carries on (exit 0, no service needed).
 
 **Expected output** (trimmed, real run, no Jaeger):
 
@@ -100,26 +100,26 @@ quiet   less than 20% of the budget left
 Done. Metrics were scraped over HTTP; traces were kept in memory.
 ```
 
-With Jaeger running you would also see "exporting traces to the OTLP endpoint" and find service `larkspur-helpdesk` in its UI (described, not run here).
+With Jaeger running, you would also see "exporting traces to the OTLP endpoint" and find the service `larkspur-helpdesk` in its UI. (This is described, not run here.)
 
 ## Try this
 
-1. In script 2 change the call cap to 8. How many tickets are blocked now? Is it the same ones?
-2. Make a model error: use `--model` with a name the endpoint lacks. Which status and alert does it produce?
+1. In script 2, change the call cap to 8. How many tickets are blocked now? Are they the same ones?
+2. Cause a model error: pass `--model` with a name the endpoint does not have. Which status and alert does it produce?
 3. Add a `model` label to the request counter. What does it do to the number of series?
-4. Make the guard read a monthly spend from a file so budgets persist across runs.
-5. Add a fourth alert: p95 latency above 5 seconds, computed from the histogram buckets.
-6. Use the logs these scripts wrote as input to 17.4/2 and see what the dataset builder keeps.
+4. Make the guard read a monthly spend from a file, so budgets carry over between runs.
+5. Add a fourth alert: p95 latency above 5 seconds, worked out from the histogram buckets.
+6. Feed the logs these scripts wrote into 17.4/2 and see what the dataset builder keeps.
 
 ## If it does not work
 
 - Run `./run doctor` and install the extra with `./setup.sh --all`.
-- Script 3 exports traces only if `OTEL_EXPORTER_OTLP_ENDPOINT` is set and reachable (start Jaeger with the compose file from 17.1, or point it at a cloud collector in `.env`; 4318 is the HTTP port).
-- A FAIL on the availability line means a call errored; check the error type on the trace's root span.
-- Slow runs: each ticket makes two sequential model calls.
+- Script 3 exports traces only if `OTEL_EXPORTER_OTLP_ENDPOINT` is set and reachable. Start Jaeger with the compose file from 17.1, or point the variable at a cloud collector in `.env`. Port 4318 is the HTTP port.
+- A FAIL on the availability line means a call failed. Check the error type on the root span of the trace.
+- If runs are slow, that is because each ticket makes two model calls, one after the other.
 
 ## In the running scenario
 
-The assistant is now something you can operate: a log line, a trace and metrics per ticket, a hard stop on spend, and alert rules that say when to wake someone. That is the evidence a team needs before letting it answer staff directly.
+The assistant is now something you can operate. Each ticket leaves a log line, a trace and metrics. Spending has a hard stop, and alert rules say when to wake someone. That is the evidence a team needs before letting the assistant answer staff directly.
 
 **Next:** 18.1 · The risk landscape and prompt injection (planned)

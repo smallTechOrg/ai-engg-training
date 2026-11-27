@@ -1,13 +1,13 @@
 """14.3/2  A crew as one node of a LangGraph graph
 
-LangGraph (modules 08-09) owns the workflow: state, branches, persistence. CrewAI owns one
-step: "have a small team write something". The glue is tiny, because a LangGraph node is just a
-function from state to a state update, and inside that function you may call crew.kickoff().
+LangGraph (modules 08-09) runs the workflow: state, branches, saving progress. CrewAI handles one
+step: "have a small team write something". Very little code joins them, because a LangGraph node
+is just a function that takes the state and returns an update. Inside it you can call crew.kickoff().
 
   START -> intake (plain Python) -> crew (CrewAI: drafter + reviewer) -> finish (plain Python) -> END
 
-Use each tool for what it is good at: the graph for control flow you can test and resume, the
-crew for the open-ended text work. The crew here has two tasks, so expect about 3-5 model requests.
+Use each tool for what it does well: the graph for control flow you can test and resume, the crew
+for open-ended writing. The crew here has two tasks, so expect about 3-5 model requests.
 
 Run it:   ./run 14.3/2          (Windows: run 14.3/2)
 """
@@ -45,11 +45,11 @@ def main(ctx):
               api_key=ctx.settings.api_key, temperature=0.2)
 
     def intake(state: State) -> dict:
-        # Plain Python: no model, fully deterministic and unit-testable.
+        # Plain Python with no model: it gives the same output every time and is easy to unit test.
         return {"cleaned": " ".join(state["ticket"].split())}
 
     def crew_node(state: State) -> dict:
-        # The whole crew lives inside this one node. A fresh crew per call keeps nodes independent.
+        # The whole crew lives inside this one node. Building a fresh crew per call keeps nodes independent.
         drafter = Agent(role="Reply drafter", goal="Draft a short helpdesk reply", backstory="You write for Larkspur Labs IT.",
                         llm=llm, allow_delegation=False, max_iter=3)
         reviewer = Agent(role="Tone reviewer", goal="Make replies calm, kind and at most three sentences",

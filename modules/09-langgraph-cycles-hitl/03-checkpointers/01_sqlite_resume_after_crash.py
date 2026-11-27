@@ -1,9 +1,9 @@
 """09.3/1  A SQLite checkpointer and a simulated crash (no model)
 
 A checkpointer saves the graph state after every step. Here the checkpoints go to a
-SQLite file. Step 2 "crashes" on the first run; we then open the file again with a brand
-new graph object (as a restarted process would) and continue from the saved step instead
-of starting over. Steps that already finished do not run twice.
+SQLite file. Step 2 "crashes" on the first run. The script then opens the file again with
+a brand new graph object, as a restarted process would, and continues from the saved step
+instead of starting over. Steps that already finished do not run twice.
 
 Run it:   ./run 09.3/1          (Windows: run 09.3/1)
 """
@@ -65,7 +65,7 @@ def main(ctx):
             snap = graph.get_state(config)
             ctx.note(f"saved state: {snap.values}")
             ctx.note(f"next node to run: {snap.next}")
-        ctx.note("The with-block closed the connection: that process is gone. Only the file remains.")
+        ctx.note("The with-block closed the connection, so that process is gone. Only the file remains.")
         ctx.note(f"checkpoint file exists: {Path(db).exists()} ({Path(db).stat().st_size} bytes)")
 
         ctx.step("Process 2: new connection, new graph object, same thread_id")
@@ -73,7 +73,7 @@ def main(ctx):
         with SqliteSaver.from_conn_string(db) as saver:
             graph = build(saver)
             ctx.note(f"state loaded from the file: {graph.get_state(config).values}")
-            ctx.note("invoke(None, config) means: no new input, continue from the last checkpoint.")
+            ctx.note("invoke(None, config) means: there is no new input, so continue from the last checkpoint.")
             final = graph.invoke(None, config)
             ctx.show_data("final state", final)
 
@@ -82,8 +82,8 @@ def main(ctx):
                 ctx.note(f"step {snap.metadata.get('step')}: next={snap.next} log entries={len(snap.values.get('log', []))}")
 
     ctx.step("What to take away")
-    ctx.note("'collect' ran once, not twice: the first run's result was loaded, not recomputed.")
-    ctx.note("SqliteSaver is a good default for one machine: no server, one file. Use Redis or Postgres when several workers share state.")
+    ctx.note("'collect' ran once, not twice. The graph loaded the first run's result instead of redoing it.")
+    ctx.note("SqliteSaver suits one machine: one file, no server. Use Redis or Postgres when several workers share state.")
 
 
 if __name__ == "__main__":

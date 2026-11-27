@@ -4,17 +4,19 @@
 
 ## What you will learn
 
-- What a **trace** and a **span** are, and why every LLM app needs them.
-- How to record latency, inputs, outputs and token cost per step with 40 lines of plain Python.
-- How LangChain **callback handlers** collect the same tree without touching your chain.
-- How to answer "which step is slowest, which costs most?" and how to send the same data to LangSmith.
+- What a trace and a span are, and why every LLM app needs them.
+- How to record the time taken (latency), inputs, outputs and token cost of each step with 40 lines of plain Python.
+- How LangChain callback handlers collect the same information without any change to your chain.
+- How to answer "which step is slowest, which costs most?", and how to send the same data to LangSmith.
 
 ## The idea
 
-A model app is rarely one call. It is a chain: classify, retrieve, reply. When an answer is
-slow, wrong or expensive you need to know **which step** did it. A **trace** is the record of
-one run; it is a tree of **spans**. A span is one unit of work: start and end time, inputs,
-outputs, tokens, an error if any, and a link to its parent span.
+A model app is rarely a single call. It is usually a chain of steps, such as classify, retrieve
+and reply. When an answer is slow, wrong or expensive, you need to know which step caused it.
+
+A trace is the record of one run. It is shaped like a tree, and each branch is a span. A span is
+one unit of work. It records the start and end time, the inputs, the outputs, the tokens used,
+any error, and a link to its parent span.
 
 ```mermaid
 flowchart TD
@@ -25,11 +27,13 @@ flowchart TD
     P --> P1[span: model call 64 in / 46 out]
 ```
 
-Script 1 builds the recorder by hand. In LangChain you do not wrap anything: the framework
-announces every chain and model start and end to **callback handlers** (`on_chain_start`,
-`on_llm_end`, ...). A handler that stores them is a tracer; LangSmith is a handler that
-uploads them. Cost is tokens times your provider's price per token; the lesson uses invented
-prices, put your own in.
+Script 1 builds the recorder by hand. In LangChain you do not need to wrap anything. The
+framework tells its callback handlers (`on_chain_start`, `on_llm_end`, ...) every time a chain
+or model call starts and ends. A handler that stores these events is a tracer. LangSmith is a
+handler that uploads them.
+
+Cost is the number of tokens times your provider's price per token. The lesson uses made-up
+prices, so put in your own.
 
 ## Scripts
 
@@ -39,8 +43,8 @@ prices, put your own in.
 ./run 10.1/1
 ```
 
-A context manager opens a span, nested `with` blocks become children, and a tree printer
-sums tokens upward. No packages beyond the standard library.
+A context manager opens a span, and `with` blocks nested inside it become its children. A tree
+printer adds the tokens up from children to parents. You only need the standard library.
 
 **Expected output** (trimmed; numbers will differ):
 
@@ -56,9 +60,9 @@ sums tokens upward. No packages beyond the standard library.
 ./run 10.1/2
 ```
 
-A `BaseCallbackHandler` subclass (`TraceRecorder`) records every chain and model call using
-`run_id` and `parent_run_id`, reading tokens from the model message's `usage_metadata`. The
-chain itself contains no tracing code: `chain.invoke(..., config={"callbacks": [recorder]})`.
+A `BaseCallbackHandler` subclass (`TraceRecorder`) records every chain and model call, linked by
+`run_id` and `parent_run_id`. It reads the tokens from the model message's `usage_metadata`. The
+chain itself has no tracing code. You only pass the recorder in: `chain.invoke(..., config={"callbacks": [recorder]})`.
 
 **Expected output** (trimmed):
 
@@ -73,8 +77,8 @@ chain itself contains no tracing code: `chain.invoke(..., config={"callbacks": [
       ...
 ```
 
-By hand you wrote `with tracer.span(...)` around each step; here LangChain emits those events
-itself, including for the prompt and parser steps you never thought of as steps.
+By hand you wrote `with tracer.span(...)` around each step. Here LangChain sends those events
+itself, even for the prompt and parser, which you may not have thought of as steps.
 
 ### 3. `03_scenario_triage_trace_report.py`: slowest and costliest span
 
@@ -82,9 +86,9 @@ itself, including for the prompt and parser steps you never thought of as steps.
 ./run 10.1/3
 ```
 
-Runs the triage-then-reply chain on three tickets, prints the trace and reports the slowest
-model call, the most expensive one and a per-step total. If `LANGSMITH_API_KEY` is set it also
-sends the run to LangSmith; otherwise it explains how and carries on.
+The script runs the triage-then-reply chain on three tickets and prints the trace. It reports the
+slowest model call, the most expensive one, and a total for each step. If `LANGSMITH_API_KEY` is set,
+it also sends the run to LangSmith. If not, it explains how to turn that on and carries on.
 
 **Expected output** (trimmed):
 
@@ -101,15 +105,16 @@ Per step, summed over the three tickets
 }
 ```
 
-Reading it: cost follows output tokens, so `reply` costs about four times more; latency has a
-fixed network part, so even a one-word `classify` can be the slowest call.
+How to read this: cost follows output tokens, so `reply` costs about four times more. Every call
+also spends a fixed amount of time on the network, so even a one-word `classify` can be the
+slowest call.
 
-**Using LangSmith.** Create a key at smith.langchain.com, then set `LANGSMITH_API_KEY`,
-`LANGSMITH_TRACING=true` and optionally `LANGSMITH_PROJECT` in your environment. With
-`LANGSMITH_TRACING=true`, every LangChain run in any script is traced with no code change;
-script 3 attaches a `LangChainTracer` explicitly so it only sends when a key exists.
-Note that traces contain your prompts and replies: do not send real employee data to a
-hosted service you have not approved.
+To use LangSmith, create a key at smith.langchain.com. Then set `LANGSMITH_API_KEY`,
+`LANGSMITH_TRACING=true` and, if you like, `LANGSMITH_PROJECT` in your environment. With
+`LANGSMITH_TRACING=true`, every LangChain run in any script is traced without code changes.
+Script 3 attaches a `LangChainTracer` itself, so it only sends data when a key exists.
+Traces contain your prompts and replies, so do not send real employee data to a hosted
+service you have not approved.
 
 ## Try this
 
@@ -124,13 +129,14 @@ hosted service you have not approved.
 
 - Run `./run doctor` to check the endpoint and the installed extras.
 - `ModuleNotFoundError: langchain_core`: install the extra, `uv sync --extra langchain` (the launcher prints the exact command).
-- All costs show `$0`: your endpoint does not report token usage. Latency still works.
+- All costs show `$0`: your endpoint does not report token usage. Latency is still measured.
 - LangSmith shows nothing: check the key, `LANGSMITH_TRACING=true`, and that you look at the right project.
 
 ## In the running scenario
 
-Tracing is how the helpdesk assistant stays affordable and fast: when replies get slow or the
-bill grows, the span tree says whether classification, retrieval or the reply is to blame.
-The next lessons in this module judge answer quality; traces give them something to judge.
+Tracing keeps the helpdesk assistant affordable and fast. When replies get slow or the bill
+grows, the span tree tells you whether classification, retrieval or the reply is to blame.
+The next lessons in this module measure the quality of the answers, and traces give them the
+material to work with.
 
 **Next:** 10.2 · Evaluation datasets and heuristic evaluators (planned)

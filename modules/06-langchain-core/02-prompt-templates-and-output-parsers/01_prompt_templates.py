@@ -6,8 +6,8 @@ Lesson 06.1 used a ChatPromptTemplate with two variables. Here we open the templ
   - `.partial(...)`: fix some variables now, supply the rest later
   - `MessagesPlaceholder`: a slot that takes a whole list of messages (chat history, examples)
 
-A prompt template is a Runnable: `invoke(dict)` returns a ChatPromptValue. No model is needed to
-test one, which makes templates cheap to unit-test. One model call at the end shows the result in use.
+A prompt template is a Runnable: `invoke(dict)` returns a ChatPromptValue. You need no model to
+test one, so templates are cheap to unit-test. One model call at the end shows the result in use.
 
 Run it:   ./run 06.2/1          (Windows: run 06.2/1)
 """
@@ -44,7 +44,7 @@ def main(ctx):
     helpdesk_prompt = prompt.partial(company="Larkspur Labs", today=date.today().isoformat())
     ctx.show_data("input_variables after partial", sorted(helpdesk_prompt.input_variables))
     show(ctx, "Rendered", helpdesk_prompt.invoke({"sentences": 2, "question": "How do I reset my password?"}))
-    ctx.note("A partial value can also be a function (called at invoke time): .partial(today=lambda: ...) keeps dates fresh.")
+    ctx.note("A partial value can be a function, called at invoke time. .partial(today=lambda: ...) keeps dates fresh.")
 
     ctx.step("MessagesPlaceholder: a slot for a list of messages")
     chat_prompt = ChatPromptTemplate.from_messages(
@@ -67,7 +67,7 @@ def main(ctx):
     message = chain.invoke({"history": history, "question": "And on my phone?"})
     ctx.show_data("AIMessage content", message.content)
     ctx.record_usage(message.usage_metadata)
-    ctx.note("By hand (module 01) you built the same list with f-strings and dicts; the template adds names, checks and reuse.")
+    ctx.note("In module 01 you built this list with f-strings and dicts. The template adds names, checks and reuse.")
 
 
 if __name__ == "__main__":

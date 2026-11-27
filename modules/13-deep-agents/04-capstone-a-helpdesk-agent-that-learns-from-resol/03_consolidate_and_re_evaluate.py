@@ -1,12 +1,12 @@
 """13.4/3  Consolidate the history, then answer from the consolidated memory
 
 The history in tickets.json has eight episodes. As in 13.3/3, one model call turns repeated episodes
-into semantic facts and procedures (with sources) and archives the sources. Then the four incoming
-tickets are answered from the CONSOLIDATED memory (recall over active memories, relevance floor),
-and scored with the same rule as 13.4/2.
+into semantic facts and procedures (with sources) and archives the sources. Then the script answers
+the four incoming tickets from the CONSOLIDATED memory (recall over active memories, with a relevance
+floor) and scores them with the same rule as 13.4/2.
 
-This shows the cost of consolidation honestly: a general procedure ("check secondary devices")
-may not contain the specific word a ticket is checked for ("phone"). Compare with 13.4/2.
+This shows what consolidation can cost. A general procedure ("check secondary devices") may not
+contain the specific word a ticket is checked for ("phone"). Compare with 13.4/2.
 
 Five model calls (1 consolidation + 4 answers). Run it:   ./run 13.4/3   (Windows: run 13.4/3)
 """
@@ -75,7 +75,7 @@ def main(ctx):
             entries = [("semantic", e) for e in data.get("facts", [])] + [("procedural", e) for e in data.get("procedures", [])]
         except (ValueError, AttributeError):
             entries = []
-            ctx.note("The consolidation reply was not usable JSON; the episodes stay as they are.")
+            ctx.note("The consolidation reply was not usable JSON, so the episodes stay as they are.")
         for n, (kind, entry) in enumerate(entries, 1):
             try:
                 text, sources = str(entry["text"]), [s for s in entry["sources"] if s in known]
@@ -116,7 +116,7 @@ def main(ctx):
         ctx.show_data("Per ticket", results)
         score = sum(r["result"] == "pass" for r in results)
         ctx.note(f"{score} of 4 pass. Acceptance bar: 3 of 4 -> {'PASS' if score >= 3 else 'FAIL'}.")
-        ctx.note("Compare with 13.4/2 (raw episodes). If a ticket now misses, look at what the consolidated entry kept and what it generalised away.")
+        ctx.note("Compare with 13.4/2 (raw episodes). If a ticket now fails, check what the consolidated entry kept and what it generalised away.")
         db.close()
 
 

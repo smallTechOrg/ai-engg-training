@@ -7,7 +7,7 @@ helpdesk_chat_app.py adds what a real page needs on top of 05.3/2:
   - a running token count in the sidebar
   - an st.error message, not a crash, when the model endpoint is down
 
-We drive it with AppTest and check each behaviour. Never launches a server.
+We drive it with AppTest and check each behaviour. It never launches a server.
 
 Run it:   ./run 05.3/3          (Windows: run 05.3/3)
 """
@@ -47,7 +47,7 @@ def main(ctx):
         ctx.show_data("The page raised", [e.value for e in at.exception])
         return
     ctx.show_data("Chat bubbles", bubbles(at))
-    ctx.note("The widget values were read on this run and went into the system prompt; no wiring code was needed.")
+    ctx.note("This run read the widget values and put them in the system prompt. No wiring code was needed.")
     ctx.note(f"Sidebar caption: {at.sidebar.caption[0].value}")
     tokens = (at.session_state["tokens_in"], at.session_state["tokens_out"])
 
@@ -66,7 +66,7 @@ def main(ctx):
     ctx.step("Tokens")
     ctx.record_usage({"prompt_tokens": tokens[0], "completion_tokens": tokens[1]})
     if tokens == (0, 0):
-        ctx.note("No usage reported by this provider (the counter stays at 0 rather than guessing).")
+        ctx.note("This provider reported no usage (the counter stays at 0 instead of guessing).")
 
 
 if __name__ == "__main__":

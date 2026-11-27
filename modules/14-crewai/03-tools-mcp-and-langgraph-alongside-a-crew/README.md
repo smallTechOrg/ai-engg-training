@@ -4,19 +4,19 @@
 
 ## What you will learn
 
-- How to give a crew the tools of an MCP server (module 11), and a version mismatch to watch for.
+- How to give a crew the tools of an MCP server (module 11), and a version mismatch to watch out for.
 - How to put a whole crew inside one LangGraph node.
-- How a LangGraph router can decide when a crew is worth paying for.
+- How a LangGraph router (a node that picks which path a ticket takes) can decide when a crew is worth paying for.
 
 ## The idea
 
-**What is new since 14.2:** crews now meet the rest of your stack. Tools can come from an MCP server
-instead of a Python function, and the crew itself becomes one step of a graph.
+In 14.2 the crew worked on its own. Now it connects to the rest of your stack. Tools can come from an MCP
+server instead of a Python function, and the crew itself becomes one step of a graph.
 
-A LangGraph node is just a function from state to a state update, so `crew.kickoff()` can run inside it.
-The graph keeps the control flow (testable, branching, resumable); the crew does the open-ended text work.
-Because a crew costs several requests per task, a conditional edge can send easy tickets down a cheap
-one-call path.
+A LangGraph node is just a function that takes the state and returns an update, so `crew.kickoff()` can
+run inside it. The graph keeps the control flow, which you can test, branch and resume. The crew does the
+open-ended writing. A crew costs several requests per task, so a conditional edge can send easy tickets
+down a cheap path that makes one call.
 
 ```mermaid
 flowchart LR
@@ -30,7 +30,7 @@ flowchart LR
 ## Scripts
 
 Run all three with `./run 14.3`. The folder also holds `asset_server.py`, a tiny MCP server that script 1
-launches over stdio (no port).
+starts over stdio (standard input and output, so no network port).
 
 ### 1. `01_mcp_tools_in_a_crew.py`: an MCP server as a toolbox
 
@@ -38,11 +38,11 @@ launches over stdio (no port).
 ./run 14.3/1
 ```
 
-CrewAI has `Agent(mcps=[MCPServerStdio(...)])`. On this install it builds an **empty argument schema** for
-the tool (it reads the camelCase `inputSchema`, but mcp 2.x calls it `input_schema`), so the model is
-not told the tool needs a `tag` and guesses wrong arguments. The script shows the empty schema, then
-bridges the tool by hand: it lists the server's tools with the module 11 client and wraps each one as a
-CrewAI `BaseTool` whose `args_schema` is built from the real schema.
+CrewAI has a built-in option, `Agent(mcps=[MCPServerStdio(...)])`. On this install it builds an empty
+argument schema for the tool. It reads the camelCase `inputSchema`, but mcp 2.x calls the field
+`input_schema`. So the model is not told the tool needs a `tag`, and it guesses the wrong arguments. The
+script shows the empty schema, then connects the tool by hand. It lists the server's tools with the
+module 11 client and wraps each one as a CrewAI `BaseTool`, with an `args_schema` built from the real schema.
 
 **Expected output** (trimmed):
 
@@ -66,8 +66,8 @@ requests and tokens
 ./run 14.3/2
 ```
 
-`intake` (plain Python), `crew` (drafter and reviewer) and `finish` (plain Python) as a graph. The script
-streams each node's update and reports how many requests the crew node used.
+The graph has three nodes: `intake` (plain Python), `crew` (a drafter and a reviewer) and `finish` (plain
+Python). The script streams each node's update and reports how many requests the crew node used.
 
 **Expected output** (trimmed):
 
@@ -87,8 +87,8 @@ The crew node used 4 model request(s); the other two nodes used none.
 ./run 14.3/3
 ```
 
-A JSON triage call sets `complexity`. Simple tickets get one plain call; complex ones go to a crew whose
-researcher has a `search_runbook` tool. Two tickets run through the same graph.
+A triage call returns JSON that sets `complexity`. A simple ticket gets one plain call. A complex one goes
+to a crew whose researcher has a `search_runbook` tool. Two tickets run through the same graph.
 
 **Expected output** (trimmed):
 
@@ -103,7 +103,7 @@ crew finished: 6 request(s)
 result: { "complexity": "complex", "path": "crew", "reply": "We are aware of the file server outage ..." }
 ```
 
-The simple ticket cost two plain calls; the incident cost one call plus six crew requests.
+The simple ticket cost two plain calls. The incident cost one call plus six crew requests.
 
 ## Try this
 
@@ -117,10 +117,10 @@ The simple ticket cost two plain calls; the incident cost one call plus six crew
 ## If it does not work
 
 Run `./run doctor`. You need `uv sync --extra crewai --extra langgraph`. Script 1 starts a Python
-subprocess for the MCP server; if it times out, check that `asset_server.py` runs on its own.
+subprocess for the MCP server. If it times out, check that `asset_server.py` runs on its own.
 
 ## In the running scenario
 
-Easy tickets stay cheap and incidents get a team. The graph, not the crew, decides which.
+Easy tickets stay cheap, and incidents get a team. The graph decides which is which, not the crew.
 
 **Next:** 14.4 · Capstone: a helpdesk incident-response crew (planned)

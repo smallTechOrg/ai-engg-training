@@ -1,16 +1,16 @@
 """13.2/3  Scenario: a validated plan for a phishing report
 
-A user says they typed their password into a phishing page. The assistant plans a containment,
-but a plan from a model is untrusted input, so it passes a gate BEFORE anything runs:
+A user says they typed their password into a phishing page. The assistant plans how to contain
+the damage. A plan from a model is untrusted input, so it must pass a gate BEFORE anything runs:
 
-  - every tool must exist and have its required arguments (pydantic checks the shape);
-  - at most MAX_STEPS steps;
-  - tools marked risky are listed for approval (here approved automatically and printed; a real
-    system would ask a person - see module 09 for human-in-the-loop).
+  - every tool must exist and have its required arguments (pydantic checks the shape)
+  - the plan has at most MAX_STEPS steps
+  - tools marked risky are listed for approval. Here they are approved automatically and printed.
+    A real system would ask a person (module 09 covers human-in-the-loop).
 
-An invalid plan goes back to the planner once with the errors. A step that fails triggers a replan
-(capped), exactly as in 13.2/2. The simulated identity provider times out on its first
-revoke_sessions call, so a replan or retry is expected.
+An invalid plan goes back to the planner once, with the errors. A step that fails triggers a
+replan, up to a cap, exactly as in 13.2/2. The simulated identity provider times out on its first
+revoke_sessions call, so you should expect a replan or a retry.
 
 Run it:   ./run 13.2/3          (Windows: run 13.2/3)
 """
@@ -77,7 +77,7 @@ class Plan(BaseModel):
     steps: list[Step]
 
 
-# The FIRST JSON object in the prompt is a format example for a different (invented) situation.
+# The FIRST JSON object in the prompt only shows the format, using a different (invented) situation.
 PLANNER_SYSTEM = (
     'Write a containment plan as JSON only, shaped like this example: {"steps": [{"tool": "lookup_user", "args": {"username": "alexample"}}, '
     '{"tool": "open_security_ticket", "args": {"username": "alexample", "summary": "one line"}}]}\n'

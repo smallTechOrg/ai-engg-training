@@ -1,9 +1,10 @@
 """17.5/2  Budget guard and SLO: what happens when the money runs out
 
-The same monitored assistant (copied from script 1), but with a budget too small for six tickets.
-The guard must block the later tickets cleanly: a "blocked" status, a metric, a span attribute, no
-crash and no call made. Then we evaluate the acceptance criteria of the capstone and print PASS or FAIL
-for each. Blocked tickets are a deliberate degrade, not an error: they are counted separately.
+This is the same monitored assistant (copied from script 1), but its budget is too small for six
+tickets. The guard must block the later tickets cleanly: a "blocked" status, a metric and a span
+attribute, with no crash and no call made. Then the script checks the capstone's acceptance criteria
+and prints PASS or FAIL for each. A blocked ticket is a planned step down in service, not an error,
+so blocked tickets are counted separately.
 
 Run it:   ./run 17.5/2          (Windows: run 17.5/2)
      or:  python modules/17-monitoring-and-fine-tuning/05-capstone-a-monitored-helpdesk-assistant/02_budget_and_slo.py
@@ -155,7 +156,7 @@ LATENCY_THRESHOLD_S = 5.0
 def main(ctx):
     ctx.step("Build the assistant with a budget that cannot cover six tickets")
     assistant = Assistant(ctx, BudgetGuard(max_dollars=1.0, max_calls=5))
-    ctx.note("Cap: 5 model calls. Each ticket needs 2, so the third ticket is blocked halfway and the rest before any call.")
+    ctx.note("Cap: 5 model calls. Each ticket needs 2, so ticket 3 is blocked halfway and the rest before any call.")
 
     ctx.step("Handle the six tickets")
     for ticket in TICKETS:
@@ -173,7 +174,7 @@ def main(ctx):
     availability = statuses["ok"] / attempted if attempted else 0.0
     slow = [r for r in assistant.records if r["status"] == "ok" and r["seconds"] > 2 * LATENCY_THRESHOLD_S]
     ctx.note(f"availability {availability:.0%} of {attempted} attempted (SLO {AVAILABILITY_SLO:.0%}); tickets slower than {2 * LATENCY_THRESHOLD_S:g}s (two model calls): {len(slow)}")
-    ctx.note("Blocked tickets are excluded from availability but reported on their own line: a budget stop is a business decision, and it needs its own alert.")
+    ctx.note("Blocked tickets are left out of availability but get their own line. A budget stop is a business decision and needs its own alert.")
 
     ctx.step("Acceptance criteria")
     spans = assistant.exporter.get_finished_spans()
@@ -187,7 +188,7 @@ def main(ctx):
     ]
     for text, passed in checks:
         ctx.console.print(f"{'PASS' if passed else 'FAIL'}  {text}", markup=False)
-    ctx.note("A FAIL on the last line means the endpoint errored on a ticket: that is the monitoring doing its job, not a bug in the lesson.")
+    ctx.note("A FAIL on the last line means the endpoint failed on a ticket. That is monitoring doing its job, not a lesson bug.")
 
 
 if __name__ == "__main__":

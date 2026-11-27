@@ -4,9 +4,9 @@
      |-- simple  -> quick_reply (one plain call)
      |-- complex -> crew (CrewAI researcher with a tool + responder)
 
-Crews are the expensive path (many requests per task), so the graph decides when to pay for one.
-The conditional edge is ordinary Python on the triage field. The crew's researcher has an
-@tool that reads a small invented runbook, as in 14.1.
+A crew is the expensive path (many requests per task), so the graph decides when to pay for one.
+The conditional edge is ordinary Python that reads the triage field. The crew's researcher has an
+@tool that reads a small made-up runbook, as in 14.1.
 
 Run it:   ./run 14.3/3          (Windows: run 14.3/3)
 """

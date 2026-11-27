@@ -1,11 +1,12 @@
 """05.3/1  How a Streamlit page works: the re-run model
 
-No model here. Streamlit runs your script from top to bottom on EVERY interaction (a click,
-a typed message). Plain variables reset each time; `st.session_state` survives. We use
-Streamlit's AppTest to run a tiny page in-process, click its button, and watch both.
+No model here. Streamlit runs your script from top to bottom every time the user does
+something (a click, a typed message). Plain variables reset each time, but
+`st.session_state` survives. We use Streamlit's AppTest to run a tiny page in-process,
+click its button, and watch both.
 
 Ideas:
-  - the script is the UI; there is no event-handler wiring
+  - the script is the UI: you do not wire up event handlers
   - st.session_state is the page's memory (the conversation will live there)
   - AppTest lets you test a page with no browser and no server
 
@@ -16,7 +17,7 @@ import logging
 
 from streamlit.testing.v1 import AppTest
 
-logging.getLogger("streamlit").setLevel(logging.ERROR)  # AppTest runs without a browser session: hide its harmless warnings
+logging.getLogger("streamlit").setLevel(logging.ERROR)  # AppTest runs without a browser, so hide its harmless warnings
 logging.getLogger("streamlit.runtime.scriptrunner_utils.script_run_context").disabled = True
 
 from labkit import lesson
@@ -41,14 +42,14 @@ def main(ctx):
     ctx.step("Run the page once")
     at = AppTest.from_function(counter_page).run()
     ctx.show_data("Text on the page", [element.value for element in at.markdown])
-    ctx.note("The script ran from the first line to the last once. AppTest gave us handles on its elements.")
+    ctx.note("The script ran once, from the first line to the last. AppTest lets us read its elements.")
 
     ctx.step("Click the button three times")
     for n in range(1, 4):
         at.button[0].click().run()  # one click = one full re-run of counter_page
         ctx.show_data(f"After click {n}", [element.value for element in at.markdown])
-    ctx.note("The plain variable shows 1 only on the run that handled the click; every run starts it from 0 again, so it never reaches 2.")
-    ctx.note("session_state kept counting. A chat page therefore keeps its message list there.")
+    ctx.note("The plain variable shows 1 only on the run that handled the click. Every run resets it to 0, so it never reaches 2.")
+    ctx.note("session_state kept counting. That is why a chat page keeps its message list there.")
 
     ctx.step("The chat elements you will use next")
     ctx.show_data(
@@ -60,7 +61,7 @@ def main(ctx):
             "st.session_state": "the list of messages, token counts, the name the user typed",
         },
     )
-    ctx.note("Why not just `while True: input()`? Because the page is re-run, not looped: state must be saved explicitly.")
+    ctx.note("Why not `while True: input()`? The page is re-run, not looped, so you must save state yourself.")
 
 
 if __name__ == "__main__":

@@ -1,15 +1,15 @@
 """01.4/2  The context grows
 
-A chat application resends the whole conversation on every turn (lesson 01.2), so the
-prompt gets longer every time. That costs money on every call and, eventually, runs into
-the model's context window: the most tokens one request can hold.
+A chat app sends the whole conversation again on every turn (lesson 01.2), so the prompt
+gets longer every time. That costs money on every call. Eventually it runs into the
+model's context window: the most tokens one request can hold.
 
-This script plays a scripted helpdesk conversation and records prompt_tokens per turn.
-It then re-asks the last question two cheaper ways, written in plain Python:
+This script plays a scripted helpdesk conversation and records prompt_tokens for each
+turn. Then it asks the last question again in two cheaper ways, written in plain Python:
 
-  1. sliding window: keep the system message and only the last N messages;
-  2. summarise older turns: one extra call condenses the early turns into a short summary
-     that replaces them.
+  1. sliding window: keep the system message and only the last N messages
+  2. summarise older turns: one extra call shrinks the early turns into a short summary
+     that takes their place
 
 The last question needs a detail from turn 1, so you can see what each strategy keeps.
 Eight model calls in all.

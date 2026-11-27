@@ -2,8 +2,8 @@
 
 Sooner or later you print your configuration to debug something, and the output ends up
 in a screenshot, a log file or a chat message. This script shows the habit that makes
-that safe: never print a secret, print a mask. It then shows how this course reads your
-real settings, with the key masked. No model calls.
+that safe: never print a secret, print a mask instead. It then shows how this course reads
+your real settings, with the key masked. It makes no model calls.
 
 Run it:   ./run 00.3/2          (Windows: run 00.3/2)
 """

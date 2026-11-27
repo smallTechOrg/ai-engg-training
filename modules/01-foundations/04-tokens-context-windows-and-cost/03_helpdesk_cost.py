@@ -1,9 +1,9 @@
 """01.4/3  What a helpdesk reply costs
 
-Providers bill per token, with separate prices for input (prompt) and output (completion)
-tokens, usually quoted per million tokens. This script answers one ticket, takes the real
-usage from the response, and turns it into money: per ticket, per 10,000 tickets, and
-what a longer system prompt would add.
+Providers charge per token. Input (prompt) tokens and output (completion) tokens have
+separate prices, usually quoted per million tokens. This script answers one ticket, takes
+the real token counts from the response, and turns them into money: per ticket, per 10,000
+tickets, and what a longer system prompt would add.
 
 The prices below are EXAMPLES, not any provider's real prices. Edit them to match yours.
 

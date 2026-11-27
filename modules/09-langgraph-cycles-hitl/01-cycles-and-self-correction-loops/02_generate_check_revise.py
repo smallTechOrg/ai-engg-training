@@ -1,8 +1,8 @@
 """09.1/2  Generate, check, revise
 
-The model drafts a helpdesk reply. A deterministic checker (plain Python) lists problems. If
-there are any, the graph loops back to the model with the problems as feedback. At most 3
-revisions, so the loop always ends.
+The model drafts a helpdesk reply. A checker written in plain Python lists any problems with
+it. If it finds some, the graph goes back to the model and passes the problems along as
+feedback. There are at most 3 revisions, so the loop always ends.
 
 Run it:   ./run 09.1/2          (Windows: run 09.1/2)
 """
@@ -26,7 +26,7 @@ class State(TypedDict):
 
 
 def check_reply(text: str) -> list[str]:
-    """Deterministic checks: length, mentions the ticket id, no forbidden phrases."""
+    """Rule-based checks: the length, that the ticket id is mentioned, and no forbidden phrases."""
     problems = []
     words = len(text.split())
     if words > 35:

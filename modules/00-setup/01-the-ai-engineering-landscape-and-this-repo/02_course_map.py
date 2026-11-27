@@ -1,9 +1,9 @@
 """00.1/2  The course map
 
 Reads curriculum.toml (the same file the launcher and CURRICULUM.md use) and prints the
-course as layers: each layer of the AI engineering stack, the modules that teach it, and
-how many of their lessons are ready. It ends with what the running scenario, the IT
-helpdesk assistant, gains at each layer. No model calls.
+course as a stack of layers. For each layer you see the modules that teach it and how many
+of their lessons are ready. It ends with what the course's running example, an IT helpdesk
+assistant, can do after each layer. It makes no model calls.
 
 Run it:   ./run 00.1/2          (Windows: run 00.1/2)
 """
@@ -11,7 +11,7 @@ Run it:   ./run 00.1/2          (Windows: run 00.1/2)
 from labkit import lesson
 from labkit.catalog import load_catalog, scenario
 
-# The stack, bottom to top. Each layer only makes sense once the one below is understood.
+# The stack, bottom to top. Each layer makes sense only after you understand the one below it.
 LAYERS = [
     ("Ground", ["00"], "A working environment, secrets, git, async Python."),
     ("One model call", ["01"], "Messages in, text out. Prompts, streaming, tokens, structured output."),
@@ -25,7 +25,7 @@ LAYERS = [
     ("Capstone", ["20"], "Design, build, deploy and present a complete system."),
 ]
 
-# What the helpdesk assistant can do once each layer is in place.
+# What the helpdesk assistant can do after each layer.
 HELPDESK_GAINS = [
     ("One model call", "answers a single ticket in one shot"),
     ("Tools and agents", "looks up tickets and resets passwords itself"),

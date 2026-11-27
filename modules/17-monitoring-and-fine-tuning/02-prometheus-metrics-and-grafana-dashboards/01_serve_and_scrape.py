@@ -1,11 +1,11 @@
 """17.2/1  Serve /metrics over HTTP, then scrape it yourself
 
-In 17.1 we printed generate_latest(). Here the metrics are served by a real HTTP endpoint
-(prometheus_client.start_http_server on a free port) and read back with a loopback request,
-exactly as Prometheus would scrape them. The scraped text is parsed into samples, and we
-compute by hand what rate() and histogram_quantile() would give.
+In 17.1 you printed generate_latest(). Here a real HTTP endpoint serves the metrics
+(prometheus_client.start_http_server on a free port), and the script reads them back with a
+request to itself, exactly as Prometheus would scrape (collect) them. It parses the text into
+samples and works out by hand what rate() and histogram_quantile() would give.
 
-To let a real Prometheus scrape it, set LESSON_METRICS_PORT=8000 in the environment: the
+To let a real Prometheus scrape it, set LESSON_METRICS_PORT=8000 in the environment. The
 script then serves on that port and waits 60 seconds after the calls.
 
 Run it:   ./run 17.2/1          (Windows: run 17.2/1)
@@ -98,11 +98,11 @@ def main(ctx):
     count = samples.get(("helpdesk_llm_latency_seconds_count", ()), 0)
     total = samples.get(("helpdesk_llm_latency_seconds_sum", ()), 0)
     ctx.note(f"average latency = sum / count = {total:.2f} s / {count:g} = {(total / count if count else 0):.2f} s")
-    ctx.note("histogram_quantile(0.95, ...) interpolates inside the bucket holding the 95th percentile. Cumulative bucket counts:")
+    ctx.note("histogram_quantile(0.95, ...) estimates inside the bucket that holds the 95th percentile. Running bucket counts:")
     cumulative = {float(dict(k[1])["le"]): v for k, v in samples.items() if k[0] == "helpdesk_llm_latency_seconds_bucket" and dict(k[1])["le"] != "+Inf"}
     for le in sorted(cumulative):
         ctx.console.print(f"  le={le:g}s  {cumulative[le]:g} of {count:g} calls", markup=False)
-    ctx.note("rate() needs two scrapes: (value now - value then) / seconds between. One scrape gives totals only, which is why dashboards use rate() and increase() on counters.")
+    ctx.note("rate() needs two scrapes: (value now - value then) / seconds between. One scrape only gives totals, so dashboards use rate() and increase() on counters.")
 
     if wanted.isdigit():
         ctx.step("Keep serving so a real Prometheus can scrape")

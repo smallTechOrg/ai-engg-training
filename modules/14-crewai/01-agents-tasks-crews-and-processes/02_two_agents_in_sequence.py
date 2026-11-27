@@ -1,13 +1,13 @@
 """14.1/2  Two agents in sequence: triager, then responder
 
-Two agents, two tasks, Process.sequential. Tasks run in the order listed. The second task
-declares context=[first_task], so CrewAI puts the first task's output into the second
-task's prompt. That is the whole "hand-off": there is no shared memory, only that text.
+Two agents, two tasks, Process.sequential. The tasks run in the order listed. The second task
+declares context=[first_task], so CrewAI puts the first task's output into the second task's
+prompt. That is all a "hand-off" is. There is no shared memory, only that text.
 
 By hand (modules 01 and 02) you would call the model once for the triage, paste the result
 into the next messages list and call it again. CrewAI does that pasting for you.
 
-Each task can cost more than one model call, so this crew makes a small handful of calls.
+Each task can cost more than one model call, so this crew makes a handful of calls.
 
 Run it:   ./run 14.1/2          (Windows: run 14.1/2)
 """

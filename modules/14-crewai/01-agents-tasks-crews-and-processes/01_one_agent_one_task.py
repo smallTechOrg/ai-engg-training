@@ -1,14 +1,14 @@
 """14.1/1  One agent, one task, a crew of one
 
-CrewAI's three nouns in the smallest possible program:
+CrewAI's three building blocks in the smallest possible program:
 
   Agent  a role, a goal and a backstory (these become the system prompt), plus an LLM
   Task   a description of the work and an expected_output (what "done" looks like)
   Crew   the agents and tasks together; crew.kickoff() runs them
 
 By hand (module 01) this was one chat call with a system message. CrewAI wraps it in a
-ReAct-style prompt format, so one task can make SEVERAL model calls. This crew of one
-usually makes one or two.
+ReAct-style prompt, so one task can make SEVERAL model calls. This crew of one usually
+makes one or two.
 
 Run it:   ./run 14.1/1          (Windows: run 14.1/1)
 """
@@ -16,7 +16,7 @@ Run it:   ./run 14.1/1          (Windows: run 14.1/1)
 import os
 
 # Turn CrewAI's telemetry off BEFORE importing it. CREWAI_TESTING also stops the first-run
-# "view your execution traces?" prompt, which would otherwise wait 20 seconds for a keypress.
+# "view your execution traces?" prompt, which would otherwise wait 20 seconds for you to press a key.
 os.environ["CREWAI_DISABLE_TELEMETRY"] = "true"
 os.environ["OTEL_SDK_DISABLED"] = "true"
 os.environ["CREWAI_TESTING"] = "true"
@@ -33,10 +33,10 @@ badges are due in 20 minutes."""
 @lesson("14.1/1", "One agent, one task, a crew of one")
 def main(ctx):
     ctx.step("Point CrewAI at the endpoint")
-    # CrewAI talks to models through its LLM class. provider="openai" means "speak the
-    # OpenAI-compatible protocol with the openai SDK"; base_url sends it to whatever provider
-    # you configured. (With only an "openai/<name>" prefix, CrewAI 1.6 accepts just model names
-    # it knows and otherwise needs LiteLLM, which this course does not install.)
+    # CrewAI talks to models through its LLM class. provider="openai" means "use the
+    # OpenAI-compatible protocol through the openai SDK", and base_url sends the calls to the
+    # provider you configured. (With only an "openai/<name>" prefix, CrewAI 1.6 accepts only model
+    # names it knows. For others it needs LiteLLM, which this course does not install.)
     llm = LLM(
         model=ctx.model,
         provider="openai",

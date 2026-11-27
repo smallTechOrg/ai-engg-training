@@ -1,12 +1,12 @@
 """06.1/1  The same call, through LangChain
 
 Lesson 01.1 made one chat call with the OpenAI SDK. Here is that call through LangChain's
-`ChatOpenAI`, side by side with the raw SDK call, so you can see what LangChain adds:
+`ChatOpenAI`, next to the raw SDK call, so you can see what LangChain adds:
 
-  - messages become classes (SystemMessage, HumanMessage) instead of dicts;
-  - the reply is an AIMessage, with the token counts in `usage_metadata`;
-  - the model object is a *Runnable*, with the same `.invoke / .batch / .stream` methods
-    as every other LangChain building block (next script).
+  - messages become classes (SystemMessage, HumanMessage) instead of dicts
+  - the reply is an AIMessage, with the token counts in `usage_metadata`
+  - the model object is a Runnable, with the same `.invoke / .batch / .stream` methods
+    as every other LangChain building block (next script)
 
 Run it:   ./run 06.1/1          (Windows: run 06.1/1)
 """
@@ -30,7 +30,7 @@ def main(ctx):
     ctx.show_response(response)
 
     ctx.step("The same call with ChatOpenAI")
-    ctx.note("ChatOpenAI takes the same three settings as the SDK client; nothing is provider-specific.")
+    ctx.note("ChatOpenAI takes the same three settings as the SDK client. Nothing here is tied to one provider.")
     model = ChatOpenAI(
         model=ctx.model,
         base_url=ctx.settings.base_url,

@@ -1,7 +1,8 @@
 """01.2/1  The model forgets
 
-A model keeps nothing between calls. This script proves it: tell the model a fact, ask about
-it in a fresh call (it cannot know), then ask again while resending the earlier messages.
+A model keeps nothing between calls. This script proves it. It tells the model a fact, then
+asks about it in a fresh call (the model cannot know). Then it asks again, this time
+sending the earlier messages along with the question.
 
 Run it:   ./run 01.2/1          (Windows: run 01.2/1)
      or:  python modules/01-foundations/02-messages-roles-and-multi-turn-conversation/01_the_model_forgets.py

@@ -4,15 +4,16 @@
 
 ## What you will learn
 
-- Static parallel branches, and the `Send` API for a number of workers decided at run time.
-- Why parallel writes to one state key need a reducer (`Annotated[list, operator.add]`).
-- Running one model call per item in parallel and collecting the answers.
-- Packaging a loop as a sub-graph, two ways to attach it, and `stream(..., subgraphs=True)`.
+- How to run fixed branches in parallel, and how the `Send` API starts as many workers as you need, decided while the graph runs.
+- Why parallel writes to one state key need a reducer (a rule for merging them, here `Annotated[list, operator.add]`).
+- How to run one model call per item in parallel and collect the answers.
+- How to package a loop as a sub-graph, two ways to attach it, and what `stream(..., subgraphs=True)` shows.
 
 ## The idea
 
-**What is new since 09.3:** every graph so far did one thing at a time. Two extensions: do many things
-in the same step (fan-out and fan-in), and nest one graph inside another (a sub-graph).
+Every graph so far did one thing at a time. This lesson adds two things. First, a graph can do many
+things in the same step: it fans out to several workers and then fans back in to collect their results.
+Second, you can put one graph inside another (a sub-graph).
 
 ```mermaid
 flowchart LR
@@ -26,8 +27,8 @@ flowchart LR
 ```
 
 `Send("worker", payload)` starts a worker with its own private input. The reducer on the shared state key
-merges what the workers return. By hand this is a loop of `create()` calls, or `asyncio.gather` from
-module 05; the graph version keeps the checkpointing and tracing you have already seen.
+merges what the workers return. By hand you would write a loop of `create()` calls, or use `asyncio.gather`
+from module 05. The graph version keeps the checkpointing and tracing you have already seen.
 
 ## Scripts
 
@@ -39,7 +40,7 @@ Run all three with `./run 09.4` (Windows: `run 09.4`), or one at a time.
 ./run 09.4/1
 ```
 
-Static branches first, then a dynamic fan-out of four workers that sleep 0.2 s each, then the empty case.
+First come fixed branches. Then the graph fans out to four workers, picked at run time, that each sleep 0.2 s. Last comes the case with no work at all.
 
 **Expected output** (trimmed):
 
@@ -53,7 +54,7 @@ results: LL-3001..LL-3004 handled
 no tickets -> results = []
 ```
 
-The order of `notes` (mail before vpn) is not guaranteed; do not depend on it. With an empty Send list nothing runs, not even `collect`.
+The order of `notes` (mail before vpn) is not guaranteed, so do not rely on it. With an empty Send list nothing runs, not even `collect`.
 
 ### 2. `02_parallel_ticket_triage.py`: one model call per ticket, in parallel
 
@@ -61,8 +62,8 @@ The order of `notes` (mail before vpn) is not guaranteed; do not depend on it. W
 ./run 09.4/2
 ```
 
-Five tickets, five classifications at once, then a plain-Python summary. The model's answer is mapped onto the
-allowed categories by `normalise`, anything else becomes `other`.
+The model classifies five tickets at once, and then plain Python sums them up. `normalise` maps the model's answer
+onto the allowed categories. Anything else becomes `other`.
 
 **Expected output** (trimmed):
 
@@ -79,9 +80,10 @@ Run summary: 5 model call(s), 180 in + 5 out = 185 tokens, 2.7s
 ./run 09.4/3
 ```
 
-A drafter graph (write, check word count, revise at most once) is used by a parent that picks a tone. Attached
-two ways: wrapped in a function (private state, keys mapped by hand) and added directly (shared keys). Streaming
-with `subgraphs=True` tags each event with its namespace.
+A small drafter graph writes a reply, checks the word count and revises at most once. A parent graph picks a tone
+and then uses the drafter. The script attaches it two ways. In the first, the drafter is wrapped in a function, keeps
+its own private state, and the keys are mapped by hand. In the second, it is added directly and shares keys with the
+parent. Streaming with `subgraphs=True` labels each event with the graph it came from (its namespace).
 
 **Expected output** (trimmed):
 
@@ -99,7 +101,7 @@ Run summary: 4 model call(s), 336 in + 326 out = 662 tokens, 6.2s
 1. In script 1, remove the reducer from `results` and read the `InvalidUpdateError`.
 2. In script 1, change the sleep to 1 second. How does the total change with 4 and with 8 tickets?
 3. In script 2, add a sixth ticket and a sixth category. Do you need to change the graph?
-4. In script 2, make `normalise` stricter (return `unknown` for unrecognised answers) and see what a chatty model does to it.
+4. In script 2, make `normalise` stricter (return `unknown` for answers it does not recognise) and see what a chatty model does to the results.
 5. In script 3, set `WORD_LIMIT = 10` and watch the sub-graph loop to its cap.
 6. In script 3, give the sub-graph a checkpointer of its own and compare with letting it inherit the parent's.
 
@@ -107,12 +109,12 @@ Run summary: 4 model call(s), 336 in + 326 out = 662 tokens, 6.2s
 
 - Run `./run doctor`. It checks the endpoint and the optional extras.
 - `ModuleNotFoundError: langgraph`: `uv sync --extra langgraph`.
-- Rate-limit errors in script 2: the provider may not like five simultaneous calls. Lower the ticket count.
-- An empty fan-out ends the graph before the join node. Handle the empty case before the graph if you need an output.
+- Rate-limit errors in script 2: the provider may not accept five calls at the same time. Use fewer tickets.
+- An empty fan-out ends the graph before the join node. If you need an output, handle the empty case before you call the graph.
 
 ## In the running scenario
 
-The helpdesk assistant triages a morning's tickets in parallel and reuses one reply-drafting
-sub-graph wherever a reply is needed.
+The helpdesk assistant sorts a morning's tickets in parallel. Wherever it needs a reply, it reuses
+the same reply-drafting sub-graph.
 
 **Next:** 09.5 · Capstone: helpdesk change request with an approval gate

@@ -1,10 +1,10 @@
 """00.3/3  Typed configuration for the helpdesk assistant
 
-Environment variables are all strings, and a typo in one of them should stop the program
-at startup with a clear message, not three hours later with a strange error. This script
-gives the running scenario, the Larkspur Labs helpdesk assistant, a configuration object
-with types and rules (pydantic), fed from a temporary .env. It loads a good file, then a
-broken one. No model calls.
+Environment variables are all strings. A typo in one of them should stop the program at
+startup with a clear message, not three hours later with a strange error. This script gives
+the course's running example, the Larkspur Labs helpdesk assistant, a configuration object
+with types and rules (built with pydantic), filled from a temporary .env. It loads a good
+file, then a broken one. It makes no model calls.
 
 Run it:   ./run 00.3/3          (Windows: run 00.3/3)
 """

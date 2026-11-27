@@ -1,12 +1,12 @@
 """17.5/3  Serve the metrics, scrape them, evaluate alert rules, optionally export traces
 
-The monitored assistant (copied from script 1) runs the batch, serves its metrics on a free
-loopback port, and we scrape them back with an HTTP GET like Prometheus would. Three alert rules
-are then evaluated on the scraped numbers in plain Python, with the PromQL you would use in
-Prometheus shown next to each:
+The monitored assistant (copied from script 1) runs the batch and serves its metrics on a free
+local port. The script then scrapes them back with an HTTP GET, the way Prometheus would. It checks
+three alert rules against the scraped numbers in plain Python, and shows next to each the PromQL
+you would use in Prometheus:
   error ratio above 5%, any blocked ticket, budget left under 20%.
-If an OTLP endpoint is configured and reachable (OTEL_EXPORTER_OTLP_ENDPOINT, e.g. Jaeger), the
-traces are also exported there; if not, the script says so and carries on. No service is required.
+If an OTLP endpoint is set and reachable (OTEL_EXPORTER_OTLP_ENDPOINT, for example Jaeger), the
+traces also go there. If not, the script says so and carries on. You need no service.
 
 Run it:   ./run 17.5/3          (Windows: run 17.5/3)
      or:  python modules/17-monitoring-and-fine-tuning/05-capstone-a-monitored-helpdesk-assistant/03_serve_scrape_and_alert.py
@@ -202,7 +202,7 @@ def main(ctx):
         ctx.console.print(f"{'FIRING ' if firing else 'quiet  '} {name}", markup=False)
         ctx.console.print(f"         PromQL: {promql}", markup=False, highlight=False)
     ctx.note(f"{int(total)} tickets, {int(errors)} errors, {int(blocked)} blocked, ${left:.6f} budget left.")
-    ctx.note("In Prometheus these rules live in a rules file and Alertmanager sends the notification. Here we only evaluate them; no alert is sent.")
+    ctx.note("In Prometheus these rules live in a rules file, and Alertmanager sends the alert. Here we only check them; nothing is sent.")
 
     ctx.step("Flush traces")
     assistant.provider.force_flush(timeout_millis=5000)

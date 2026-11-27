@@ -5,16 +5,16 @@
 ## What you will learn
 
 - How to read the JSON-lines run logs that every lesson writes, and turn token counts into dollars.
-- Why input and output tokens are priced separately and kept as separate columns.
+- Why input and output tokens have separate prices and belong in separate columns.
 - How to write a **budget guard** that stops a runaway loop, even when the endpoint reports no token usage.
 - What an **SLI**, an **SLO**, an **error budget** and a **burn rate** are, and how to compute them from logs.
-- Why percentiles and burn-rate alerts beat averages and raw error counts.
+- Why percentiles and burn-rate alerts work better than averages and raw error counts.
 
 ## The idea
 
-**What is new since 17.2.** 17.2 charted live metrics. This lesson works from the other end: the raw log of what happened, offline. It adds two ideas that sit on top of metrics: a **budget** you enforce in code, and an **SLO** you measure against.
+In 17.2 you charted live metrics. This lesson starts from the other end: the raw log of what happened, read offline. It adds two ideas on top of metrics. One is a **budget** that your code enforces. The other is an **SLO** that you measure against.
 
-Every lesson run writes `logs/<time>-<lesson>.jsonl`. Three event types are enough for operations:
+Every lesson run writes `logs/<time>-<lesson>.jsonl`. Three event types are enough for running the service day to day:
 
 | Event | Fields used | Gives you |
 | --- | --- | --- |
@@ -31,17 +31,29 @@ flowchart LR
     Cost --> Guard
 ```
 
-**Cost.** dollars = tokens_in x price_in + tokens_out x price_out. The prices in these scripts are invented; use your provider's list. Input is usually most of the tokens (long prompts), output usually costs more per token.
+### Cost
 
-**Budget guard.** A guard checks before each call and charges after it, with caps on dollars, tokens and calls. It is a second line of defence: the loop still has its own iteration cap. Caveat: the last allowed call can overshoot a cap, so leave headroom. When usage is missing it estimates tokens as characters divided by four, a rough rule that is better than not counting.
+dollars = tokens_in x price_in + tokens_out x price_out. The prices in these scripts are made up, so use your provider's list. Most tokens are usually input, because prompts are long. Output usually costs more per token.
 
-**SLOs.** An SLI is a measurement ("share of calls that succeeded"). An SLO is the target for it ("99%"). The **error budget** is what is left to fail: 1% of 759 calls is 7.6 failures. The **burn rate** is the observed failure share divided by the allowed share. At 1.0x you use the budget exactly over the window; at 14x you would burn a month of budget in about two days, which is worth waking someone for. Latency SLOs use percentiles ("95% of calls within 5 seconds"), because an average hides the slow tail.
+### Budget guard
+
+A guard checks the budget before each call and adds the cost after it. It has caps on dollars, tokens and calls. It is a backup: the loop still has its own limit on how many times it runs.
+
+One caveat: the last allowed call can go past a cap, so leave some headroom. When the endpoint reports no usage, the guard estimates tokens as characters divided by four. That is a rough rule, but it is better than not counting at all.
+
+### SLOs
+
+An SLI (service level indicator) is a measurement, such as "share of calls that succeeded". An SLO (service level objective) is the target for it, such as "99%". The **error budget** is how much failure you have left: 1% of 759 calls is 7.6 failures.
+
+The **burn rate** is the share of calls that actually failed divided by the share you are allowed. At 1.0x you use up the budget exactly over the window. At 14x you would burn a month of budget in about two days, which is worth waking someone up for.
+
+Latency SLOs use percentiles ("95% of calls within 5 seconds"), because an average hides the slowest calls.
 
 ## Scripts
 
-### 1. `01_cost_from_logs.py` — cost per lesson from run logs
+### 1. `01_cost_from_logs.py`: cost per lesson from run logs
 
-Run: `./run 17.3/1`. Makes two small calls (so the logs are never empty), reads every `*.jsonl` in the logs folder (`labkit.config.state_dir("logs")`), groups by lesson and prints a ranked table with totals. The numbers depend on what you have run on your machine.
+Run: `./run 17.3/1`. The script makes two small calls, so the logs are never empty. It reads every `*.jsonl` in the logs folder (`labkit.config.state_dir("logs")`), groups the calls by lesson and prints a ranked table with totals. Your numbers depend on what you have run on your machine.
 
 **Expected output** (trimmed, real run on the author's full logs folder):
 
@@ -60,9 +72,9 @@ average per call: $0.0002054; input is 76% of all tokens.
 1 call(s) reported no token counts, so the true spend is higher than shown. ...
 ```
 
-### 2. `02_budget_guard.py` — stop a loop when the budget is spent
+### 2. `02_budget_guard.py`: stop a loop when the budget is spent
 
-Run: `./run 17.3/2`. A `BudgetGuard` with deliberately small caps wraps a "make this reply friendlier" loop. `check()` runs before each call and raises `BudgetExceeded`; `charge()` runs after. With `--model no-usage` on the stub you can see it fall back to estimates.
+Run: `./run 17.3/2`. A `BudgetGuard` with small caps, chosen on purpose, wraps a "make this reply friendlier" loop. `check()` runs before each call and raises `BudgetExceeded` when a cap is reached. `charge()` runs after each call. With `--model no-usage` on the stub, you can watch it fall back to estimates.
 
 **Expected output** (trimmed, real run):
 
@@ -75,11 +87,11 @@ iteration 4: BLOCKED before calling the model: token cap reached (242/150)
 3 calls, 242 tokens, about $0.000239. 0 call(s) were estimated ...
 ```
 
-Note iteration 3 took the total from 97 left to over the cap: the guard stops the next call, not the current one. The run is a real example of why you leave headroom.
+Look at iteration 3. It took the total from 97 tokens left to over the cap, because the guard stops the next call, not the current one. This real run shows why you leave headroom.
 
-### 3. `03_slo_report.py` — SLIs, error budget and burn rate
+### 3. `03_slo_report.py`: SLIs, error budget and burn rate
 
-Run: `./run 17.3/3`. Makes three real calls, pairs every request and response in the logs, computes availability and latency, and evaluates two SLOs (99% success, 95% within 5 seconds). A final what-if marks 3 calls failed; it is labelled SIMULATED in the output.
+Run: `./run 17.3/3`. The script makes three real calls and pairs every request with its response in the logs. It computes availability and latency and checks two SLOs: 99% success, and 95% within 5 seconds. A final what-if marks 3 calls as failed, and the output labels it SIMULATED.
 
 **Expected output** (trimmed, real run):
 
@@ -95,26 +107,26 @@ What if? Simulate failures (NOT real data)
     burn rate 0.40x (on track); ...
 ```
 
-The logs record only calls that reached the endpoint as requests, so a failure before the request (a DNS error) is invisible here: another reason to also have live metrics (17.2).
+The logs only record calls that reached the endpoint as requests. A failure before the request, such as a DNS error, does not show up here. That is one more reason to have live metrics too (17.2).
 
 ## Try this
 
-1. Change the invented prices in script 1 to a model that is ten times dearer on output. Which lesson becomes the most expensive?
+1. Change the made-up prices in script 1 to a model that costs ten times more for output. Which lesson becomes the most expensive?
 2. In script 2, raise the token cap to 400 and lower the call cap to 3. Which cap fires first? Add a fourth cap: maximum seconds.
-3. Make `charge()` use a cheaper price when the reply is short (a tiered price list). What new data would a real invoice need?
+3. Make `charge()` use a cheaper price when the reply is short (a tiered price list). What extra data would a real invoice need?
 4. In script 3, change the latency threshold to 1 second. Does the SLO still hold? What would you tune first: the prompt, the model or the threshold?
-5. Raise the simulated failures to 12. At what number does the burn rate pass 1.0x?
-6. Write the budget guard's state to a JSON file between runs so the budget spans several runs. What breaks when two processes run at once?
+5. Raise the simulated failures to 12. At what number does the burn rate go past 1.0x?
+6. Save the budget guard's state to a JSON file between runs, so the budget covers several runs. What breaks when two processes run at once?
 
 ## If it does not work
 
 - Run `./run doctor`. These scripts need only a working endpoint (`.env`) and the base install.
-- Empty tables: the logs folder is where `LABKIT_STATE_DIR` points (default: the repo's `logs/`). Run a few lessons first.
-- "tokens not reported": your endpoint omits usage; the cost report says so and script 2 estimates from text length.
-- No service is used in this lesson. To feed the same numbers to a hosted Prometheus or Grafana, use the counters from 17.2.
+- If the tables are empty, check the logs folder. It is wherever `LABKIT_STATE_DIR` points (by default the repo's `logs/`). Run a few lessons first.
+- "tokens not reported" means your endpoint leaves out usage. The cost report says so, and script 2 estimates from the text length.
+- This lesson uses no service. To send the same numbers to a hosted Prometheus or Grafana, use the counters from 17.2.
 
 ## In the running scenario
 
-Larkspur Labs' finance lead asks what the helpdesk assistant costs per ticket and whether it is reliable enough to answer staff directly. Script 1 gives the per-ticket cost, script 2 stops a runaway reply loop at a fixed amount, and script 3 says "99% success, 95% under five seconds, 7.6 failures of budget left", the sentence that goes in the service agreement.
+The Larkspur Labs finance lead asks what the helpdesk assistant costs per ticket, and whether it is reliable enough to answer staff directly. Script 1 gives the cost per ticket. Script 2 stops a runaway reply loop at a fixed amount. Script 3 gives the sentence that goes in the service agreement: "99% success, 95% under five seconds, 7.6 failures of budget left".
 
 **Next:** 17.4 · Fine-tuning: when it is warranted; LoRA and QLoRA (planned)

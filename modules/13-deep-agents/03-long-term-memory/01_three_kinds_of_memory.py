@@ -1,15 +1,15 @@
 """13.3/1  Three kinds of long-term memory
 
-A context window forgets everything when the conversation ends. Long-term memory is something the
-agent WRITES to and READS from between conversations. Cognitive science (and agent design) splits
-it in three, and each has a different shape and a different job:
+The context window (everything the model sees in one call) is gone when the conversation ends.
+Long-term memory is something the agent WRITES to and READS from between conversations. Cognitive
+science, and agent design after it, splits it into three kinds. Each has its own shape and job:
 
-  episodic    - what HAPPENED:    "ticket LL-3101: dmorgan was locked out; we removed the old account from her phone"
-  semantic    - what is TRUE:     "lockouts clear on their own after 15 minutes"
-  procedural  - HOW to do things: "to handle a lockout: confirm identity, check phones, unlock, re-add the account"
+  episodic:   what HAPPENED:    "ticket LL-3101: dmorgan was locked out; we removed the old account from her phone"
+  semantic:   what is TRUE:     "lockouts clear on their own after 15 minutes"
+  procedural: HOW to do things: "to handle a lockout: confirm identity, check phones, unlock, re-add the account"
 
-Here the memories sit in a plain Python list. We embed them with ctx.embed (local model; see the
-README), recall the best match per kind for a new question, and put those into the prompt.
+Here the memories sit in a plain Python list. The script embeds them with ctx.embed (a local model,
+see the README), recalls the best match of each kind for a new question, and puts those into the prompt.
 
 Run it:   ./run 13.3/1          (Windows: run 13.3/1)
 """
@@ -55,7 +55,7 @@ def main(ctx):
         recalled[kind] = best["text"]
         scores = [round(cosine(query_vec, m["vec"]), 2) for m in ranked]
         ctx.note(f"{kind:10} scores {scores} -> best: {best['text'][:70]}...")
-    ctx.note("Scores only mean something relative to each other: unrelated sentences already score around 0.4-0.5.")
+    ctx.note("Scores only mean something compared with each other: unrelated sentences already score around 0.4-0.5.")
 
     ctx.step("Put the recalled memories into the prompt")
     messages = [
@@ -69,7 +69,7 @@ def main(ctx):
     ctx.show_messages(messages)
     response = ctx.client.chat.completions.create(model=ctx.model, messages=messages)
     ctx.show_response(response)
-    ctx.note("Episodic memory says what happened last time, semantic gives the facts, procedural gives the steps. 13.3/2 builds the episodic store properly.")
+    ctx.note("Episodic memory says what happened last time, semantic gives the facts, procedural gives the steps. 13.3/2 builds a real episodic store.")
 
 
 if __name__ == "__main__":

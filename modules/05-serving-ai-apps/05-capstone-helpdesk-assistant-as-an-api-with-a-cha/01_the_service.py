@@ -1,7 +1,8 @@
 """05.5/1  The service: health, triage, streaming chat, validation, stats
 
-Exercises helpdesk_service.py in-process with FastAPI's TestClient, the way the front end will use
-it over HTTP: every route once, the bad requests that must be rejected, and the usage counters.
+Tries out helpdesk_service.py in-process with FastAPI's TestClient, the way the front end will use
+it over HTTP. It calls every route once, sends the bad requests the service must reject, and reads
+the usage counters.
 
 Run it:   ./run 05.5/1          (Windows: run 05.5/1)
 """
@@ -76,7 +77,7 @@ def main(ctx):
         ctx.step("GET /stats")
         ctx.show_data("Service counters", stats)
         for usage in stats["usage"]:
-            ctx.record_usage(usage)  # the service saw each model call; we add them to our totals
+            ctx.record_usage(usage)  # the service saw each model call, so we add them to our totals
     finally:
         app.dependency_overrides.clear()
 

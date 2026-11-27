@@ -1,8 +1,9 @@
 """17.1/2  Metrics for an LLM app with prometheus_client
 
-Counters, a Histogram and a Gauge for requests, latency, tokens and cost. We make a few real model
-calls, then print what Prometheus would scrape from /metrics (the text exposition format).
-No server is started: generate_latest() gives the same text your /metrics endpoint would return.
+Metrics are numbers you add up over time. This script keeps counters, a histogram and a gauge for
+requests, latency, tokens and cost. It makes a few real model calls, then prints the text that
+Prometheus (a tool that collects metrics) would read from a /metrics page.
+No server starts: generate_latest() returns the same text your /metrics endpoint would serve.
 
 Run it:   ./run 17.1/2          (Windows: run 17.1/2)
      or:  python modules/17-monitoring-and-fine-tuning/01-logs-metrics-and-traces-with-opentelemetry/02_metrics_prometheus.py
@@ -30,7 +31,7 @@ TICKETS = [
 @lesson("17.1/2", "Metrics for an LLM app with prometheus_client")
 def main(ctx):
     ctx.step("Define the metrics")
-    ctx.note("A private registry keeps this lesson tidy; in a real service you would use the default one.")
+    ctx.note("A private registry keeps this lesson tidy. A real service would use the default one.")
     reg = CollectorRegistry()
     requests = Counter("helpdesk_requests_total", "Model calls made", ["category", "status"], registry=reg)
     latency = Histogram("helpdesk_llm_latency_seconds", "Model call latency", buckets=(0.25, 0.5, 1, 2, 5, 10), registry=reg)
@@ -38,8 +39,8 @@ def main(ctx):
     cost = Counter("helpdesk_llm_cost_dollars_total", "Estimated spend", registry=reg)
     budget_left = Gauge("helpdesk_budget_remaining_dollars", "Monthly budget minus spend so far", registry=reg)
     budget_left.set(MONTHLY_BUDGET_USD)
-    ctx.note("Counter: only goes up (requests, tokens, cost). Histogram: latency buckets. Gauge: a value that moves both ways.")
-    ctx.note("Keep label values few and fixed (category, status). Never label by user id or ticket text: every distinct value is a new time series.")
+    ctx.note("A counter only goes up (requests, tokens, cost). A histogram puts latency in buckets. A gauge goes up and down.")
+    ctx.note("Keep label values few and fixed (category, status). Each new value makes a new series, so never use user id or text.")
 
     ctx.step("Make a few real calls and record each one")
     for category, text in TICKETS:
@@ -69,13 +70,13 @@ def main(ctx):
             ctx.note(f"{category}: {t_in} in, {t_out} out, ${usd:.6f}")
 
     ctx.step("What Prometheus would scrape from /metrics")
-    ctx.note("This is the exposition format: one line per time series. Histograms expand to _bucket, _sum and _count lines.")
+    ctx.note("This is the exposition format: one line per series. A histogram becomes _bucket, _sum and _count lines.")
     text = generate_latest(reg).decode()
     for line in text.splitlines():
         if line.startswith("#") or "_created" in line:
             continue  # hide comments and creation timestamps to keep the output short
         ctx.console.print(line, markup=False, highlight=False)
-    ctx.note("Prometheus stores these every scrape interval; PromQL (see the README) turns them into rates and percentiles.")
+    ctx.note("Prometheus saves these on every scrape. PromQL (see the README) turns them into rates and percentiles.")
 
 
 if __name__ == "__main__":

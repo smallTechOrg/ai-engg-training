@@ -1,8 +1,9 @@
 """00.2/1  Which Python is this?
 
 "It works on my machine" problems usually start here: the script ran with a different
-Python, or a different set of packages, than you thought. This script asks the running
-interpreter where it lives and whether it is inside a virtual environment. No model calls.
+Python, or a different set of packages, than you expected. This script asks the Python
+that is running it where it lives and whether it is inside a virtual environment. It makes
+no model calls.
 
 Run it:   ./run 00.2/1          (Windows: run 00.2/1)
      or:  python modules/00-setup/02-environments-and-dependencies/01_which_python.py
@@ -27,7 +28,7 @@ def main(ctx):
             "implementation": platform.python_implementation(),
         },
     )
-    ctx.note("sys.executable is the truth. What `python` means in your terminal depends on PATH; this does not.")
+    ctx.note("sys.executable is the Python really running. What `python` means in a terminal depends on PATH.")
 
     ctx.step("Is it a virtual environment?")
     ctx.note("A virtual environment is a folder with its own packages that borrows a Python installed elsewhere.")

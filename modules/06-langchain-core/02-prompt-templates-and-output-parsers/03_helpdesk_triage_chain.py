@@ -1,8 +1,8 @@
 """06.2/3  Scenario: a triage chain that survives bad output
 
-A reusable triage chain for the helpdesk: partial prompt, format instructions from the Pydantic class,
-and a PydanticOutputParser. A reply that does not parse gets one "here is your error, try again"
-round, then goes to a person. The model is called once for all tickets (`batch`).
+A reusable triage chain for the helpdesk. It has a partial prompt, format instructions built from the
+Pydantic class, and a PydanticOutputParser. A reply that does not parse gets one more round ("here is
+your error, try again"), then goes to a person. One `batch` call sends all tickets to the model.
 
 Run it:   ./run 06.2/3          (Windows: run 06.2/3)
 """
@@ -46,7 +46,7 @@ def main(ctx):
     ).partial(format_instructions=parser.get_format_instructions())
     ctx.step("The chain")
     ctx.show_data("variables still needed", sorted(prompt.input_variables))
-    ask = prompt | model  # keep the AIMessage so we can count tokens, then parse separately
+    ask = prompt | model  # keep the AIMessage so we can count tokens, then parse it separately
 
     ctx.step("Triage three tickets (one batched call)")
     replies = ask.batch([{"ticket": t} for t in TICKETS])
@@ -70,7 +70,7 @@ def main(ctx):
             ctx.show_data(ticket[:50] + "...", {**result.model_dump(), "queue": queue})
         else:
             ctx.note(f"Giving up after {MAX_ATTEMPTS} attempts: route {ticket[:40]!r} to a person (as in lesson 01.7).")
-    ctx.note("Usage was recorded quietly per call; see the run summary.")
+    ctx.note("Usage was recorded quietly for each call. See the run summary.")
 
 
 if __name__ == "__main__":

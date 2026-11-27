@@ -1,13 +1,13 @@
 """05.1/3  The helpdesk triage API: POST /triage and the OpenAPI schema
 
 The lesson 01.6 triage, now behind an API. POST /triage takes a ticket and returns a
-Triage object that has been validated twice: the model was constrained by a JSON schema,
-and the route validated the reply with Pydantic before answering. The caller can trust
-the shape of every 200 response.
+Triage object that was checked twice. First, a JSON schema limited what the model could
+return. Then the route checked the reply with Pydantic before answering. So the caller
+can trust the shape of every 200 response.
 
-Then the part FastAPI gives you for free: the OpenAPI schema. Every route, request model
-and response model in helpdesk_api.py is described in /openapi.json, and /docs renders it
-as an interactive page (Swagger UI).
+Then comes the part FastAPI gives you for free: the OpenAPI schema. /openapi.json
+describes every route, request model and response model in helpdesk_api.py. /docs shows
+that description as an interactive page (Swagger UI).
 
 Run it:   ./run 05.1/3          (Windows: run 05.1/3)
 """
@@ -63,7 +63,7 @@ def main(ctx):
             ctx.note("No ticket was triaged on this run; the errors above say why.")
 
         ctx.step("The OpenAPI schema FastAPI generated")
-        ctx.note("GET /openapi.json describes every route. Nobody wrote it by hand: it comes from the type hints and models.")
+        ctx.note("GET /openapi.json describes every route. Nobody wrote it: it comes from the type hints and models.")
         spec = client.get("/openapi.json").json()
         ctx.show_data(
             "Paths in /openapi.json",
@@ -79,7 +79,7 @@ def main(ctx):
         )
         ctx.show_data("components.schemas.TicketIn", spec["components"]["schemas"]["TicketIn"])
         ctx.note("The 422 response is listed automatically: FastAPI knows the body is validated.")
-        ctx.note("Client code generators read this file to build a typed client for other languages.")
+        ctx.note("Code generators read this file to build a ready-made client in other languages.")
 
         ctx.step("The interactive docs")
         docs = client.get("/docs")

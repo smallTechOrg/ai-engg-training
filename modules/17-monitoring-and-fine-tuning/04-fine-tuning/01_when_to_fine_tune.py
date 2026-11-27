@@ -1,7 +1,7 @@
 """17.4/1  When is fine-tuning warranted? A checklist, a break-even and the LoRA arithmetic
 
-Fine-tuning changes the model's weights with your examples. It is the LAST tool to reach for.
-This script (no model call, no GPU) shows three things:
+Fine-tuning trains the model further on your examples, so its weights (the numbers inside it)
+change. It is the LAST tool to reach for. This script (no model call, no GPU) shows three things:
   1. the ladder of cheaper options to try first, as a checklist,
   2. a break-even calculation: does a shorter prompt after fine-tuning repay the training cost?
   3. why LoRA and QLoRA are cheap: the number of trainable parameters and the memory,
@@ -52,7 +52,7 @@ def main(ctx):
     ]
     for name, why in ladder:
         ctx.console.print(f"{name:42} {why}", markup=False)
-    ctx.note("Fine-tuning teaches behaviour (tone, format, a classification habit). It is a poor way to teach facts: they go stale and the model may still invent. Facts belong in retrieval.")
+    ctx.note("Fine-tuning teaches behaviour (tone, format, a classification habit). It is a poor way to teach facts: they go stale and the model can still make things up. Facts belong in retrieval.")
 
     ctx.step("Warrant checklist: answer these about the helpdesk assistant")
     checks = [
@@ -64,7 +64,7 @@ def main(ctx):
     ]
     for text, answer in checks:
         ctx.console.print(f"[{'x' if answer else ' '}] {text}", markup=False)
-    ctx.note("Two boxes are open, so Larkspur Labs is not ready: collect and review data first (script 2), and wait until the policy settles.")
+    ctx.note("Two boxes are open, so Larkspur Labs is not ready. Collect and review data first (script 2), and wait for the policy to settle.")
 
     ctx.step("Break-even: does a shorter prompt repay the training?")
     today = monthly_cost(PROMPT_TOKENS_TODAY, 1.0)
@@ -75,10 +75,10 @@ def main(ctx):
     ctx.console.print(f"saving: ${saving:,.2f} per month", markup=False)
     yearly_cost = TRAINING_COST * (1 + RETRAIN_PER_YEAR)
     if saving <= 0:
-        ctx.note("No saving: fine-tuning would have to be justified by quality, not cost.")
+        ctx.note("No saving: only better quality, not cost, could justify fine-tuning here.")
     else:
         ctx.note(f"Training ${TRAINING_COST:,.0f} now plus {RETRAIN_PER_YEAR} retrains a year = ${yearly_cost:,.0f} in year one; it pays back in {yearly_cost / saving:.1f} months.")
-    ctx.note("Set TICKETS_PER_MONTH to 40,000 and rerun: payback stretches to about eight years, so at low volume cost alone never justifies it. Cost is rarely the best reason; consistent tone and latency are.")
+    ctx.note("Set TICKETS_PER_MONTH to 40,000 and rerun: payback takes about eight years, so at low volume cost alone never justifies it. Cost is rarely the best reason. Consistent tone and speed are better ones.")
 
     ctx.step("Why LoRA is cheap: count the trainable parameters")
     full_matrix = HIDDEN * HIDDEN
@@ -87,14 +87,14 @@ def main(ctx):
     ctx.console.print(f"one {HIDDEN}x{HIDDEN} attention matrix: {full_matrix:,} weights", markup=False)
     ctx.console.print(f"its LoRA update at rank {RANK}: {lora_matrix:,} weights ({lora_matrix / full_matrix:.2%})", markup=False)
     ctx.console.print(f"adapter over {LAYERS} layers x {TARGET_MATRICES_PER_LAYER} matrices: {adapter:,} weights = {adapter / TOTAL_PARAMS:.3%} of the {TOTAL_PARAMS / 1e9:.0f}B model", markup=False)
-    ctx.note("LoRA freezes the base weights and learns two thin matrices per target layer (A and B); the update is B x A. Only those are trained and saved: a few megabytes, swappable per task.")
+    ctx.note("LoRA freezes the base weights and learns two thin matrices per target layer (A and B). The update is B x A. Only these are trained and saved: a few megabytes, one per task if you like.")
 
     ctx.step("Why QLoRA fits on one GPU: memory for the frozen weights")
     gb16 = TOTAL_PARAMS * 2 / 1e9
     gb4 = TOTAL_PARAMS * 0.5 / 1e9
     ctx.console.print(f"base weights at 16-bit: {gb16:.1f} GB   at 4-bit (QLoRA): {gb4:.1f} GB", markup=False)
-    ctx.note("QLoRA stores the frozen base in 4-bit and trains the LoRA adapters in higher precision. Activations, optimiser state and the context length add more memory, so these are lower bounds, not a recommendation.")
-    ctx.note("Full fine-tuning would also need gradients and optimiser state for all 7B weights, several times the weight memory.")
+    ctx.note("QLoRA stores the frozen base in 4-bit and trains the LoRA adapters in higher precision. Activations, optimiser state and context length add more memory, so these are minimums, not a recommendation.")
+    ctx.note("Full fine-tuning also needs gradients and optimiser state for all 7B weights: several times the weight memory.")
 
 
 if __name__ == "__main__":

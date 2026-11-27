@@ -1,12 +1,12 @@
 """17.5/1  The monitored assistant: logs, traces, metrics and a budget guard in one wrapper
 
-Capstone. The helpdesk assistant of module 01 (classify, then reply) is wrapped so every ticket leaves:
+Capstone. This wraps the helpdesk assistant from module 01 (classify, then reply) so every ticket leaves:
   - a JSON log line carrying the trace id (17.1),
   - a trace with classify and reply spans (17.1),
   - metrics for requests, latency, tokens, dollars and budget left, named as the 17.2 dashboard expects,
   - a budget guard that checks before each model call (17.3).
-Six tickets run with a comfortable budget. Then we read back the log, one trace and the metrics.
-This wrapper is copied into scripts 2 and 3 (lessons never import each other).
+Six tickets run with plenty of budget. Then you read back the log, one trace and the metrics.
+Scripts 2 and 3 have their own copy of this wrapper (lessons never import each other).
 
 Run it:   ./run 17.5/1          (Windows: run 17.5/1)
      or:  python modules/17-monitoring-and-fine-tuning/05-capstone-a-monitored-helpdesk-assistant/01_monitored_assistant.py
@@ -171,7 +171,7 @@ def print_tree(spans, console, only_trace=None):
 def main(ctx):
     ctx.step("Build the assistant with a comfortable budget")
     assistant = Assistant(ctx, BudgetGuard(max_dollars=0.01, max_calls=40))
-    ctx.note("Budget: $0.01 and 40 calls for six tickets (twelve calls). Plenty, so nothing should be blocked.")
+    ctx.note("Budget: $0.01 and 40 calls for six tickets (twelve calls). That is plenty, so nothing should be blocked.")
 
     ctx.step("Handle the six tickets")
     for ticket in TICKETS:

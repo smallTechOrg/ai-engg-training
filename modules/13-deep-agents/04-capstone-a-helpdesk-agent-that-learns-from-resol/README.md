@@ -4,23 +4,23 @@
 
 ## What you will learn
 
-- How the module's pieces fit into one agent: a **tool loop** (13.2) over a **persistent memory** (13.3).
-- Where in the lifecycle to **write** memory (after a person resolves the ticket) and where to **read** it (before answering).
-- How to **benchmark** memory: the same tickets with and without it, scored by a repeatable rule.
-- How to **consolidate** the history and check that consolidation did not lose what made the fixes findable.
+- How the module's pieces fit into one agent: a tool loop (13.2) over a memory that lasts between sessions (13.3).
+- When to write memory (after a person resolves the ticket) and when to read it (before answering).
+- How to benchmark memory: run the same tickets with and without it, and score them by a repeatable rule.
+- How to consolidate the history, and how to check that consolidation kept the details that make each fix easy to find.
 
 ## The idea
 
-This is a capstone: no new API, just the module assembled and measured.
+This is a capstone. It adds no new API. You put the module's pieces together and measure the result.
 
-**The brief.** The Larkspur Labs helpdesk agent answers a ticket with a likely fix. Today it starts from zero on
-every ticket. Make it learn from resolved tickets, across sessions, and prove it helps.
+**The brief.** The Larkspur Labs helpdesk agent answers a ticket with a likely fix. Today it starts from nothing on
+every ticket. Make it learn from resolved tickets, across sessions, and prove that this helps.
 
 **Acceptance criteria.**
 
 1. A `search_memory` tool over a SQLite file of past resolved tickets, used inside a capped tool loop (at most 5 model calls).
-2. Memory is written **after a human resolves** the ticket, with the engineer's real fix, and survives closing the connection.
-3. Recall has a relevance floor; when nothing clears it, the agent says it has no experience and does not cite a past ticket.
+2. Memory is written after a person resolves the ticket, using the engineer's real fix, and it is still there after the connection closes.
+3. Recall has a relevance floor. When nothing clears it, the agent says it has no experience and does not cite a past ticket.
 4. On the four tickets in [`tickets.json`](tickets.json) (three repeat a known problem, one is new) the agent with memory passes at least 3 of 4 and beats the no-memory baseline (script 2).
 5. Consolidating the history (script 3) keeps the pass rate at 3 of 4 or better.
 
@@ -35,11 +35,11 @@ flowchart LR
     M -. consolidate: facts + procedures, sources archived .-> M
 ```
 
-The `expected_keyword` in `tickets.json` is the answer key; only scripts 2 and 3 read it, and it is never sent to the model.
+The `expected_keyword` in `tickets.json` is the answer key. Only scripts 2 and 3 read it, and it is never sent to the model.
 
 ## Scripts
 
-Run all three with `./run 13.4` (Windows: `run 13.4`), or one at a time. Databases live in temporary folders.
+Run all three with `./run 13.4` (Windows: `run 13.4`), or one at a time. The databases live in temporary folders.
 
 ### 1. `01_agent_with_memory_tool.py`: the agent and the learning step
 
@@ -47,8 +47,8 @@ Run all three with `./run 13.4` (Windows: `run 13.4`), or one at a time. Databas
 ./run 13.4/1
 ```
 
-Seeds a store from the history, runs the agent on ticket LL-5001 with `search_memory` as a tool, writes the engineer's resolution as a
-new episode, then reopens the file as "session 2" and counts the episodes.
+The script fills a store from the ticket history and runs the agent on ticket LL-5001, with `search_memory` as a tool. It
+writes the engineer's resolution as a new episode. Then it reopens the file as "session 2" and counts the episodes.
 
 **Expected output** (trimmed):
 
@@ -62,7 +62,8 @@ Episodes now
 { "count": 9, "includes_new": true }
 ```
 
-Why store the engineer's fix and not the agent's answer: otherwise a wrong guess becomes a "memory" that the next session trusts.
+The script stores the engineer's fix, not the agent's answer. If it stored the answer, a wrong guess would become a
+"memory" that the next session trusts.
 
 ### 2. `02_benchmark_with_and_without_memory.py`: does it help?
 
@@ -70,8 +71,8 @@ Why store the engineer's fix and not the agent's answer: otherwise a wrong guess
 ./run 13.4/2
 ```
 
-Four tickets, each answered by the same prompt with and without recalled episodes (eight calls). Three repeat a historical problem; one (installing Figma)
-has no precedent and should not cite a past ticket.
+The same prompt answers four tickets, once with and once without recalled episodes (eight calls). Three tickets repeat a
+problem from the history. One (installing Figma) has never come up before, so the answer should not cite a past ticket.
 
 **Expected output** (trimmed):
 
@@ -89,8 +90,9 @@ Passes out of 4
 Acceptance (memory passes at least 3 of 4 and beats the baseline): PASS.
 ```
 
-The baseline passed two tickets: the phone answer (generic advice often guesses it) and the Figma ticket (nothing to cite). The memory answers name the
-specific cause and server from history, and the Figma ticket's best score (0.56) sat under the 0.6 floor, so the model was told there was no precedent.
+The baseline passed two tickets. One was the phone ticket, because generic advice often guesses that cause. The other was
+the Figma ticket, where there is nothing to cite. The answers with memory name the specific cause and server from the
+history. The Figma ticket's best score (0.56) was under the 0.6 floor, so the model was told there was no earlier case.
 
 ### 3. `03_consolidate_and_re_evaluate.py`: knowledge instead of stories
 
@@ -98,8 +100,9 @@ specific cause and server from history, and the Figma ticket's best score (0.56)
 ./run 13.4/3
 ```
 
-One JSON call consolidates the eight episodes into facts and procedures with their sources (the two lockout episodes were the only repeating pair); the sources are archived.
-Then the four tickets are answered from the consolidated memory and scored with the same rule.
+One JSON call consolidates the eight episodes into facts and procedures, with their sources. The two lockout episodes were
+the only pair that repeated. The script archives the sources. Then it answers the four tickets from the consolidated memory
+and scores them with the same rule.
 
 **Expected output** (trimmed):
 
@@ -112,8 +115,9 @@ LL-5001 recalled [('K-1', 0.75), ('K-2', 0.75)]
 4 of 4 pass. Acceptance bar: 3 of 4 -> PASS.
 ```
 
-Only two episodes consolidated, so the memory did not shrink (8 active entries: 6 untouched episodes plus 2 new entries). The prompt consolidation asks the model to keep concrete details such as devices,
-servers and protocols; without that line, a summary can generalise the keyword away and the ticket would miss.
+Only two episodes were consolidated, so the memory did not shrink. It has 8 active entries: 6 untouched episodes plus 2 new
+ones. The consolidation prompt asks the model to keep concrete details such as devices, servers and protocols. Without that
+line, a summary can generalise the keyword away, and the ticket would fail the check.
 
 ## Stretch goals
 
@@ -135,13 +139,14 @@ servers and protocols; without that line, a summary can generalise the keyword a
 ## If it does not work
 
 - Run `./run doctor` to check the endpoint and installed extras.
-- `ModuleNotFoundError: fastembed`: install the extra with `uv sync --extra rag`; the first run downloads the small embedding model.
-- A FAIL in scripts 2 or 3 is a result, not a bug: read the answers above it. Models vary, and the keyword rule is deliberately strict.
-- If the agent never calls `search_memory` in script 1, the run says so by showing a reply with no tool call. Strengthen the system prompt or lower the model temperature.
+- `ModuleNotFoundError: fastembed`: install the extra with `uv sync --extra rag`. The first run downloads the small embedding model.
+- A FAIL in scripts 2 or 3 is a result, not a bug. Read the answers above it. Models vary, and the keyword rule is strict on purpose.
+- If the agent never calls `search_memory` in script 1, you will see a reply with no tool call. Make the system prompt firmer or lower the model temperature.
 
 ## In the running scenario
 
-The helpdesk agent now improves with use. Each resolved ticket makes the next similar ticket cheaper to solve, repeated patterns become compact knowledge with
-traceable sources, and a new kind of ticket is escalated instead of guessed. Module 14 turns to several agents working together as a crew.
+The helpdesk agent now gets better the more it is used. Each resolved ticket makes the next similar ticket cheaper to
+solve. Patterns that repeat become short pieces of knowledge, and you can trace each one back to its sources. A new kind of
+ticket goes to a person instead of getting a guess. Module 14 turns to several agents working together as a crew.
 
 **Next:** 14.1 · Agents, tasks, crews and processes (module 14 starts there)

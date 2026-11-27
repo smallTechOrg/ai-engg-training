@@ -1,12 +1,12 @@
 """17.2/2  Validate the provisioned Grafana dashboard offline
 
-Grafana can load a data source and a dashboard from files at start-up ("provisioning"), so a
-dashboard lives in git like code. This script checks those files without Grafana:
-  - the YAML/JSON parse and have the keys Grafana needs,
+Grafana can load a data source and a dashboard from files when it starts ("provisioning"), so
+your dashboard lives in git like code. This script checks those files without Grafana:
+  - the YAML and JSON parse and have the keys Grafana needs,
   - every panel points at the provisioned data source uid,
   - every PromQL expression has balanced brackets and only uses metric names the app exposes,
-  - every metric the app exposes is shown by at least one panel (nothing is collected for nothing).
-No model call and no service is needed.
+  - every metric the app exposes appears in at least one panel, so nothing is collected for no reason.
+You need no model call and no service.
 
 Run it:   ./run 17.2/2          (Windows: run 17.2/2)
      or:  python modules/17-monitoring-and-fine-tuning/02-prometheus-metrics-and-grafana-dashboards/02_validate_the_dashboard.py
@@ -67,7 +67,7 @@ def main(ctx):
     for key in ("uid", "type", "url"):
         if key not in ds:
             problems.append(f"data source file has no {key}")
-    ctx.note("The url uses the compose service name 'prometheus', which only resolves inside the compose network.")
+    ctx.note("The url uses the compose service name 'prometheus', which only works inside the compose network.")
 
     ctx.step("Read the dashboard provider file")
     provider = read_simple_yaml(HERE / "grafana" / "provisioning" / "dashboards" / "dashboards.yml")
@@ -106,7 +106,7 @@ def main(ctx):
             ctx.console.print("PROBLEM: " + p, markup=False)
     else:
         ctx.note("All checks passed: provisioning files and dashboard agree with the metrics the app exposes.")
-    ctx.note("This is a structural check. Only a running Grafana proves a panel draws what you meant (script 3 checks queries against Prometheus).")
+    ctx.note("This only checks structure. Only a running Grafana proves a panel draws what you meant (script 3 runs the queries).")
 
 
 if __name__ == "__main__":

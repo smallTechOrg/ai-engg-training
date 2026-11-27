@@ -3,12 +3,13 @@
   Triager  ->  Researcher (uses a lookup tool on an invented KB)  ->  Responder
 
 The researcher is the only agent with a tool. CrewAI turns the tool's name, description and
-type hints into the schema the model sees, runs it when the model asks, and feeds the result
-back, which is the loop you wrote by hand in module 02. Our tool prints each call so you can
-see it happen.
+type hints into the schema the model sees. It runs the tool when the model asks and feeds the
+result back. That is the loop you wrote by hand in module 02. This tool prints each call so you
+can see it happen.
 
-Cost warning: CrewAI makes several model calls per task (a tool round trip alone is two, and CrewAI adds formatting retries).
-A real run of this crew made about a dozen requests (see successful_requests). max_iter caps each agent's loop.
+A note on cost: CrewAI makes several model calls per task. A tool round trip alone is two, and
+CrewAI adds retries when the format is wrong. A real run of this crew made about a dozen requests
+(see successful_requests). max_iter caps each agent's loop.
 
 Run it:   ./run 14.1/3          (Windows: run 14.1/3)
 """
@@ -72,7 +73,7 @@ def main(ctx):
     ctx.show_data("Crew", {"agents": [a.role for a in (triager, researcher, responder)], "tools on the researcher": ["search_kb"]})
 
     ctx.step("Run the crew")
-    ctx.note("Several model calls per task: this takes a little while.")
+    ctx.note("Each task makes several model calls, so this takes a little while.")
     crew = Crew(agents=[triager, researcher, responder], tasks=[t1, t2, t3],
                 process=Process.sequential, verbose=False, tracing=False)
     result = crew.kickoff()
@@ -81,14 +82,14 @@ def main(ctx):
     for task_output in result.tasks_output:
         ctx.show_data(task_output.agent, task_output.raw)
     if not calls:
-        ctx.note("The researcher never called search_kb this run. Models sometimes skip a tool; its answer then comes from the model alone.")
+        ctx.note("The researcher never called search_kb this run. Models sometimes skip a tool, and then the answer comes from the model alone.")
 
     ctx.step("Usage")
     usage = result.token_usage
     ctx.show_data("result.token_usage", usage.model_dump() if hasattr(usage, "model_dump") else str(usage))
     if usage and getattr(usage, "total_tokens", 0):
         ctx.record_usage({"prompt_tokens": usage.prompt_tokens, "completion_tokens": usage.completion_tokens})
-    ctx.note("Compare with the by-hand version: three chat calls plus a tool loop. The crew trades extra calls for structure.")
+    ctx.note("Compare with the by-hand version: three chat calls plus a tool loop. The crew costs more calls but adds structure.")
 
 
 if __name__ == "__main__":

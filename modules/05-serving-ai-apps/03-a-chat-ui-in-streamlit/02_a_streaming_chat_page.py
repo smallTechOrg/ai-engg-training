@@ -1,12 +1,12 @@
 """05.3/2  A streaming chat page, tested with AppTest
 
-chat_app.py is a complete Streamlit chat page: it keeps the conversation in session_state,
+chat_app.py is a complete Streamlit chat page. It keeps the conversation in session_state,
 redraws it on every run, and streams each reply with st.write_stream (the streaming call
-from 01.3, wrapped in a generator). This script drives it like a user would, with no browser
-and no server: type a message, run, read the chat bubbles, type another.
+from 01.3, wrapped in a generator). This script uses the page the way a person would, but
+with no browser and no server: type a message, run, read the chat bubbles, type another.
 
-The page uses a client we place in session_state, so the model calls go through the course's
-client. The page records token usage in session_state; we add it to this run's totals.
+We put the course's client in session_state, and the page uses it for its model calls.
+The page records token usage in session_state, and we add it to this run's totals.
 
 Run it:   ./run 05.3/2          (Windows: run 05.3/2)
 """
@@ -44,7 +44,7 @@ def main(ctx):
         ctx.show_data("The page raised", [e.value for e in at.exception])
         return
     ctx.show_data("Chat bubbles", bubbles(at))
-    ctx.note("st.write_stream consumed the generator; the full reply was saved to session_state.messages.")
+    ctx.note("st.write_stream used up the generator. The page saved the full reply to session_state.messages.")
 
     ctx.step("Turn 2: a follow-up that only makes sense with memory")
     at.chat_input[0].set_value("I already restarted it. What should I try next?").run()
@@ -53,7 +53,7 @@ def main(ctx):
 
     ctx.step("Tokens")
     for usage in at.session_state["usage"]:
-        ctx.record_usage(usage)  # the page recorded each streamed call's usage; add them to our totals
+        ctx.record_usage(usage)  # the page recorded each streamed call's usage. Add it to our totals.
     if not at.session_state["usage"]:
         ctx.note("The provider sent no usage chunks, so the page has nothing to report.")
     ctx.note("The history is re-sent every turn, so the prompt tokens grow with the conversation.")

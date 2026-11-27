@@ -4,17 +4,17 @@
 
 ## What you will learn
 
-- What a checkpointer stores and what `thread_id` means.
-- Resuming after a crash with `invoke(None, config)`, from a SQLite file and a brand new graph object.
-- Listing history with `get_state_history` and branching from an old checkpoint.
-- When SQLite is enough and when to move to Redis (or Postgres).
+- What a checkpointer stores, and what `thread_id` means.
+- How to resume after a crash with `invoke(None, config)`, using a SQLite file and a brand new graph object.
+- How to list the history with `get_state_history` and start a new branch from an old checkpoint.
+- When SQLite is enough, and when to move to Redis (or Postgres).
 
 ## The idea
 
-**What is new since 09.2:** 09.2 used an in-memory saver, which forgets everything when the process
-ends, so an approval could not outlive a restart. A checkpointer is the storage behind
-`compile(checkpointer=...)`: after every step it writes the state, keyed by `thread_id`. Swap
-the saver and the graph code does not change.
+In 09.2 the graph used an in-memory saver. It forgets everything when the process ends, so a
+pending approval was lost on a restart. A checkpointer is the storage you pass to
+`compile(checkpointer=...)`. After every step it writes down the state, filed under the
+`thread_id`. You can swap one saver for another without changing the graph code.
 
 ```mermaid
 flowchart LR
@@ -25,8 +25,9 @@ flowchart LR
     C --- R[RedisSaver: shared server]
 ```
 
-By hand (module 02) the "state" was a `messages` list you kept in a variable or wrote to a file
-yourself. The checkpointer does that for every step, including the step you were in the middle of.
+When you worked by hand (module 02), the "state" was a `messages` list that you kept in a variable
+or wrote to a file yourself. The checkpointer does that for you after every step, so you also know
+which step was running when things stopped.
 
 ## Scripts
 
@@ -38,8 +39,8 @@ Run all three with `./run 09.3` (Windows: `run 09.3`), or one at a time. Script 
 ./run 09.3/1
 ```
 
-A three-step graph writes checkpoints to a temporary SQLite file. Step 2 raises on purpose. The script closes the
-connection, opens the file again with a new graph object and continues: `collect` does not run again.
+A three-step graph writes checkpoints to a temporary SQLite file. Step 2 fails on purpose. The script closes the
+connection, opens the file again with a new graph object and carries on. `collect` does not run a second time.
 
 **Expected output** (trimmed):
 
@@ -62,8 +63,8 @@ step -1: next=('__start__',) log entries=0
 ./run 09.3/2
 ```
 
-Two turns on thread `priya` (the second turn relies on the first), the same question on thread
-`marco`, the history list, then a branch from the checkpoint after turn 1.
+The script has two turns on thread `priya`, where the second turn depends on the first. Then it asks
+the same question on thread `marco`, prints the history, and starts a branch from the checkpoint after turn 1.
 
 **Expected output** (trimmed):
 
@@ -82,8 +83,8 @@ checkpoints in the thread now: 9 (was 6); the branch added to the history
 Run summary: 4 model call(s), 192 in + 86 out = 278 tokens, 4.5s
 ```
 
-Thread `marco` has no memory of Priya, so the model invented a laptop: a missing thread is a missing memory, not an error.
-A branch lives in the same thread: its latest checkpoint becomes the thread's current state, while the old checkpoints stay in the history.
+Thread `marco` has no memory of Priya, so the model made up a laptop. A missing thread means a missing memory, not an error.
+A branch lives in the same thread. Its latest checkpoint becomes the thread's current state, and the old checkpoints stay in the history.
 
 ### 3. `03_redis_checkpointer.py`: the same graph on Redis (needs a Redis server)
 
@@ -91,9 +92,9 @@ A branch lives in the same thread: its latest checkpoint becomes the thread's cu
 ./run 09.3/3
 ```
 
-Same graph, `RedisSaver` instead of SQLite. It calls `require("REDIS_URL")` first. Redis is not running on the author's
-machine, so the run here stops with exit code 3. The Redis saver needs the RediSearch and RedisJSON modules (use the
-`redis/redis-stack-server` image) and the package `langgraph-checkpoint-redis`; it was not run against a real Redis.
+This is the same graph, with `RedisSaver` instead of SQLite. It calls `require("REDIS_URL")` first. Redis is not running on the author's
+machine, so the run shown here stops with exit code 3. The Redis saver needs the RediSearch and RedisJSON modules (use the
+`redis/redis-stack-server` image) and the package `langgraph-checkpoint-redis`. This script has not been run against a real Redis.
 
 **Expected output without Redis** (real, exit code 3):
 
@@ -103,8 +104,8 @@ This lesson needs Redis: REDIS_URL is not set.
 - Then set it in .env, for example REDIS_URL=redis://localhost:6379/0
 ```
 
-With the service running you should see the final state with `log: ['collect', 'provision']`, then the same state read
-back through a second connection and a checkpoint count for the thread.
+With the service running, you should see the final state with `log: ['collect', 'provision']`. After that comes the same
+state read back through a second connection, and the number of checkpoints in the thread.
 
 ## Try this
 
@@ -113,7 +114,7 @@ back through a second connection and a checkpoint count for the thread.
 3. In script 1, print the SQLite file's tables with the `sqlite3` module (`.execute("select name from sqlite_master")`).
 4. In script 2, change `thread_id` for the second turn. Is the model's answer still right?
 5. In script 2, branch from the checkpoint at step 0 (one message) instead of step 1.
-6. In script 3 (with Redis), run it twice: the thread id is random each time. Make it fixed and see the history grow.
+6. In script 3 (with Redis), run it twice. The thread id is random each time. Make it fixed and watch the history grow.
 
 ## If it does not work
 
@@ -121,11 +122,11 @@ back through a second connection and a checkpoint count for the thread.
 - `ModuleNotFoundError: langgraph.checkpoint.sqlite`: `uv sync --extra langgraph`.
 - Script 3 exits with code 3: start Redis and set `REDIS_URL` in `.env`. For a cloud-hosted Redis (Upstash, Redis Cloud, ElastiCache) put its `rediss://...` URL in the same variable.
 - Script 3 says the Redis checkpointer package is missing: `uv sync --extra langgraph`.
-- On Windows the temp SQLite file is removed after the connection closes; the scripts use `with` blocks for that reason.
+- On Windows the temp SQLite file can only be removed after the connection closes. That is why the scripts use `with` blocks.
 
 ## In the running scenario
 
-The helpdesk workflow (onboarding a new hire, waiting for an approval) no longer lives in one process.
+The helpdesk workflow (onboarding a new hire, waiting for an approval) is no longer tied to one process.
 Whoever restarts it, on any day, picks the thread up where it stopped.
 
 **Next:** 09.4 · Parallel workers and sub-graphs

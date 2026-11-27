@@ -3,10 +3,10 @@
   START -> crew -> guard --ok--> END
                      |--bad--> crew (again, with feedback) ... at most 2 crew runs
 
-The guard is plain Python: the status message must mention "status page" and be at most four
+The guard is plain Python. The status message must mention "status page" and be at most four
 sentences. If it fails, the graph sends the crew round again with the problem written into the task
-(a cycle, module 09). The cap is the safety net: with a stub model the guard never passes and
-the loop must still end. The crew is small (comms writer only) to keep requests low.
+(a cycle, module 09). The cap is the safety net. With a stub model the guard never passes, and the
+loop must still end. The crew is small (only the comms writer) to keep the request count low.
 
 Run it:   ./run 14.4/2          (Windows: run 14.4/2)
 """

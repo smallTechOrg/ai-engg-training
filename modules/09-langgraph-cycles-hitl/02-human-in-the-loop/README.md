@@ -4,17 +4,17 @@
 
 ## What you will learn
 
-- How `interrupt()` pauses a graph and how `Command(resume=...)` continues it on the same `thread_id`.
-- Why an interrupt needs a checkpointer, and what the paused state looks like (`get_state`, `__interrupt__`).
-- An approve or reject loop where a rejection sends feedback back to the model.
-- An approve, edit or reject gate in front of the only node with a side effect.
+- How `interrupt()` pauses a graph, and how `Command(resume=...)` picks it up again on the same `thread_id` (the name of one conversation or run).
+- Why an interrupt needs a checkpointer (the place where the graph saves its state), and what the paused state looks like (`get_state`, `__interrupt__`).
+- How to build an approve or reject loop, where a rejection sends the reviewer's feedback back to the model.
+- How to put an approve, edit or reject gate in front of the only node with a side effect (the one step that actually changes something).
 
 ## The idea
 
-**What is new since 09.1:** in 09.1 the checker was code or a second model. Now the checker is a
-person, and the graph has to wait for them, possibly for days. A graph cannot block in a Python
-`input()`; instead it saves its state and stops. That needs a checkpointer (09.3 goes deeper), and
-the resume is just another call on the same thread.
+In 09.1 the checker was code or a second model. Now the checker is a person, and the graph has
+to wait for them, maybe for days. A graph cannot sit waiting in a Python `input()`. Instead, it
+saves its state and stops. Saving needs a checkpointer (09.3 covers these in depth). Resuming is
+just another call on the same thread.
 
 ```mermaid
 flowchart LR
@@ -24,14 +24,18 @@ flowchart LR
     R -->|reject, cap reached| E[escalate]
 ```
 
-`interrupt(payload)` inside a node: the first time it is reached the run stops and `invoke` returns the
-payload under `__interrupt__`. When you call `invoke(Command(resume=value), config)` the node starts
-again from its top and this time `interrupt()` returns `value`. Anything before the `interrupt()` call
-in that node runs twice, so keep that node small and free of side effects. The by-hand equivalent
-(module 02) is a `while` loop with `input()`; it works in a terminal and nowhere else.
+Here is how `interrupt(payload)` works inside a node. The first time the run reaches it, the run
+stops and `invoke` returns the payload under `__interrupt__`. When you later call
+`invoke(Command(resume=value), config)`, the node starts again from the top, and this time
+`interrupt()` returns `value`.
 
-The approvals in these scripts are scripted lists so the lesson runs unattended. In an app the
-decision arrives from a button, a chat message or an email link, possibly in another process.
+That means anything before the `interrupt()` call in that node runs twice. Keep that node small
+and make sure it does not change anything outside the graph. The by-hand version (module 02) is a
+`while` loop with `input()`. It works in a terminal and nowhere else.
+
+In these scripts the approvals come from fixed lists, so the lesson runs without you typing
+anything. In a real app the decision comes from a button, a chat message or an email link,
+possibly in a different process.
 
 ## Scripts
 
@@ -43,8 +47,8 @@ Run all three with `./run 09.2` (Windows: `run 09.2`), or one at a time.
 ./run 09.2/1
 ```
 
-One node asks a manager; the graph pauses; the script inspects the paused state, resumes with
-`Command(resume="yes")`, then shows that a second `thread_id` is independent.
+One node asks a manager for approval and the graph pauses. The script looks at the paused state,
+resumes with `Command(resume="yes")`, and then shows that a second `thread_id` is kept separate.
 
 **Expected output** (trimmed):
 
@@ -67,9 +71,9 @@ thread LL-2050 still says: done: Grant Priya access to the finance share
 ./run 09.2/2
 ```
 
-The model drafts a VPN reply. The reviewer's scripted decisions are: reject with feedback, then
-approve. A rejection loops back to `draft` with the feedback; after 2 rejections the graph would
-escalate to a human agent instead.
+The model drafts a VPN reply. The scripted reviewer first rejects it with feedback, then approves
+the next draft. A rejection loops back to `draft` with the feedback. After 2 rejections the graph
+would hand the ticket to a human agent instead.
 
 **Expected output** (trimmed):
 
@@ -89,9 +93,10 @@ Run summary: 2 model call(s), 184 in + 127 out = 311 tokens, 4.2s
 ./run 09.2/3
 ```
 
-Three tickets, each its own thread. The model proposes one action; the gate offers approve, edit
-or reject; `execute` is only reachable through the gate. The gate returns a `Command(goto=..., update=...)`
-so routing and state changes come from one place.
+There are three tickets, each on its own thread. For each one the model proposes an action, and
+the gate offers approve, edit or reject. The only way to reach `execute` is through the gate. The
+gate returns a `Command(goto=..., update=...)`, so the routing and the state changes both come from
+one place.
 
 **Expected output** (trimmed):
 
@@ -104,16 +109,16 @@ so routing and state changes come from one place.
 [LL-2073] audit trail: ['rejected: Needs a records-retention review first.']
 ```
 
-Notice the model's own proposals are often vague ("please provide your username..."): the gate is
-exactly where a person catches that, and the edit decision is how they fix it without a new model call.
+The model's own proposals are often vague ("please provide your username..."). The gate is where
+a person catches that, and the edit option lets them fix it without another model call.
 
 ## Try this
 
 1. In script 1, resume with something other than `"yes"` and watch the `act` node's branch.
 2. In script 1, call `graph.invoke(Command(resume="yes"), config)` a second time after the run finished. What happens?
 3. In script 2, change `SCRIPTED_DECISIONS` to three rejections and see the escalation path.
-4. In script 2, add `print` before the `interrupt()` call in `review` and count how often it prints per pause (the node restarts on resume).
-5. In script 3, change LL-2073's decision to `approve`. The audit trail shows why a gate needs a human who reads.
+4. In script 2, add a `print` before the `interrupt()` call in `review` and count how often it prints per pause (the node starts over when it resumes).
+5. In script 3, change LL-2073's decision to `approve`. The audit trail shows why the person at the gate has to actually read the proposal.
 6. In script 3, remove `"execute"` from the gate's `destinations` and read the error or the changed graph drawing.
 
 ## If it does not work
@@ -121,11 +126,12 @@ exactly where a person catches that, and the edit decision is how they fix it wi
 - Run `./run doctor`. It checks the endpoint and the optional extras.
 - `ModuleNotFoundError: langgraph`: install the extra with `uv sync --extra langgraph`.
 - `ValueError ... checkpointer`: an interrupt needs `compile(checkpointer=...)` and a `thread_id` in `config["configurable"]`.
-- A model that rambles in script 2 or 3 is fine: the scripted decisions do not depend on the text.
+- If the model rambles in script 2 or 3, that is fine. The scripted decisions do not depend on the text.
 
 ## In the running scenario
 
-The helpdesk assistant no longer sends or does anything risky on its own. It proposes, a person approves,
-edits or rejects, and only then does the single side-effect node run. The next lesson makes the pause durable.
+The helpdesk assistant no longer sends anything or takes a risky action on its own. It proposes,
+a person approves, edits or rejects, and only then does the single side-effect node run. The next
+lesson makes the pause survive a restart.
 
 **Next:** 09.3 · Checkpointers: SQLite and Redis persistence

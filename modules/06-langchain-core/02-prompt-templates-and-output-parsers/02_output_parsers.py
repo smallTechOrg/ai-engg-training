@@ -1,13 +1,13 @@
 """06.2/2  Output parsers: str, JSON and Pydantic
 
-A parser is the last hop of a chain: it turns the model's AIMessage into something your code can use.
+A parser is the last step of a chain. It turns the model's AIMessage into something your code can use.
 
   StrOutputParser       -> plain text
   JsonOutputParser      -> a dict (parsed from the text, tolerant of ```json fences)
   PydanticOutputParser  -> a validated object, plus `get_format_instructions()` to tell the model the shape
 
-The parser works on the text, so it works on ANY chat endpoint (unlike with_structured_output, which needs
-JSON-schema or tool support). When the text is not valid, the parser raises OutputParserException.
+The parser works on the text, so it works on any chat endpoint. with_structured_output, by contrast, needs
+JSON-schema or tool support. When the text is not valid, the parser raises OutputParserException.
 
 Run it:   ./run 06.2/2          (Windows: run 06.2/2)
 """
@@ -76,7 +76,7 @@ def main(ctx):
             ctx.show_data(f"{name} -> {type(parsed).__name__}", shown)
         except OutputParserException:
             ctx.note(f"{name}: the model's reply was not valid for this parser: {str(ai.content)[:80]!r}")
-    ctx.note("Same model call, three result types. Pick the parser by what the next step of your program needs.")
+    ctx.note("Same model call, three result types. Pick the parser that gives the next step of your program what it needs.")
 
 
 if __name__ == "__main__":

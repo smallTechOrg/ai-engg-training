@@ -1,10 +1,10 @@
 """01.1/2  The helpdesk assistant's first reply
 
-The same call as before, applied to the running scenario of this course: an IT helpdesk
+The same call as before, used for this course's running example: an IT helpdesk
 assistant. Two things are new:
 
-  1. a `system` message, which tells the model what job it is doing;
-  2. streaming, so the reply appears piece by piece instead of all at once.
+  1. a `system` message, which tells the model what job it is doing
+  2. streaming, so the reply appears piece by piece instead of all at once
 
 Run it:   ./run 01.1/2          (Windows: run 01.1/2)
 """

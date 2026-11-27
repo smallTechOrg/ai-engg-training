@@ -1,8 +1,8 @@
 """00.4/1  Is my repo safe to push?
 
-Before any `git push`, two questions matter for an AI project: are the files that hold
-secrets and local clutter IGNORED, and is any of them already TRACKED? This script asks
-git both questions about this repo. It only reads; it changes nothing. No model calls.
+Before any `git push`, ask two questions about an AI project. Are the files that hold
+secrets and local clutter IGNORED? Is any of them already TRACKED? This script asks git
+both questions about this repo. It only reads and changes nothing. It makes no model calls.
 
 Run it:   ./run 00.4/1          (Windows: run 00.4/1)
      or:  python modules/00-setup/04-git-and-github-essentials-for-ai-projects/01_is_my_repo_safe.py

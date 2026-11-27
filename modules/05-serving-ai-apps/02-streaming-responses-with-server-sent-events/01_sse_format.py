@@ -1,8 +1,9 @@
 """05.2/1  What Server-Sent Events look like on the wire
 
 No model here. GET /countdown streams three numbers and a final event. We read the
-response two ways: as raw lines (what the network carries), then with a tiny parser that
-turns the lines back into (event, data) pairs, which is all a client has to do.
+response two ways. First as raw lines, which is what the network carries. Then with a
+tiny parser that turns the lines back into (event, data) pairs. That parser is all a
+client has to do.
 
 Ideas:
   - media type `text/event-stream`
@@ -33,7 +34,7 @@ def parse_sse(lines):
             event = line[len("event:"):].strip()
         elif line.startswith("data:"):
             data.append(line[len("data:"):].strip())
-        # lines starting with ":" are comments (keep-alives); anything else is ignored
+        # lines starting with ":" are comments (keep-alives). Anything else is ignored.
 
 
 @lesson("05.2/1", "What Server-Sent Events look like on the wire")
@@ -41,14 +42,14 @@ def main(ctx):
     client = TestClient(app)
 
     ctx.step("The raw response, line by line")
-    ctx.note("The status is an ordinary 200. The body is text that arrives in pieces, and the connection stays open until the server is done.")
+    ctx.note("The status is a normal 200. The body arrives in pieces, and the connection stays open until the server is done.")
     with client.stream("GET", "/countdown") as response:
         ctx.note(f"GET /countdown -> {response.status_code}, content-type: {response.headers['content-type']}")
         for line in response.iter_lines():
             ctx.note(repr(line))  # repr makes the empty separator lines visible
 
     ctx.step("Parse the lines back into events")
-    ctx.note("parse_sse() in this script is everything a client needs: split on blank lines, read `event:` and `data:`.")
+    ctx.note("parse_sse() is all a client needs: split on blank lines, then read `event:` and `data:`.")
     events = []
     with client.stream("GET", "/countdown", params={"start": 5}) as response:
         for event, data in parse_sse(response.iter_lines()):

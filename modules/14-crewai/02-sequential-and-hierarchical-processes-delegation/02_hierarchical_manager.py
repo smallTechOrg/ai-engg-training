@@ -1,11 +1,11 @@
 """14.2/2  Hierarchical process: a manager decides who does what
 
-Sequential: YOU fix the order and the owner of every task.
+Sequential: YOU set the order and the owner of every task.
 Hierarchical: you give the crew a goal (tasks with NO agent) and a manager_llm. CrewAI creates a
-manager agent that decides which worker gets each task, delegates to it, reviews the answer and
-may delegate again. More flexible, but the manager adds model calls and can choose badly.
+manager agent. It decides which worker gets each task, delegates to it, reviews the answer and
+may delegate again. This is more flexible, but the manager adds model calls and can choose badly.
 
-Cost: a manager round trip per delegation. This script has ONE task and two workers.
+Cost: one manager round trip per delegation. This script has ONE task and two workers.
 
 Run it:   ./run 14.2/2          (Windows: run 14.2/2)
 """
@@ -62,7 +62,7 @@ def main(ctx):
         for role, tool_name in seen:
             ctx.show_tool_call(tool_name, {"by": role}, "(see the crew's answer below)")
     else:
-        ctx.note("The manager answered without delegating this run. Hierarchical crews do not guarantee delegation; the model decides.")
+        ctx.note("The manager answered without delegating this run. A hierarchical crew does not guarantee delegation: the model decides.")
     ctx.show_data("Final answer", result.raw)
 
     ctx.step("Usage")

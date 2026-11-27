@@ -1,11 +1,12 @@
 """17.3/2  A budget guard that stops a loop
 
-A loop that calls a model (an agent, a retry loop, a reflection loop) can run away. A
-BudgetGuard wraps each call: it checks BEFORE the call that there is budget left, adds the
-cost AFTER, and refuses further calls when a cap is reached. Three caps: dollars, tokens and calls.
+A loop that calls a model (an agent, a retry loop, a reflection loop) can run away and keep
+spending. A BudgetGuard wraps each call. It checks BEFORE the call that there is budget left,
+adds the cost AFTER, and refuses more calls once a cap is reached. There are three caps:
+dollars, tokens and calls.
 
-When an endpoint reports no token counts the guard estimates them from text length (about 4
-characters per token), so the budget still holds. Prices are INVENTED constants.
+If an endpoint reports no token counts, the guard estimates them from the text length (about 4
+characters per token), so the budget still holds. The prices are INVENTED constants.
 
 Run it:   ./run 17.3/2          (Windows: run 17.3/2)
      or:  python modules/17-monitoring-and-fine-tuning/03-cost-tracking-budgets-and-service-level-objectiv/02_budget_guard.py
@@ -62,7 +63,7 @@ def main(ctx):
 
     ctx.step("Run a refine loop: ask for a better reply until the guard says stop")
     reply = "Restart the router."
-    HARD_CAP = 10  # the loop's own cap: the guard is a second line of defence, not the only one
+    HARD_CAP = 10  # the loop's own limit: the guard is a backup, not the only protection
     stopped = None
     for i in range(1, HARD_CAP + 1):
         prompt = f"Make this IT helpdesk reply friendlier and more specific, in one sentence: {reply}"
@@ -83,8 +84,8 @@ def main(ctx):
     ctx.step("What the guard saw")
     ctx.note(f"{guard.calls} calls, {guard.tokens} tokens, about ${guard.dollars:.6f}. {guard.estimated_calls} call(s) were estimated from text length because the endpoint reported no usage.")
     ctx.note("Final reply: " + reply[:160])
-    ctx.note("Design choices: check BEFORE the call (so a spent budget never triggers another call; the last allowed call can still overshoot a cap, as iteration 3 did, so leave headroom), raise a specific exception, and let the caller decide: return the best reply so far, fall back to a cheaper model, or ask a human.")
-    ctx.note("A guard in one process is not a company budget: keep the running total in shared storage (Redis, a database) to cap spend across workers.")
+    ctx.note("Design choices: check BEFORE the call, so a spent budget never starts another call. The last allowed call can still overshoot a cap, as iteration 3 did, so leave headroom. Raise a specific exception and let the caller decide: return the best reply so far, switch to a cheaper model, or ask a human.")
+    ctx.note("A guard in one process is not a company budget. To cap spend across workers, keep the total in shared storage (Redis, a database).")
 
 
 if __name__ == "__main__":
