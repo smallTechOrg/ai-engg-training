@@ -10,7 +10,7 @@ Retrieval that decides, checks and corrects itself.
 
 | Lesson | Title | Status |
 |---|---|---|
-| 15.1 | RAG failure modes and how to diagnose them | ⬜ planned |
+| 15.1 | [RAG failure modes and how to diagnose them](01-rag-failure-modes-and-how-to-diagnose-them/README.md) | ✅ ready |
 | 15.2 | Agentic, self- and corrective RAG | ⬜ planned |
 | 15.3 | Re-ranking, HyDE and query expansion | ⬜ planned |
 | 15.4 | GraphRAG: knowledge graphs and multi-hop questions | ⬜ planned |

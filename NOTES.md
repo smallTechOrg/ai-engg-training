@@ -54,3 +54,27 @@ Each entry: symptom -> what was done -> durable lesson.
     real masks for invented keys; only the learner's own key stays a placeholder.
     -> Lesson: tell writers which values are sensitive (real settings) and which are not
     (invented demo data).
+
+11. **Writers on a stale API brief.** The installed frameworks were far newer than model
+    memory (openai 3, langchain 1.5, langgraph 1.2, mcp 2.3, crewai 1.6). The brief told
+    writers to inspect installed versions first; it paid off: `mcp.server.fastmcp` is gone,
+    the published SQLite MCP server breaks on mcp 2.x (pinned `mcp<2` through `uvx --with`),
+    and CrewAI's `LLM(model="openai/<name>")` needs LiteLLM for unknown names (use
+    `provider="openai"`). -> Recorded in the lesson READMEs. -> Lesson: for fast-moving
+    libraries, make "read the installed source" a step of the brief, not an afterthought.
+
+12. **Double-counted tokens in three tool loops.** Writers recorded usage quietly on every
+    response, then `show_response` recorded the final one again. Found by noticing the run
+    summary was one call higher than the visible calls. -> Moved the quiet record after the
+    final-reply check. -> Lesson: a summary that disagrees with what is on screen is a bug
+    signal; cheap to check across every writer's output.
+
+13. **CrewAI first-run prompt.** CrewAI asks, with a 20 s timeout, whether to upload traces
+    and saves the answer in the user's data folder; telemetry env vars do not stop it.
+    -> `CREWAI_TESTING=true` set before import. -> Lesson: library first-run prompts can
+    leave state on the learner's machine; run lessons from a clean HOME at least once.
+
+14. **User said stopping workers was unnecessary.** Twice I stopped running sub-agents when
+    the user switched models; the user said that was not needed. -> Default now: let running
+    workers finish, switch only new ones. -> Lesson: a model switch is about future spend,
+    not a reason to discard in-flight work.

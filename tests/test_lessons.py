@@ -22,6 +22,9 @@ STREAMING = "modules/01-foundations/01-first-llm-call/02_helpdesk_first_reply.py
 @pytest.mark.parametrize("script", SCRIPTS)
 def test_script_runs_and_reports(script, run, tmp_path):
     result = run([str(script)])
+    if result.returncode == 3:  # the lesson explained a missing service or package and stopped cleanly
+        assert "Traceback" not in result.stdout + result.stderr
+        pytest.skip("lesson skipped itself: " + result.stdout.strip().splitlines()[-3][:120])
     assert result.returncode == 0, result.stdout + result.stderr
     assert "Step 1:" in result.stdout
     assert "Run summary:" in result.stdout

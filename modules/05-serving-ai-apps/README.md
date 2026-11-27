@@ -10,7 +10,7 @@ Put a model behind an API and a simple user interface.
 
 | Lesson | Title | Status |
 |---|---|---|
-| 05.1 | REST and FastAPI basics with Pydantic models | ⬜ planned |
+| 05.1 | [REST and FastAPI basics with Pydantic models](01-rest-and-fastapi-basics-with-pydantic-models/README.md) | ✅ ready |
 | 05.2 | Streaming responses with Server-Sent Events | ⬜ planned |
 | 05.3 | A chat UI in Streamlit | ⬜ planned |
 | 05.4 | A demo UI in Gradio; choosing between the two | ⬜ planned |

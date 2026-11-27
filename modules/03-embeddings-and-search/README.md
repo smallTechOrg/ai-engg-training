@@ -10,7 +10,7 @@ Turn text into vectors and search by meaning.
 
 | Lesson | Title | Status |
 |---|---|---|
-| 03.1 | What embeddings are: similarity by hand | ⬜ planned |
+| 03.1 | [What embeddings are: similarity by hand](01-what-embeddings-are/README.md) | ✅ ready |
 | 03.2 | Chunking strategies | ⬜ planned |
 | 03.3 | Vector stores: ChromaDB and FAISS | ⬜ planned |
 | 03.4 | Hybrid search: keywords plus vectors | ⬜ planned |

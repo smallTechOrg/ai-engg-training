@@ -10,7 +10,7 @@ Agents that choose and call tools, built with LangChain.
 
 | Lesson | Title | Status |
 |---|---|---|
-| 07.1 | Custom tools and input schemas | ⬜ planned |
+| 07.1 | [Custom tools and input schemas](01-custom-tools-and-input-schemas/README.md) | ✅ ready |
 | 07.2 | ReAct and plan-and-execute agents | ⬜ planned |
 | 07.3 | Agents over SQL data | ⬜ planned |
 | 07.4 | Structured final answers and streaming intermediate steps | ⬜ planned |

@@ -33,7 +33,7 @@ def test_run_whole_lesson(run):
 
 
 def test_planned_lesson_is_explained(run):
-    result = run([*LABKIT, "02.1"])
+    result = run([*LABKIT, "02.2"])
     assert result.returncode == 3
     assert "planned but not written yet" in result.stdout
 

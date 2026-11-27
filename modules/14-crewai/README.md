@@ -10,7 +10,7 @@ Role-based agents working as a team.
 
 | Lesson | Title | Status |
 |---|---|---|
-| 14.1 | Agents, tasks, crews and processes | ⬜ planned |
+| 14.1 | [Agents, tasks, crews and processes](01-agents-tasks-crews-and-processes/README.md) | ✅ ready |
 | 14.2 | Sequential and hierarchical processes; delegation | ⬜ planned |
 | 14.3 | Tools, MCP and LangGraph alongside a crew | ⬜ planned |
 | 14.4 | Capstone: a helpdesk incident-response crew | ⬜ planned |

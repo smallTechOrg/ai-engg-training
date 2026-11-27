@@ -10,7 +10,7 @@ Retrieval-augmented generation built from parts you already understand.
 
 | Lesson | Title | Status |
 |---|---|---|
-| 04.1 | The RAG pipeline: retrieve, augment, generate | ⬜ planned |
+| 04.1 | [The RAG pipeline: retrieve, augment, generate](01-the-rag-pipeline/README.md) | ✅ ready |
 | 04.2 | Grounding, citations and saying 'I don't know' | ⬜ planned |
 | 04.3 | Measuring retrieval and answer quality | ⬜ planned |
 | 04.4 | Capstone: helpdesk answers grounded in the knowledge base | ⬜ planned |

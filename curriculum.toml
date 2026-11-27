@@ -115,7 +115,7 @@ services = []
   id = "02.1"
   slug = "01-function-calling"
   title = "Function calling: letting the model ask for a tool"
-  status = "planned"
+  status = "ready"
   needs = ["chat", "tools"]
 
   [[module.lesson]]
@@ -158,7 +158,7 @@ services = []
   id = "03.1"
   slug = "01-what-embeddings-are"
   title = "What embeddings are: similarity by hand"
-  status = "planned"
+  status = "ready"
   needs = ["embeddings"]
 
   [[module.lesson]]
@@ -201,7 +201,7 @@ services = []
   id = "04.1"
   slug = "01-the-rag-pipeline"
   title = "The RAG pipeline: retrieve, augment, generate"
-  status = "planned"
+  status = "ready"
   needs = ["chat", "embeddings"]
 
   [[module.lesson]]
@@ -237,7 +237,7 @@ services = []
   id = "05.1"
   slug = "01-rest-and-fastapi-basics-with-pydantic-models"
   title = "REST and FastAPI basics with Pydantic models"
-  status = "planned"
+  status = "ready"
   needs = ["chat"]
 
   [[module.lesson]]
@@ -280,7 +280,7 @@ services = []
   id = "06.1"
   slug = "01-runnables-and-lcel"
   title = "Runnables and LCEL: prompt | model | parser"
-  status = "planned"
+  status = "ready"
   needs = ["chat"]
 
   [[module.lesson]]
@@ -323,7 +323,7 @@ services = []
   id = "07.1"
   slug = "01-custom-tools-and-input-schemas"
   title = "Custom tools and input schemas"
-  status = "planned"
+  status = "ready"
   needs = ["chat", "tools"]
 
   [[module.lesson]]
@@ -366,7 +366,7 @@ services = []
   id = "08.1"
   slug = "01-why-graphs"
   title = "Why graphs: state, nodes and edges"
-  status = "planned"
+  status = "ready"
   needs = ["chat"]
 
   [[module.lesson]]
@@ -402,7 +402,7 @@ services = ["REDIS_URL"]
   id = "09.1"
   slug = "01-cycles-and-self-correction-loops"
   title = "Cycles and self-correction loops"
-  status = "planned"
+  status = "ready"
   needs = ["chat"]
 
   [[module.lesson]]
@@ -445,7 +445,7 @@ services = ["LANGSMITH_API_KEY"]
   id = "10.1"
   slug = "01-tracing-runs"
   title = "Tracing runs: spans, latency and token cost"
-  status = "planned"
+  status = "ready"
   needs = ["chat"]
 
   [[module.lesson]]
@@ -481,7 +481,7 @@ services = []
   id = "11.1"
   slug = "01-mcp-architecture"
   title = "MCP architecture: hosts, clients, servers, primitives"
-  status = "planned"
+  status = "ready"
   needs = []
 
   [[module.lesson]]
@@ -524,7 +524,7 @@ services = []
   id = "12.1"
   slug = "01-ready-made-servers"
   title = "Ready-made servers: SQLite and filesystem"
-  status = "planned"
+  status = "ready"
   needs = ["chat", "tools"]
 
   [[module.lesson]]
@@ -560,7 +560,7 @@ services = []
   id = "13.1"
   slug = "01-reflection"
   title = "Reflection: generate, critique, revise"
-  status = "planned"
+  status = "ready"
   needs = ["chat"]
 
   [[module.lesson]]
@@ -596,7 +596,7 @@ services = []
   id = "14.1"
   slug = "01-agents-tasks-crews-and-processes"
   title = "Agents, tasks, crews and processes"
-  status = "planned"
+  status = "ready"
   needs = ["chat"]
 
   [[module.lesson]]
@@ -632,7 +632,7 @@ services = []
   id = "15.1"
   slug = "01-rag-failure-modes-and-how-to-diagnose-them"
   title = "RAG failure modes and how to diagnose them"
-  status = "planned"
+  status = "ready"
   needs = ["chat", "embeddings"]
 
   [[module.lesson]]

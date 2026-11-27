@@ -10,7 +10,7 @@ The same ideas as modules 01-04, expressed with LangChain.
 
 | Lesson | Title | Status |
 |---|---|---|
-| 06.1 | Runnables and LCEL: prompt | model | parser | ⬜ planned |
+| 06.1 | [Runnables and LCEL: prompt | model | parser](01-runnables-and-lcel/README.md) | ✅ ready |
 | 06.2 | Prompt templates and output parsers | ⬜ planned |
 | 06.3 | Conversation memory across turns and sessions | ⬜ planned |
 | 06.4 | Loaders, splitters and retrievers: RAG with LangChain | ⬜ planned |

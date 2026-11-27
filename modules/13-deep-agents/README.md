@@ -10,7 +10,7 @@ Agents that critique their work, plan ahead and remember.
 
 | Lesson | Title | Status |
 |---|---|---|
-| 13.1 | Reflection: generate, critique, revise | ⬜ planned |
+| 13.1 | [Reflection: generate, critique, revise](01-reflection/README.md) | ✅ ready |
 | 13.2 | Planning and replanning | ⬜ planned |
 | 13.3 | Long-term memory: episodic, semantic, procedural | ⬜ planned |
 | 13.4 | Capstone: a helpdesk agent that learns from resolved tickets | ⬜ planned |

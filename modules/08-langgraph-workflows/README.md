@@ -10,7 +10,7 @@ Model a workflow as a graph with explicit state.
 
 | Lesson | Title | Status |
 |---|---|---|
-| 08.1 | Why graphs: state, nodes and edges | ⬜ planned |
+| 08.1 | [Why graphs: state, nodes and edges](01-why-graphs/README.md) | ✅ ready |
 | 08.2 | Conditional edges and routing to specialists | ⬜ planned |
 | 08.3 | Streaming, visualising and testing a graph | ⬜ planned |
 | 08.4 | Capstone: helpdesk router with specialist nodes | ⬜ planned |

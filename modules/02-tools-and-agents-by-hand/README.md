@@ -8,7 +8,7 @@ Tool calling and the agent loop in plain Python, so frameworks hold no mystery.
 
 | Lesson | Title | Status |
 |---|---|---|
-| 02.1 | Function calling: letting the model ask for a tool | ⬜ planned |
+| 02.1 | [Function calling: letting the model ask for a tool](01-function-calling/README.md) | ✅ ready |
 | 02.2 | The agent loop: reason, act, observe | ⬜ planned |
 | 02.3 | Conversation memory and context management | ⬜ planned |
 | 02.4 | Tool failures, retries and iteration limits | ⬜ planned |

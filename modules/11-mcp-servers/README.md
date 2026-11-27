@@ -10,7 +10,7 @@ The Model Context Protocol and how to write a server.
 
 | Lesson | Title | Status |
 |---|---|---|
-| 11.1 | MCP architecture: hosts, clients, servers, primitives | ⬜ planned |
+| 11.1 | [MCP architecture: hosts, clients, servers, primitives](01-mcp-architecture/README.md) | ✅ ready |
 | 11.2 | A minimal server: tools, resources and prompts | ⬜ planned |
 | 11.3 | Writing an MCP client; discovery and negotiation | ⬜ planned |
 | 11.4 | Security, validation and debugging with the Inspector | ⬜ planned |

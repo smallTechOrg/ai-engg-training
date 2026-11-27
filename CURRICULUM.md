@@ -2,7 +2,7 @@
 
 <!-- Generated from curriculum.toml by `./run map`. Do not edit by hand. -->
 
-21 modules, 99 lessons, 12 ready. Each lesson shows a concept on its own, then applies it to the running scenario: **IT helpdesk assistant**.
+21 modules, 99 lessons, 26 ready. Each lesson shows a concept on its own, then applies it to the running scenario: **IT helpdesk assistant**.
 
 | Status | Meaning |
 |---|---|
@@ -16,20 +16,20 @@
 |---|---|---|
 | 00 | [Setup and Python for AI work](modules/00-setup/README.md) | 5 / 5 |
 | 01 | [Foundations: talking to an LLM](modules/01-foundations/README.md) | 7 / 7 |
-| 02 | [Tools and agents by hand](modules/02-tools-and-agents-by-hand/README.md) | 0 / 5 |
-| 03 | [Embeddings and semantic search](modules/03-embeddings-and-search/README.md) | 0 / 5 |
-| 04 | [RAG by hand](modules/04-rag-by-hand/README.md) | 0 / 4 |
-| 05 | [Serving AI apps: FastAPI, Streamlit, Gradio](modules/05-serving-ai-apps/README.md) | 0 / 5 |
-| 06 | [LangChain core: chains, memory, RAG](modules/06-langchain-core/README.md) | 0 / 5 |
-| 07 | [LangChain agents and tool use](modules/07-langchain-agents/README.md) | 0 / 5 |
-| 08 | [LangGraph: stateful workflows and routing](modules/08-langgraph-workflows/README.md) | 0 / 4 |
-| 09 | [LangGraph: cycles, human-in-the-loop, persistence](modules/09-langgraph-cycles-hitl/README.md) | 0 / 5 |
-| 10 | [Tracing, evaluation and testing](modules/10-tracing-and-evaluation/README.md) | 0 / 4 |
-| 11 | [MCP: architecture and custom servers](modules/11-mcp-servers/README.md) | 0 / 5 |
-| 12 | [MCP: ecosystem integrations](modules/12-mcp-ecosystem/README.md) | 0 / 4 |
-| 13 | [Deep agents: reflection, planning, long-term memory](modules/13-deep-agents/README.md) | 0 / 4 |
-| 14 | [CrewAI: multi-agent orchestration](modules/14-crewai/README.md) | 0 / 4 |
-| 15 | [Agentic RAG and GraphRAG](modules/15-agentic-rag/README.md) | 0 / 5 |
+| 02 | [Tools and agents by hand](modules/02-tools-and-agents-by-hand/README.md) | 1 / 5 |
+| 03 | [Embeddings and semantic search](modules/03-embeddings-and-search/README.md) | 1 / 5 |
+| 04 | [RAG by hand](modules/04-rag-by-hand/README.md) | 1 / 4 |
+| 05 | [Serving AI apps: FastAPI, Streamlit, Gradio](modules/05-serving-ai-apps/README.md) | 1 / 5 |
+| 06 | [LangChain core: chains, memory, RAG](modules/06-langchain-core/README.md) | 1 / 5 |
+| 07 | [LangChain agents and tool use](modules/07-langchain-agents/README.md) | 1 / 5 |
+| 08 | [LangGraph: stateful workflows and routing](modules/08-langgraph-workflows/README.md) | 1 / 4 |
+| 09 | [LangGraph: cycles, human-in-the-loop, persistence](modules/09-langgraph-cycles-hitl/README.md) | 1 / 5 |
+| 10 | [Tracing, evaluation and testing](modules/10-tracing-and-evaluation/README.md) | 1 / 4 |
+| 11 | [MCP: architecture and custom servers](modules/11-mcp-servers/README.md) | 1 / 5 |
+| 12 | [MCP: ecosystem integrations](modules/12-mcp-ecosystem/README.md) | 1 / 4 |
+| 13 | [Deep agents: reflection, planning, long-term memory](modules/13-deep-agents/README.md) | 1 / 4 |
+| 14 | [CrewAI: multi-agent orchestration](modules/14-crewai/README.md) | 1 / 4 |
+| 15 | [Agentic RAG and GraphRAG](modules/15-agentic-rag/README.md) | 1 / 5 |
 | 16 | [Containers and deployment](modules/16-containers-and-deployment/README.md) | 0 / 5 |
 | 17 | [Monitoring, evaluation and fine-tuning](modules/17-monitoring-and-fine-tuning/README.md) | 0 / 5 |
 | 18 | [Guardrails and safety](modules/18-guardrails/README.md) | 0 / 5 |
@@ -68,7 +68,7 @@ Tool calling and the agent loop in plain Python, so frameworks hold no mystery.
 
 | Lesson | Title | Status | Model needs |
 |---|---|---|---|
-| 02.1 | Function calling: letting the model ask for a tool | ⬜ planned | chat, tools |
+| 02.1 | [Function calling: letting the model ask for a tool](modules/02-tools-and-agents-by-hand/01-function-calling/README.md) | ✅ ready | chat, tools |
 | 02.2 | The agent loop: reason, act, observe | ⬜ planned | chat, tools |
 | 02.3 | Conversation memory and context management | ⬜ planned | chat |
 | 02.4 | Tool failures, retries and iteration limits | ⬜ planned | chat, tools |
@@ -82,7 +82,7 @@ Optional packages: `rag`
 
 | Lesson | Title | Status | Model needs |
 |---|---|---|---|
-| 03.1 | What embeddings are: similarity by hand | ⬜ planned | embeddings |
+| 03.1 | [What embeddings are: similarity by hand](modules/03-embeddings-and-search/01-what-embeddings-are/README.md) | ✅ ready | embeddings |
 | 03.2 | Chunking strategies | ⬜ planned | embeddings |
 | 03.3 | Vector stores: ChromaDB and FAISS | ⬜ planned | embeddings |
 | 03.4 | Hybrid search: keywords plus vectors | ⬜ planned | embeddings |
@@ -96,7 +96,7 @@ Optional packages: `rag`
 
 | Lesson | Title | Status | Model needs |
 |---|---|---|---|
-| 04.1 | The RAG pipeline: retrieve, augment, generate | ⬜ planned | chat, embeddings |
+| 04.1 | [The RAG pipeline: retrieve, augment, generate](modules/04-rag-by-hand/01-the-rag-pipeline/README.md) | ✅ ready | chat, embeddings |
 | 04.2 | Grounding, citations and saying 'I don't know' | ⬜ planned | chat, embeddings |
 | 04.3 | Measuring retrieval and answer quality | ⬜ planned | chat, embeddings |
 | 04.4 | Capstone: helpdesk answers grounded in the knowledge base | ⬜ planned | chat, embeddings |
@@ -109,7 +109,7 @@ Optional packages: `apps`
 
 | Lesson | Title | Status | Model needs |
 |---|---|---|---|
-| 05.1 | REST and FastAPI basics with Pydantic models | ⬜ planned | chat |
+| 05.1 | [REST and FastAPI basics with Pydantic models](modules/05-serving-ai-apps/01-rest-and-fastapi-basics-with-pydantic-models/README.md) | ✅ ready | chat |
 | 05.2 | Streaming responses with Server-Sent Events | ⬜ planned | chat, stream |
 | 05.3 | A chat UI in Streamlit | ⬜ planned | chat, stream |
 | 05.4 | A demo UI in Gradio; choosing between the two | ⬜ planned | chat |
@@ -123,7 +123,7 @@ Optional packages: `langchain`
 
 | Lesson | Title | Status | Model needs |
 |---|---|---|---|
-| 06.1 | Runnables and LCEL: prompt | model | parser | ⬜ planned | chat |
+| 06.1 | [Runnables and LCEL: prompt | model | parser](modules/06-langchain-core/01-runnables-and-lcel/README.md) | ✅ ready | chat |
 | 06.2 | Prompt templates and output parsers | ⬜ planned | chat, json |
 | 06.3 | Conversation memory across turns and sessions | ⬜ planned | chat |
 | 06.4 | Loaders, splitters and retrievers: RAG with LangChain | ⬜ planned | chat, embeddings |
@@ -137,7 +137,7 @@ Optional packages: `langchain`
 
 | Lesson | Title | Status | Model needs |
 |---|---|---|---|
-| 07.1 | Custom tools and input schemas | ⬜ planned | chat, tools |
+| 07.1 | [Custom tools and input schemas](modules/07-langchain-agents/01-custom-tools-and-input-schemas/README.md) | ✅ ready | chat, tools |
 | 07.2 | ReAct and plan-and-execute agents | ⬜ planned | chat, tools |
 | 07.3 | Agents over SQL data | ⬜ planned | chat, tools |
 | 07.4 | Structured final answers and streaming intermediate steps | ⬜ planned | chat, tools, stream |
@@ -151,7 +151,7 @@ Optional packages: `langgraph`
 
 | Lesson | Title | Status | Model needs |
 |---|---|---|---|
-| 08.1 | Why graphs: state, nodes and edges | ⬜ planned | chat |
+| 08.1 | [Why graphs: state, nodes and edges](modules/08-langgraph-workflows/01-why-graphs/README.md) | ✅ ready | chat |
 | 08.2 | Conditional edges and routing to specialists | ⬜ planned | chat |
 | 08.3 | Streaming, visualising and testing a graph | ⬜ planned | chat, stream |
 | 08.4 | Capstone: helpdesk router with specialist nodes | ⬜ planned | chat |
@@ -164,7 +164,7 @@ Optional packages: `langgraph` · Services: `REDIS_URL`
 
 | Lesson | Title | Status | Model needs |
 |---|---|---|---|
-| 09.1 | Cycles and self-correction loops | ⬜ planned | chat |
+| 09.1 | [Cycles and self-correction loops](modules/09-langgraph-cycles-hitl/01-cycles-and-self-correction-loops/README.md) | ✅ ready | chat |
 | 09.2 | Human-in-the-loop: interrupt, approve, resume | ⬜ planned | chat |
 | 09.3 | Checkpointers: SQLite and Redis persistence | ⬜ planned | chat |
 | 09.4 | Parallel workers and sub-graphs | ⬜ planned | chat |
@@ -178,7 +178,7 @@ Optional packages: `langchain` · Services: `LANGSMITH_API_KEY`
 
 | Lesson | Title | Status | Model needs |
 |---|---|---|---|
-| 10.1 | Tracing runs: spans, latency and token cost | ⬜ planned | chat |
+| 10.1 | [Tracing runs: spans, latency and token cost](modules/10-tracing-and-evaluation/01-tracing-runs/README.md) | ✅ ready | chat |
 | 10.2 | Evaluation datasets and heuristic evaluators | ⬜ planned | chat |
 | 10.3 | LLM-as-judge and regression testing of prompts | ⬜ planned | chat |
 | 10.4 | Capstone: an evaluation suite for the helpdesk assistant | ⬜ planned | chat |
@@ -191,7 +191,7 @@ Optional packages: `mcp`
 
 | Lesson | Title | Status | Model needs |
 |---|---|---|---|
-| 11.1 | MCP architecture: hosts, clients, servers, primitives | ⬜ planned | - |
+| 11.1 | [MCP architecture: hosts, clients, servers, primitives](modules/11-mcp-servers/01-mcp-architecture/README.md) | ✅ ready | - |
 | 11.2 | A minimal server: tools, resources and prompts | ⬜ planned | - |
 | 11.3 | Writing an MCP client; discovery and negotiation | ⬜ planned | chat, tools |
 | 11.4 | Security, validation and debugging with the Inspector | ⬜ planned | - |
@@ -205,7 +205,7 @@ Optional packages: `mcp`, `langgraph`
 
 | Lesson | Title | Status | Model needs |
 |---|---|---|---|
-| 12.1 | Ready-made servers: SQLite and filesystem | ⬜ planned | chat, tools |
+| 12.1 | [Ready-made servers: SQLite and filesystem](modules/12-mcp-ecosystem/01-ready-made-servers/README.md) | ✅ ready | chat, tools |
 | 12.2 | Chaining several servers in one session | ⬜ planned | chat, tools |
 | 12.3 | MCP tools inside LangChain, LangGraph and CrewAI | ⬜ planned | chat, tools |
 | 12.4 | Capstone: query-to-report pipeline for the helpdesk | ⬜ planned | chat, tools |
@@ -218,7 +218,7 @@ Optional packages: `langgraph`, `rag`
 
 | Lesson | Title | Status | Model needs |
 |---|---|---|---|
-| 13.1 | Reflection: generate, critique, revise | ⬜ planned | chat |
+| 13.1 | [Reflection: generate, critique, revise](modules/13-deep-agents/01-reflection/README.md) | ✅ ready | chat |
 | 13.2 | Planning and replanning | ⬜ planned | chat, tools |
 | 13.3 | Long-term memory: episodic, semantic, procedural | ⬜ planned | chat, embeddings |
 | 13.4 | Capstone: a helpdesk agent that learns from resolved tickets | ⬜ planned | chat, tools, embeddings |
@@ -231,7 +231,7 @@ Optional packages: `crewai`
 
 | Lesson | Title | Status | Model needs |
 |---|---|---|---|
-| 14.1 | Agents, tasks, crews and processes | ⬜ planned | chat |
+| 14.1 | [Agents, tasks, crews and processes](modules/14-crewai/01-agents-tasks-crews-and-processes/README.md) | ✅ ready | chat |
 | 14.2 | Sequential and hierarchical processes; delegation | ⬜ planned | chat, tools |
 | 14.3 | Tools, MCP and LangGraph alongside a crew | ⬜ planned | chat, tools |
 | 14.4 | Capstone: a helpdesk incident-response crew | ⬜ planned | chat, tools |
@@ -244,7 +244,7 @@ Optional packages: `rag`, `langgraph`
 
 | Lesson | Title | Status | Model needs |
 |---|---|---|---|
-| 15.1 | RAG failure modes and how to diagnose them | ⬜ planned | chat, embeddings |
+| 15.1 | [RAG failure modes and how to diagnose them](modules/15-agentic-rag/01-rag-failure-modes-and-how-to-diagnose-them/README.md) | ✅ ready | chat, embeddings |
 | 15.2 | Agentic, self- and corrective RAG | ⬜ planned | chat, tools, embeddings |
 | 15.3 | Re-ranking, HyDE and query expansion | ⬜ planned | chat, embeddings |
 | 15.4 | GraphRAG: knowledge graphs and multi-hop questions | ⬜ planned | chat, embeddings |

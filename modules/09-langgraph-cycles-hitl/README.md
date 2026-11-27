@@ -12,7 +12,7 @@ Loops, approvals and workflows that survive a restart.
 
 | Lesson | Title | Status |
 |---|---|---|
-| 09.1 | Cycles and self-correction loops | ⬜ planned |
+| 09.1 | [Cycles and self-correction loops](01-cycles-and-self-correction-loops/README.md) | ✅ ready |
 | 09.2 | Human-in-the-loop: interrupt, approve, resume | ⬜ planned |
 | 09.3 | Checkpointers: SQLite and Redis persistence | ⬜ planned |
 | 09.4 | Parallel workers and sub-graphs | ⬜ planned |
