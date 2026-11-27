@@ -11,10 +11,10 @@ Defend an LLM application against misuse and mistakes.
 | Lesson | Title | Status |
 |---|---|---|
 | 18.1 | [The risk landscape and prompt injection](01-the-risk-landscape-and-prompt-injection/README.md) | ✅ ready |
-| 18.2 | Input and output rails | ⬜ planned |
-| 18.3 | Validators and detecting personal data | ⬜ planned |
-| 18.4 | Red-teaming a safety stack | ⬜ planned |
-| 18.5 | Capstone: a guarded helpdesk assistant | ⬜ planned |
+| 18.2 | [Input and output rails](02-input-and-output-rails/README.md) | ✅ ready |
+| 18.3 | [Validators and detecting personal data](03-validators-and-detecting-personal-data/README.md) | ✅ ready |
+| 18.4 | [Red-teaming a safety stack](04-red-teaming-a-safety-stack/README.md) | ✅ ready |
+| 18.5 | [Capstone: a guarded helpdesk assistant](05-capstone-a-guarded-helpdesk-assistant/README.md) | ✅ ready |
 
 <!-- lessons:end -->
 

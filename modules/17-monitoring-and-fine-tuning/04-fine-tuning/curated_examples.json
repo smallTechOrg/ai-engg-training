@@ -1,0 +1,146 @@
+[
+ {
+  "id": "LL-2000",
+  "category": "network",
+  "ticket": "The Wi-Fi in meeting room 3B drops every few minutes for everyone in the room.",
+  "reply": "Thanks for the detail. A room-wide drop points at the access point, not your laptop. I have logged it for the network team with the room number; meanwhile please use the wired ports under the table or the Larkspur-Guest network."
+ },
+ {
+  "id": "LL-2001",
+  "category": "network",
+  "ticket": "I cannot reach the intranet from home but email works.",
+  "reply": "The intranet needs the VPN while you are off site. Please connect to the Larkspur VPN client first; if it connects but the intranet still fails, reply with the time and I will pass it to the network team."
+ },
+ {
+  "id": "LL-2002",
+  "category": "network",
+  "ticket": "The VPN client says connection timed out.",
+  "reply": "A timeout usually means your home network blocks the VPN port. Try a phone hotspot once; if that works, tell us your router model and the network team will suggest a fix. If it does not, we will check your VPN account."
+ },
+ {
+  "id": "LL-2003",
+  "category": "network",
+  "ticket": "Internet is very slow on floor 2 since this morning.",
+  "reply": "Thanks for reporting it. I have checked with the network team: it is a floor-wide issue and they are working on it. No action is needed from you; we will update this ticket when it is fixed."
+ },
+ {
+  "id": "LL-2004",
+  "category": "hardware",
+  "ticket": "My docking station does not charge my laptop.",
+  "reply": "Please check that the dock's power brick is plugged in and its light is on, then reseat the laptop's USB-C cable. If it still does not charge, bring both to the IT desk and we will swap the dock."
+ },
+ {
+  "id": "LL-2005",
+  "category": "hardware",
+  "ticket": "I dropped my laptop and the screen is cracked.",
+  "reply": "Sorry to hear that. If the laptop still works, please keep using an external monitor; I have booked a screen repair slot at the IT desk. Back up your files to the shared drive before you come in."
+ },
+ {
+  "id": "LL-2006",
+  "category": "hardware",
+  "ticket": "My keyboard types the wrong characters.",
+  "reply": "That is usually the keyboard language setting. Press Windows key plus Space and select English (UK). If the keys are still wrong, tell us the laptop model and we will arrange a replacement keyboard."
+ },
+ {
+  "id": "LL-2007",
+  "category": "hardware",
+  "ticket": "The projector in room 2A shows no signal.",
+  "reply": "Please check that the input on the projector is set to HDMI 1 and that your adapter is firmly seated. If there is still no signal, I have flagged the room for a technician; try room 2B for now."
+ },
+ {
+  "id": "LL-2008",
+  "category": "software",
+  "ticket": "The VPN client crashes when I open it.",
+  "reply": "Please uninstall the VPN client from Settings, restart, and install the current version from the Software Portal. If it still crashes, send us the Windows version and we will look at the crash log."
+ },
+ {
+  "id": "LL-2009",
+  "category": "software",
+  "ticket": "Excel freezes when I open the budget workbook.",
+  "reply": "Large workbooks can freeze Excel when add-ins are loaded. Open Excel in safe mode (hold Ctrl while starting it) and open the file again. If that works, we will find the add-in causing it."
+ },
+ {
+  "id": "LL-2010",
+  "category": "software",
+  "ticket": "I need Figma installed.",
+  "reply": "Figma is available from the Software Portal under Design. Install it from there and sign in with your Larkspur account; if the portal does not list it for you, I will ask your manager to approve a licence."
+ },
+ {
+  "id": "LL-2011",
+  "category": "software",
+  "ticket": "Teams will not let me share my screen.",
+  "reply": "Screen sharing needs permission on your laptop. Open Settings, then Privacy, then Screen recording, and allow Teams, then restart Teams. If it is still blocked, tell us your operating system and we will check the policy."
+ },
+ {
+  "id": "LL-2012",
+  "category": "access",
+  "ticket": "I am locked out of my Larkspur Labs account.",
+  "reply": "I am sorry about that. For your security I cannot unlock it in chat: please call the IT desk or use the self-service reset page with your phone. I have noted the ticket so the desk expects your call."
+ },
+ {
+  "id": "LL-2013",
+  "category": "access",
+  "ticket": "I need access to the finance shared drive.",
+  "reply": "Access to the finance drive needs approval from the finance lead. I have sent them a request on your behalf; you will get an email when it is approved, normally within one working day."
+ },
+ {
+  "id": "LL-2014",
+  "category": "access",
+  "ticket": "Outlook says my password is wrong after I changed it.",
+  "reply": "Your old password may still be saved on your phone, which keeps locking the account. Remove the account from your phone's mail app, then sign in again with the new password. If the lock continues, call the IT desk."
+ },
+ {
+  "id": "LL-2015",
+  "category": "access",
+  "ticket": "My new starter cannot log in on day one.",
+  "reply": "Please ask the new starter's manager to confirm the start date in the people system; accounts switch on at 8am on that day. If it is past 8am, reply with the starter's name and we will check it now."
+ },
+ {
+  "id": "LL-2016",
+  "category": "other",
+  "ticket": "Where can I find the IT policy on personal phones?",
+  "reply": "The bring-your-own-device policy is on the intranet under IT, then Policies. It covers phones, email access and what we can and cannot see on a personal device. Tell me if you want a short summary."
+ },
+ {
+  "id": "LL-2017",
+  "category": "other",
+  "ticket": "Can you recommend a good laptop bag?",
+  "reply": "That is outside what IT supports, but the approved equipment list on the intranet shows bags that fit our standard laptops. Anything on that list can be claimed through your manager."
+ },
+ {
+  "id": "LL-2018",
+  "category": "other",
+  "ticket": "Who do I ask about my monitor arm?",
+  "reply": "Monitor arms are handled by Facilities, not IT. I have forwarded your request to them with your desk number so you do not need to ask again."
+ },
+ {
+  "id": "LL-2019",
+  "category": "other",
+  "ticket": "The coffee machine on floor 3 is broken.",
+  "reply": "That one is for Facilities rather than IT. I have passed your note to them with the floor number. Thanks for letting us know."
+ },
+ {
+  "id": "LL-2020",
+  "category": "network",
+  "ticket": "Printer on floor 2 is offline for everyone.",
+  "reply": "Thank you. A printer that is offline for everyone is usually its network connection. I have raised it with the network team; please use the floor 1 printer until we confirm it is back."
+ },
+ {
+  "id": "LL-2021",
+  "category": "software",
+  "ticket": "My laptop asks to restart for updates every day.",
+  "reply": "Updates install on a schedule and need a restart to finish. Please restart once now, before you leave today, and the prompt will stop. If it returns after a restart, tell us and we will check the policy on your laptop."
+ },
+ {
+  "id": "LL-2022",
+  "category": "access",
+  "ticket": "Please give me admin rights on my laptop.",
+  "reply": "We do not give admin rights as standard because it protects the company and you. Tell me what you need to install and I will check whether it is on the Software Portal, or raise it as an exception with your manager."
+ },
+ {
+  "id": "LL-2023",
+  "category": "hardware",
+  "ticket": "My mouse pointer jumps around.",
+  "reply": "Try cleaning the sensor underneath and using the mouse on a plain surface. If it still jumps, replace the battery or plug in the receiver on a different port. We have spare mice at the IT desk."
+ }
+]

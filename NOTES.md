@@ -112,3 +112,14 @@ Each entry: symptom -> what was done -> durable lesson.
     (`ast.literal_eval`, correct quiet-then-final recording). -> Verified by reading the
     code and comparing visible calls with the run summary. -> Lesson: a flagging heuristic
     needs a cheap second look, not blind trust either way.
+
+21. **Provider rate limit mid-batch.** Four of six writers stopped on a 5-hour account limit
+    with partial work on disk. -> After the limit reset, resumed each with SendMessage so it
+    continued from its own transcript instead of restarting. -> Lesson: durable files plus
+    resumable workers make a rate-limit stall cheap; do not commit half-written folders (the
+    "planned lessons have no folders" test is a useful tripwire for exactly this).
+
+22. **Module extras drifted from reality again.** Writers legitimately used LangChain in the
+    LangGraph modules and MCP/LangGraph inside the CrewAI module. -> Compared each module's
+    declared `extras` with the packages its scripts import (AST scan) and corrected four
+    modules. -> Lesson: derive extras from imports at the end of every batch.

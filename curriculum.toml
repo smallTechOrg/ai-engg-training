@@ -359,7 +359,7 @@ id = "08"
 slug = "08-langgraph-workflows"
 title = "LangGraph: stateful workflows and routing"
 summary = "Model a workflow as a graph with explicit state."
-extras = ["langgraph"]
+extras = ["langchain", "langgraph"]
 services = []
 
   [[module.lesson]]
@@ -395,7 +395,7 @@ id = "09"
 slug = "09-langgraph-cycles-hitl"
 title = "LangGraph: cycles, human-in-the-loop, persistence"
 summary = "Loops, approvals and workflows that survive a restart."
-extras = ["langgraph"]
+extras = ["langchain", "langgraph"]
 services = ["REDIS_URL"]
 
   [[module.lesson]]
@@ -553,7 +553,7 @@ id = "13"
 slug = "13-deep-agents"
 title = "Deep agents: reflection, planning, long-term memory"
 summary = "Agents that critique their work, plan ahead and remember."
-extras = ["langgraph", "rag"]
+extras = ["langchain", "langgraph", "rag"]
 services = []
 
   [[module.lesson]]
@@ -589,7 +589,7 @@ id = "14"
 slug = "14-crewai"
 title = "CrewAI: multi-agent orchestration"
 summary = "Role-based agents working as a team."
-extras = ["crewai"]
+extras = ["crewai", "langgraph", "mcp"]
 services = []
 
   [[module.lesson]]
@@ -603,21 +603,21 @@ services = []
   id = "14.2"
   slug = "02-sequential-and-hierarchical-processes-delegation"
   title = "Sequential and hierarchical processes; delegation"
-  status = "planned"
+  status = "ready"
   needs = ["chat", "tools"]
 
   [[module.lesson]]
   id = "14.3"
   slug = "03-tools-mcp-and-langgraph-alongside-a-crew"
   title = "Tools, MCP and LangGraph alongside a crew"
-  status = "planned"
+  status = "ready"
   needs = ["chat", "tools"]
 
   [[module.lesson]]
   id = "14.4"
   slug = "04-capstone-a-helpdesk-incident-response-crew"
   title = "Capstone: a helpdesk incident-response crew"
-  status = "planned"
+  status = "ready"
   needs = ["chat", "tools"]
 
 [[module]]
@@ -639,28 +639,28 @@ services = []
   id = "15.2"
   slug = "02-agentic-self-and-corrective-rag"
   title = "Agentic, self- and corrective RAG"
-  status = "planned"
+  status = "ready"
   needs = ["chat", "tools", "embeddings"]
 
   [[module.lesson]]
   id = "15.3"
   slug = "03-re-ranking-hyde-and-query-expansion"
   title = "Re-ranking, HyDE and query expansion"
-  status = "planned"
+  status = "ready"
   needs = ["chat", "embeddings"]
 
   [[module.lesson]]
   id = "15.4"
   slug = "04-graphrag"
   title = "GraphRAG: knowledge graphs and multi-hop questions"
-  status = "planned"
+  status = "ready"
   needs = ["chat", "embeddings"]
 
   [[module.lesson]]
   id = "15.5"
   slug = "05-capstone-benchmark-agentic-against-plain-rag-on"
   title = "Capstone: benchmark agentic against plain RAG on helpdesk questions"
-  status = "planned"
+  status = "ready"
   needs = ["chat", "embeddings"]
 
 [[module]]
@@ -682,28 +682,28 @@ services = ["DOCKER", "REDIS_URL"]
   id = "16.2"
   slug = "02-docker-compose"
   title = "Docker Compose: API, vector store, Redis, worker"
-  status = "planned"
+  status = "ready"
   needs = ["chat"]
 
   [[module.lesson]]
   id = "16.3"
   slug = "03-health-checks-configuration-and-secrets"
   title = "Health checks, configuration and secrets"
-  status = "planned"
+  status = "ready"
   needs = []
 
   [[module.lesson]]
   id = "16.4"
   slug = "04-ci-cd-and-rollout-strategies"
   title = "CI/CD and rollout strategies"
-  status = "planned"
+  status = "ready"
   needs = []
 
   [[module.lesson]]
   id = "16.5"
   slug = "05-capstone-the-helpdesk-stack-in-containers"
   title = "Capstone: the helpdesk stack in containers"
-  status = "planned"
+  status = "ready"
   needs = ["chat"]
 
 [[module]]
@@ -725,28 +725,28 @@ services = ["OTEL_EXPORTER_OTLP_ENDPOINT", "PROMETHEUS_URL", "GRAFANA_URL"]
   id = "17.2"
   slug = "02-prometheus-metrics-and-grafana-dashboards"
   title = "Prometheus metrics and Grafana dashboards"
-  status = "planned"
+  status = "ready"
   needs = ["chat"]
 
   [[module.lesson]]
   id = "17.3"
   slug = "03-cost-tracking-budgets-and-service-level-objectiv"
   title = "Cost tracking, budgets and service-level objectives"
-  status = "planned"
+  status = "ready"
   needs = ["chat"]
 
   [[module.lesson]]
   id = "17.4"
   slug = "04-fine-tuning"
   title = "Fine-tuning: when it is warranted; LoRA and QLoRA"
-  status = "planned"
+  status = "ready"
   needs = []
 
   [[module.lesson]]
   id = "17.5"
   slug = "05-capstone-a-monitored-helpdesk-assistant"
   title = "Capstone: a monitored helpdesk assistant"
-  status = "planned"
+  status = "ready"
   needs = ["chat"]
 
 [[module]]
@@ -768,28 +768,28 @@ services = []
   id = "18.2"
   slug = "02-input-and-output-rails"
   title = "Input and output rails"
-  status = "planned"
+  status = "ready"
   needs = ["chat"]
 
   [[module.lesson]]
   id = "18.3"
   slug = "03-validators-and-detecting-personal-data"
   title = "Validators and detecting personal data"
-  status = "planned"
+  status = "ready"
   needs = ["chat"]
 
   [[module.lesson]]
   id = "18.4"
   slug = "04-red-teaming-a-safety-stack"
   title = "Red-teaming a safety stack"
-  status = "planned"
+  status = "ready"
   needs = ["chat"]
 
   [[module.lesson]]
   id = "18.5"
   slug = "05-capstone-a-guarded-helpdesk-assistant"
   title = "Capstone: a guarded helpdesk assistant"
-  status = "planned"
+  status = "ready"
   needs = ["chat"]
 
 [[module]]
@@ -811,21 +811,21 @@ services = ["N8N_URL"]
   id = "19.2"
   slug = "02-webhooks-http-requests-and-model-nodes"
   title = "Webhooks, HTTP requests and model nodes"
-  status = "planned"
+  status = "ready"
   needs = ["chat"]
 
   [[module.lesson]]
   id = "19.3"
   slug = "03-error-handling-schedules-and-expressions"
   title = "Error handling, schedules and expressions"
-  status = "planned"
+  status = "ready"
   needs = []
 
   [[module.lesson]]
   id = "19.4"
   slug = "04-capstone-a-helpdesk-ticket-workflow-calling-an-a"
   title = "Capstone: a helpdesk ticket workflow calling an agent"
-  status = "planned"
+  status = "ready"
   needs = ["chat"]
 
 [[module]]

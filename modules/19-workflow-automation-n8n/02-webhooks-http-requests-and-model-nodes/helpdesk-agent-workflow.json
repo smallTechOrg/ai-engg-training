@@ -1,0 +1,81 @@
+{
+  "name": "Larkspur helpdesk agent call",
+  "nodes": [
+    {
+      "id": "c2d0a1a0-0001-4000-8000-000000000001",
+      "name": "Ticket Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [0, 0],
+      "webhookId": "c2d0a1a0-0001-4000-8000-0000000000bb",
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "helpdesk-agent",
+        "responseMode": "responseNode",
+        "options": {}
+      }
+    },
+    {
+      "id": "c2d0a1a0-0002-4000-8000-000000000002",
+      "name": "Call the agent",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [240, 0],
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 2000,
+      "parameters": {
+        "method": "POST",
+        "url": "http://host.docker.internal:8008/ask",
+        "sendBody": true,
+        "contentType": "json",
+        "specifyBody": "keypair",
+        "bodyParameters": {
+          "parameters": [
+            { "name": "ticket", "value": "={{ $json.body.ticket }}" }
+          ]
+        },
+        "sendQuery": true,
+        "specifyQuery": "keypair",
+        "queryParameters": {
+          "parameters": [
+            { "name": "source", "value": "n8n" }
+          ]
+        },
+        "options": { "timeout": 30000 }
+      }
+    },
+    {
+      "id": "c2d0a1a0-0003-4000-8000-000000000003",
+      "name": "Shape the reply",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [480, 0],
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            { "id": "a1000000-0000-4000-8000-000000000001", "name": "reply", "value": "={{ $json.reply }}", "type": "string" },
+            { "id": "a1000000-0000-4000-8000-000000000002", "name": "ticket", "value": "={{ $('Ticket Webhook').item.json.body.ticket }}", "type": "string" }
+          ]
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "c2d0a1a0-0004-4000-8000-000000000004",
+      "name": "Respond to caller",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [720, 0],
+      "parameters": { "respondWith": "json", "responseBody": "={{ $json }}", "options": {} }
+    }
+  ],
+  "connections": {
+    "Ticket Webhook": { "main": [[{ "node": "Call the agent", "type": "main", "index": 0 }]] },
+    "Call the agent": { "main": [[{ "node": "Shape the reply", "type": "main", "index": 0 }]] },
+    "Shape the reply": { "main": [[{ "node": "Respond to caller", "type": "main", "index": 0 }]] }
+  },
+  "pinData": {},
+  "settings": { "executionOrder": "v1" },
+  "active": false
+}

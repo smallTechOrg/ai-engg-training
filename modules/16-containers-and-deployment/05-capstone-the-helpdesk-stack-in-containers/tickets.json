@@ -1,0 +1,6 @@
+[
+  {"id": "LL-2001", "text": "The VPN disconnects every ten minutes when I work from home.", "expected_category": "network"},
+  {"id": "LL-2002", "text": "My laptop screen is cracked and flickers.", "expected_category": "hardware"},
+  {"id": "LL-2003", "text": "Outlook keeps rejecting my password since I changed it yesterday.", "expected_category": "access"},
+  {"id": "LL-2004", "text": "Excel crashes every time I open the finance workbook.", "expected_category": "software"}
+]

@@ -13,10 +13,10 @@ Operate an agent: traces, metrics, dashboards, and when to fine-tune.
 | Lesson | Title | Status |
 |---|---|---|
 | 17.1 | [Logs, metrics and traces with OpenTelemetry](01-logs-metrics-and-traces-with-opentelemetry/README.md) | ✅ ready |
-| 17.2 | Prometheus metrics and Grafana dashboards | ⬜ planned |
-| 17.3 | Cost tracking, budgets and service-level objectives | ⬜ planned |
-| 17.4 | Fine-tuning: when it is warranted; LoRA and QLoRA | ⬜ planned |
-| 17.5 | Capstone: a monitored helpdesk assistant | ⬜ planned |
+| 17.2 | [Prometheus metrics and Grafana dashboards](02-prometheus-metrics-and-grafana-dashboards/README.md) | ✅ ready |
+| 17.3 | [Cost tracking, budgets and service-level objectives](03-cost-tracking-budgets-and-service-level-objectiv/README.md) | ✅ ready |
+| 17.4 | [Fine-tuning: when it is warranted; LoRA and QLoRA](04-fine-tuning/README.md) | ✅ ready |
+| 17.5 | [Capstone: a monitored helpdesk assistant](05-capstone-a-monitored-helpdesk-assistant/README.md) | ✅ ready |
 
 <!-- lessons:end -->
 

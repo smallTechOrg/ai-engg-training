@@ -13,10 +13,10 @@ Package an agent and ship it.
 | Lesson | Title | Status |
 |---|---|---|
 | 16.1 | [Docker fundamentals and a production Dockerfile](01-docker-fundamentals-and-a-production-dockerfile/README.md) | ✅ ready |
-| 16.2 | Docker Compose: API, vector store, Redis, worker | ⬜ planned |
-| 16.3 | Health checks, configuration and secrets | ⬜ planned |
-| 16.4 | CI/CD and rollout strategies | ⬜ planned |
-| 16.5 | Capstone: the helpdesk stack in containers | ⬜ planned |
+| 16.2 | [Docker Compose: API, vector store, Redis, worker](02-docker-compose/README.md) | ✅ ready |
+| 16.3 | [Health checks, configuration and secrets](03-health-checks-configuration-and-secrets/README.md) | ✅ ready |
+| 16.4 | [CI/CD and rollout strategies](04-ci-cd-and-rollout-strategies/README.md) | ✅ ready |
+| 16.5 | [Capstone: the helpdesk stack in containers](05-capstone-the-helpdesk-stack-in-containers/README.md) | ✅ ready |
 
 <!-- lessons:end -->
 

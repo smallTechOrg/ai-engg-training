@@ -1,0 +1,109 @@
+{
+  "name": "Larkspur weekday ticket digest",
+  "nodes": [
+    {
+      "id": "d3d0a1a0-0001-4000-8000-000000000001",
+      "name": "Every weekday 08:00",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [0, 0],
+      "parameters": {
+        "rule": {
+          "interval": [
+            { "field": "cronExpression", "expression": "0 8 * * 1-5" }
+          ]
+        }
+      }
+    },
+    {
+      "id": "d3d0a1a0-0002-4000-8000-000000000002",
+      "name": "Fetch open tickets",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [240, 0],
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 2000,
+      "onError": "continueErrorOutput",
+      "parameters": {
+        "method": "GET",
+        "url": "http://host.docker.internal:8008/tickets/open",
+        "options": { "timeout": 15000 }
+      }
+    },
+    {
+      "id": "d3d0a1a0-0003-4000-8000-000000000003",
+      "name": "Any open tickets?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [480, -100],
+      "parameters": {
+        "conditions": {
+          "options": { "caseSensitive": true, "leftValue": "", "typeValidation": "strict", "version": 2 },
+          "combinator": "and",
+          "conditions": [
+            {
+              "id": "e0000000-0000-4000-8000-000000000001",
+              "leftValue": "={{ $json.open }}",
+              "rightValue": 0,
+              "operator": { "type": "number", "operation": "gt" }
+            }
+          ]
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "d3d0a1a0-0004-4000-8000-000000000004",
+      "name": "Format digest",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [720, -200],
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            { "id": "a2000000-0000-4000-8000-000000000001", "name": "text", "value": "=Good morning: {{ $json.open }} open tickets, {{ $json.urgent }} urgent.", "type": "string" }
+          ]
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "d3d0a1a0-0005-4000-8000-000000000005",
+      "name": "Describe the failure",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [480, 120],
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            { "id": "a2000000-0000-4000-8000-000000000002", "name": "message", "value": "=Digest failed at 'Fetch open tickets': {{ $json.error.message }}", "type": "string" }
+          ]
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "d3d0a1a0-0006-4000-8000-000000000006",
+      "name": "Fail the run",
+      "type": "n8n-nodes-base.stopAndError",
+      "typeVersion": 1,
+      "position": [720, 120],
+      "parameters": { "errorType": "errorMessage", "errorMessage": "={{ $json.message }}" }
+    }
+  ],
+  "connections": {
+    "Every weekday 08:00": { "main": [[{ "node": "Fetch open tickets", "type": "main", "index": 0 }]] },
+    "Fetch open tickets": {
+      "main": [
+        [{ "node": "Any open tickets?", "type": "main", "index": 0 }],
+        [{ "node": "Describe the failure", "type": "main", "index": 0 }]
+      ]
+    },
+    "Any open tickets?": { "main": [[{ "node": "Format digest", "type": "main", "index": 0 }], []] },
+    "Describe the failure": { "main": [[{ "node": "Fail the run", "type": "main", "index": 0 }]] }
+  },
+  "pinData": {},
+  "settings": { "executionOrder": "v1", "timezone": "Europe/London", "errorWorkflow": "REPLACE_WITH_ERROR_WORKFLOW_ID" },
+  "active": false
+}

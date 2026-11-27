@@ -2,7 +2,7 @@
 
 <!-- Generated from curriculum.toml by `./run map`. Do not edit by hand. -->
 
-21 modules, 99 lessons, 73 ready. Each lesson shows a concept on its own, then applies it to the running scenario: **IT helpdesk assistant**.
+21 modules, 99 lessons, 95 ready. Each lesson shows a concept on its own, then applies it to the running scenario: **IT helpdesk assistant**.
 
 | Status | Meaning |
 |---|---|
@@ -28,12 +28,12 @@
 | 11 | [MCP: architecture and custom servers](modules/11-mcp-servers/README.md) | 5 / 5 |
 | 12 | [MCP: ecosystem integrations](modules/12-mcp-ecosystem/README.md) | 4 / 4 |
 | 13 | [Deep agents: reflection, planning, long-term memory](modules/13-deep-agents/README.md) | 4 / 4 |
-| 14 | [CrewAI: multi-agent orchestration](modules/14-crewai/README.md) | 1 / 4 |
-| 15 | [Agentic RAG and GraphRAG](modules/15-agentic-rag/README.md) | 1 / 5 |
-| 16 | [Containers and deployment](modules/16-containers-and-deployment/README.md) | 1 / 5 |
-| 17 | [Monitoring, evaluation and fine-tuning](modules/17-monitoring-and-fine-tuning/README.md) | 1 / 5 |
-| 18 | [Guardrails and safety](modules/18-guardrails/README.md) | 1 / 5 |
-| 19 | [Workflow automation with n8n](modules/19-workflow-automation-n8n/README.md) | 1 / 4 |
+| 14 | [CrewAI: multi-agent orchestration](modules/14-crewai/README.md) | 4 / 4 |
+| 15 | [Agentic RAG and GraphRAG](modules/15-agentic-rag/README.md) | 5 / 5 |
+| 16 | [Containers and deployment](modules/16-containers-and-deployment/README.md) | 5 / 5 |
+| 17 | [Monitoring, evaluation and fine-tuning](modules/17-monitoring-and-fine-tuning/README.md) | 5 / 5 |
+| 18 | [Guardrails and safety](modules/18-guardrails/README.md) | 5 / 5 |
+| 19 | [Workflow automation with n8n](modules/19-workflow-automation-n8n/README.md) | 4 / 4 |
 | 20 | [Capstone](modules/20-capstone/README.md) | 0 / 4 |
 
 ## 00 · Setup and Python for AI work
@@ -147,7 +147,7 @@ Optional packages: `langchain`
 
 Model a workflow as a graph with explicit state.
 
-Optional packages: `langgraph`
+Optional packages: `langchain`, `langgraph`
 
 | Lesson | Title | Status | Model needs |
 |---|---|---|---|
@@ -160,7 +160,7 @@ Optional packages: `langgraph`
 
 Loops, approvals and workflows that survive a restart.
 
-Optional packages: `langgraph` · Services: `REDIS_URL`
+Optional packages: `langchain`, `langgraph` · Services: `REDIS_URL`
 
 | Lesson | Title | Status | Model needs |
 |---|---|---|---|
@@ -214,7 +214,7 @@ Optional packages: `mcp`, `langchain`, `langgraph`, `crewai`
 
 Agents that critique their work, plan ahead and remember.
 
-Optional packages: `langgraph`, `rag`
+Optional packages: `langchain`, `langgraph`, `rag`
 
 | Lesson | Title | Status | Model needs |
 |---|---|---|---|
@@ -227,14 +227,14 @@ Optional packages: `langgraph`, `rag`
 
 Role-based agents working as a team.
 
-Optional packages: `crewai`
+Optional packages: `crewai`, `langgraph`, `mcp`
 
 | Lesson | Title | Status | Model needs |
 |---|---|---|---|
 | 14.1 | [Agents, tasks, crews and processes](modules/14-crewai/01-agents-tasks-crews-and-processes/README.md) | ✅ ready | chat |
-| 14.2 | Sequential and hierarchical processes; delegation | ⬜ planned | chat, tools |
-| 14.3 | Tools, MCP and LangGraph alongside a crew | ⬜ planned | chat, tools |
-| 14.4 | Capstone: a helpdesk incident-response crew | ⬜ planned | chat, tools |
+| 14.2 | [Sequential and hierarchical processes; delegation](modules/14-crewai/02-sequential-and-hierarchical-processes-delegation/README.md) | ✅ ready | chat, tools |
+| 14.3 | [Tools, MCP and LangGraph alongside a crew](modules/14-crewai/03-tools-mcp-and-langgraph-alongside-a-crew/README.md) | ✅ ready | chat, tools |
+| 14.4 | [Capstone: a helpdesk incident-response crew](modules/14-crewai/04-capstone-a-helpdesk-incident-response-crew/README.md) | ✅ ready | chat, tools |
 
 ## 15 · Agentic RAG and GraphRAG
 
@@ -245,10 +245,10 @@ Optional packages: `rag`, `langgraph`
 | Lesson | Title | Status | Model needs |
 |---|---|---|---|
 | 15.1 | [RAG failure modes and how to diagnose them](modules/15-agentic-rag/01-rag-failure-modes-and-how-to-diagnose-them/README.md) | ✅ ready | chat, embeddings |
-| 15.2 | Agentic, self- and corrective RAG | ⬜ planned | chat, tools, embeddings |
-| 15.3 | Re-ranking, HyDE and query expansion | ⬜ planned | chat, embeddings |
-| 15.4 | GraphRAG: knowledge graphs and multi-hop questions | ⬜ planned | chat, embeddings |
-| 15.5 | Capstone: benchmark agentic against plain RAG on helpdesk questions | ⬜ planned | chat, embeddings |
+| 15.2 | [Agentic, self- and corrective RAG](modules/15-agentic-rag/02-agentic-self-and-corrective-rag/README.md) | ✅ ready | chat, tools, embeddings |
+| 15.3 | [Re-ranking, HyDE and query expansion](modules/15-agentic-rag/03-re-ranking-hyde-and-query-expansion/README.md) | ✅ ready | chat, embeddings |
+| 15.4 | [GraphRAG: knowledge graphs and multi-hop questions](modules/15-agentic-rag/04-graphrag/README.md) | ✅ ready | chat, embeddings |
+| 15.5 | [Capstone: benchmark agentic against plain RAG on helpdesk questions](modules/15-agentic-rag/05-capstone-benchmark-agentic-against-plain-rag-on/README.md) | ✅ ready | chat, embeddings |
 
 ## 16 · Containers and deployment
 
@@ -259,10 +259,10 @@ Optional packages: `apps` · Services: `DOCKER`, `REDIS_URL`
 | Lesson | Title | Status | Model needs |
 |---|---|---|---|
 | 16.1 | [Docker fundamentals and a production Dockerfile](modules/16-containers-and-deployment/01-docker-fundamentals-and-a-production-dockerfile/README.md) | ✅ ready | - |
-| 16.2 | Docker Compose: API, vector store, Redis, worker | ⬜ planned | chat |
-| 16.3 | Health checks, configuration and secrets | ⬜ planned | - |
-| 16.4 | CI/CD and rollout strategies | ⬜ planned | - |
-| 16.5 | Capstone: the helpdesk stack in containers | ⬜ planned | chat |
+| 16.2 | [Docker Compose: API, vector store, Redis, worker](modules/16-containers-and-deployment/02-docker-compose/README.md) | ✅ ready | chat |
+| 16.3 | [Health checks, configuration and secrets](modules/16-containers-and-deployment/03-health-checks-configuration-and-secrets/README.md) | ✅ ready | - |
+| 16.4 | [CI/CD and rollout strategies](modules/16-containers-and-deployment/04-ci-cd-and-rollout-strategies/README.md) | ✅ ready | - |
+| 16.5 | [Capstone: the helpdesk stack in containers](modules/16-containers-and-deployment/05-capstone-the-helpdesk-stack-in-containers/README.md) | ✅ ready | chat |
 
 ## 17 · Monitoring, evaluation and fine-tuning
 
@@ -273,10 +273,10 @@ Optional packages: `observability` · Services: `OTEL_EXPORTER_OTLP_ENDPOINT`, `
 | Lesson | Title | Status | Model needs |
 |---|---|---|---|
 | 17.1 | [Logs, metrics and traces with OpenTelemetry](modules/17-monitoring-and-fine-tuning/01-logs-metrics-and-traces-with-opentelemetry/README.md) | ✅ ready | chat |
-| 17.2 | Prometheus metrics and Grafana dashboards | ⬜ planned | chat |
-| 17.3 | Cost tracking, budgets and service-level objectives | ⬜ planned | chat |
-| 17.4 | Fine-tuning: when it is warranted; LoRA and QLoRA | ⬜ planned | - |
-| 17.5 | Capstone: a monitored helpdesk assistant | ⬜ planned | chat |
+| 17.2 | [Prometheus metrics and Grafana dashboards](modules/17-monitoring-and-fine-tuning/02-prometheus-metrics-and-grafana-dashboards/README.md) | ✅ ready | chat |
+| 17.3 | [Cost tracking, budgets and service-level objectives](modules/17-monitoring-and-fine-tuning/03-cost-tracking-budgets-and-service-level-objectiv/README.md) | ✅ ready | chat |
+| 17.4 | [Fine-tuning: when it is warranted; LoRA and QLoRA](modules/17-monitoring-and-fine-tuning/04-fine-tuning/README.md) | ✅ ready | - |
+| 17.5 | [Capstone: a monitored helpdesk assistant](modules/17-monitoring-and-fine-tuning/05-capstone-a-monitored-helpdesk-assistant/README.md) | ✅ ready | chat |
 
 ## 18 · Guardrails and safety
 
@@ -287,10 +287,10 @@ Optional packages: `guardrails`
 | Lesson | Title | Status | Model needs |
 |---|---|---|---|
 | 18.1 | [The risk landscape and prompt injection](modules/18-guardrails/01-the-risk-landscape-and-prompt-injection/README.md) | ✅ ready | chat |
-| 18.2 | Input and output rails | ⬜ planned | chat |
-| 18.3 | Validators and detecting personal data | ⬜ planned | chat |
-| 18.4 | Red-teaming a safety stack | ⬜ planned | chat |
-| 18.5 | Capstone: a guarded helpdesk assistant | ⬜ planned | chat |
+| 18.2 | [Input and output rails](modules/18-guardrails/02-input-and-output-rails/README.md) | ✅ ready | chat |
+| 18.3 | [Validators and detecting personal data](modules/18-guardrails/03-validators-and-detecting-personal-data/README.md) | ✅ ready | chat |
+| 18.4 | [Red-teaming a safety stack](modules/18-guardrails/04-red-teaming-a-safety-stack/README.md) | ✅ ready | chat |
+| 18.5 | [Capstone: a guarded helpdesk assistant](modules/18-guardrails/05-capstone-a-guarded-helpdesk-assistant/README.md) | ✅ ready | chat |
 
 ## 19 · Workflow automation with n8n
 
@@ -301,9 +301,9 @@ Services: `N8N_URL`
 | Lesson | Title | Status | Model needs |
 |---|---|---|---|
 | 19.1 | [n8n concepts: workflows, nodes, triggers, credentials](modules/19-workflow-automation-n8n/01-n8n-concepts/README.md) | ✅ ready | - |
-| 19.2 | Webhooks, HTTP requests and model nodes | ⬜ planned | chat |
-| 19.3 | Error handling, schedules and expressions | ⬜ planned | - |
-| 19.4 | Capstone: a helpdesk ticket workflow calling an agent | ⬜ planned | chat |
+| 19.2 | [Webhooks, HTTP requests and model nodes](modules/19-workflow-automation-n8n/02-webhooks-http-requests-and-model-nodes/README.md) | ✅ ready | chat |
+| 19.3 | [Error handling, schedules and expressions](modules/19-workflow-automation-n8n/03-error-handling-schedules-and-expressions/README.md) | ✅ ready | - |
+| 19.4 | [Capstone: a helpdesk ticket workflow calling an agent](modules/19-workflow-automation-n8n/04-capstone-a-helpdesk-ticket-workflow-calling-an-a/README.md) | ✅ ready | chat |
 
 ## 20 · Capstone
 
