@@ -17,6 +17,7 @@ logs/
 .labkit/
 doctor-report.txt
 check-report.txt
+site-dist/
 
 # local planning material, never versioned
 *.xlsx
