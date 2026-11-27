@@ -43,6 +43,21 @@ jobs:
         if: runner.os != 'Windows'
         run: .venv/bin/python -m pytest
 
+      # The read-only course site must build cleanly; its checks keep READMEs and scripts in sync.
+      - name: Course site, strict build (Linux)
+        if: runner.os == 'Linux'
+        run: |
+          export PATH="$HOME/.local/bin:$HOME/.cargo/bin:$PATH"
+          uv sync --extra docs
+          ./run site build --strict
+
+      - name: Upload the course site (Linux)
+        if: runner.os == 'Linux'
+        uses: actions/upload-artifact@v4
+        with:
+          name: course-site
+          path: site-dist
+
       - name: Tests (Windows)
         if: runner.os == 'Windows'
         shell: cmd

@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% import "_macros.html" as m %}
+{% block bodyclass %}page-home{% endblock %}
+{% block main %}
+<section class="hero">
+  <p class="eyebrow">A hands-on course</p>
+  <h1>{{ site_title }}</h1>
+  <p class="lead">{{ lead }}</p>
+  <div class="hero-actions">
+    {% if first_url %}<a class="btn btn-primary" href="{{ href(first_url) }}">Start with lesson {{ first.id }}</a>{% endif %}
+    <a class="btn" href="#modules">Browse {{ stats.modules }} modules</a>
+  </div>
+  <ul class="stats" aria-label="Course size">
+    <li><strong>{{ stats.modules }}</strong> modules</li>
+    <li><strong>{{ stats.lessons }}</strong> lessons</li>
+    <li><strong>{{ stats.ready }}</strong> ready to read</li>
+  </ul>
+</section>
+
+<section class="scenario-card">
+  <h2>The running example</h2>
+  <p>Every lesson shows an idea on its own, then applies it to one project that grows through the course: an <strong>{{ scenario }}</strong>. By the end you have built it, tested it, deployed it and guarded it.</p>
+</section>
+
+<section class="how" aria-label="How this site works">
+  <div><h3>Follow along</h3><p>Each lesson explains the idea, then walks through its scripts step by step with the output you should see.</p></div>
+  <div><h3>Nothing to run</h3><p>This site is read-only. To run the code yourself, clone the repository and use the launcher described in <a href="{{ href('about.html') }}">About</a>.</p></div>
+  <div><h3>Never out of date</h3><p>It is generated from the lessons themselves, so the code you read is the code in the repo.</p></div>
+</section>
+
+<section id="modules" class="modules">
+  <h2>Modules</h2>
+  <div class="cards">
+  {% for c in modules %}
+    <a class="card modcard" href="{{ href(c.url) }}">
+      <span class="modcard-id">{{ c.module.id }}</span>
+      <h3>{{ c.module.title }}</h3>
+      <p>{{ c.module.summary }}</p>
+      <div class="chips">
+        {% for e in c.extras %}<span class="chip chip-pkg" title="Optional package group">{{ e }}</span>{% endfor %}
+        {% if c.all_extras %}<span class="chip chip-pkg">all packages</span>{% endif %}
+        {% for s in c.services %}<span class="chip chip-svc" title="Optional service setting">{{ s }}</span>{% endfor %}
+      </div>
+      <span class="modcard-count"><span class="bar" aria-hidden="true"><i style="width: {{ (100 * c.ready / c.total)|round|int if c.total else 0 }}%"></i></span>{{ c.ready }} of {{ c.total }} lessons ready</span>
+    </a>
+  {% endfor %}
+  </div>
+</section>
+{% endblock %}

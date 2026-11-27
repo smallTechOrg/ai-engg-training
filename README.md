@@ -43,6 +43,7 @@ Type `./run` on macOS/Linux and `run` on Windows.
 | `run 01.1 --raw` | Also show the HTTP requests and responses |
 | `run doctor` | Check your machine, settings, endpoint and model capabilities |
 | `run doctor --report` | Same, and write `doctor-report.txt` to send to your instructor |
+| `run site build` / `run site serve` | Instructors: build the read-only course website into `site-dist/` (`--out DIR`, `--strict`) and serve it on `127.0.0.1` (`--port N`, 0 = any free port); needs `uv sync --extra docs` |
 | `run check` | Instructors: run every ready lesson against your endpoint and report pass / fail / skip (`--module 04`, `--lesson 04.1`, `--report`) |
 
 Every script is also an ordinary Python file. With the environment active
@@ -86,6 +87,26 @@ python -m venv .venv
    `--lesson 04.1` narrow it; `--report` writes `check-report.txt`). Scripts that need Docker,
    Redis, n8n or other services you have not set up are skipped, not failed.
 4. After upgrading any dependency, repeat step 3.
+
+## Course site
+
+A read-only website explains every lesson step by step, for people who follow along without running anything.
+It is generated from the repo, never hand-edited.
+
+```
+uv sync --extra docs         # once (or ./setup.sh --all)
+./run site build             # writes site-dist/   (--out DIR to choose another folder)
+./run site serve             # http://127.0.0.1:8000   (--port 0 picks a free port)
+```
+
+The built folder also works opened from disk and under a sub-path. **How it stays in sync:** module and lesson
+facts come from `curriculum.toml`, prose and expected output from each lesson `README.md`, code and the
+step-by-step walkthrough from the scripts themselves. `./run site build --strict` (run in CI) fails when a README
+mentions a script that does not exist, omits one that does, has a link that does not resolve, or shows an
+expected-output `Step N: title` that does not match the script's `ctx.step` title. Details: `spec/capabilities/site.md`.
+
+**Publishing to GitHub Pages** is opt-in: set the repository variable `PUBLISH_SITE` to `true` and set
+Settings > Pages > Source to "GitHub Actions". The workflow `.github/workflows/pages.yml` then deploys on every push to `main`.
 
 ## For instructors and contributors
 

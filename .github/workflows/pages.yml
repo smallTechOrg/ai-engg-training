@@ -1,0 +1,44 @@
+name: Course site
+
+# Opt-in publishing: set the repository variable PUBLISH_SITE to "true" and choose
+# Settings > Pages > Source: GitHub Actions. Without the variable only the build job runs.
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v5
+      - name: Install the docs extra
+        run: uv sync --extra docs
+      - name: Build the site (strict)
+        run: uv run labkit site build --strict
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: site-dist
+
+  deploy:
+    needs: build
+    if: ${{ vars.PUBLISH_SITE == 'true' }}
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/configure-pages@v5
+      - id: deployment
+        uses: actions/deploy-pages@v4

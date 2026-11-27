@@ -1,0 +1,15 @@
+{% macro badge(status) %}<span class="badge badge-{{ status }}">{{ status }}</span>{% endmacro %}
+
+{% macro need_chips(needs) %}{% if needs %}{% for n in needs %}<span class="chip chip-model" title="The model must support: {{ n }}">{{ n }}</span>{% endfor %}{% else %}<span class="chip chip-model" title="This lesson does not call a model">no model</span>{% endif %}{% endmacro %}
+
+{% macro toc_list(toc) %}
+<ol class="toc-list">
+{% for entry in toc %}
+  <li><a href="#{{ entry.id }}">{{ entry.title }}</a>
+  {% if entry.children %}
+    <ol>{% for child in entry.children %}<li><a href="#{{ child.id }}"><code>{{ child.title }}</code></a></li>{% endfor %}</ol>
+  {% endif %}
+  </li>
+{% endfor %}
+</ol>
+{% endmacro %}

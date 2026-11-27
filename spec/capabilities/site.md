@@ -67,3 +67,13 @@ It is **generated from the repo and never hand-edited**, so it cannot drift from
 5. CI: the base job runs `./run site build --strict` and uploads the site as an artifact. A separate
    `pages.yml` deploys it to GitHub Pages **only when the repository variable `PUBLISH_SITE` is `true`**
    and Pages is set to "GitHub Actions" in repo settings (opt-in; nothing is published otherwise).
+
+## Implementation notes (deviations and decisions)
+
+- Steps are read from `ctx.step(...)` calls inside `main` only. A title that is a variable is shown as "Step titled at run time" and
+  receives any expected-output chunk no other step claims; steps called from helper functions outside `main` attach their output
+  to the script as a whole.
+- Expected-output headings the author trimmed with an ellipsis match by prefix; a heading that is only `...` is treated as an elision.
+- F-string `ctx.note(...)` lines are runtime values, not narrative, so only constant notes become step narrative.
+- The README's own `**Next:**` line is replaced by the generated previous/next navigation.
+- GitHub links use the `main` branch and the `origin` remote, only when it is a github.com remote.
