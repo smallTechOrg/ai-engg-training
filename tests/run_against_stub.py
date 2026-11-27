@@ -34,6 +34,7 @@ if __name__ == "__main__":
         LLM_API_KEY="test-key",
         LLM_MODEL=args.model,
         LLM_TIMEOUT="10",
+        EMBEDDING_MODEL=os.environ.get("STUB_EMBEDDING_MODEL", "stub-embedding"),
     )
     code = subprocess.run([sys.executable, args.script, *args.rest], env=env, input="", text=True).returncode
     print(f"\n[stub run] exit code {code}")

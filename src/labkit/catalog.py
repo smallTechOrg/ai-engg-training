@@ -10,6 +10,32 @@ from pathlib import Path
 from labkit.config import repo_root
 
 STATUSES = ("ready", "draft", "planned")
+
+# Optional package groups (pyproject extras) and one import that proves each is installed.
+EXTRAS = {
+    "rag": ("fastembed", "chromadb", "faiss", "rank_bm25", "networkx"),
+    "apps": ("fastapi", "uvicorn", "streamlit", "gradio"),
+    "langchain": ("langchain", "langchain_openai", "langchain_community"),
+    "langgraph": ("langgraph", "langchain_openai"),
+    "mcp": ("mcp",),
+    "crewai": ("crewai",),
+}
+# Which extra provides an importable top-level module (for friendly "install this" errors).
+MODULE_TO_EXTRA: dict[str, str] = {}
+for _extra, _modules in EXTRAS.items():
+    for _module in _modules:
+        MODULE_TO_EXTRA.setdefault(_module, _extra)  # first group that lists a module wins
+MODULE_TO_EXTRA.update({"numpy": "rag", "langchain_core": "langchain", "langchain_text_splitters": "langchain", "langgraph_checkpoint": "langgraph", "httpx": "apps", "starlette": "apps"})
+
+
+def install_command(extra: str) -> str:
+    return f"uv sync --extra {extra}   (or everything: ./setup.sh --all, Windows: setup -All)"
+
+
+def extra_installed(extra: str) -> bool:
+    import importlib.util
+
+    return all(importlib.util.find_spec(name) is not None for name in EXTRAS.get(extra, ()))
 SCRIPT_PATTERN = "[0-9][0-9]_*.py"
 
 

@@ -51,7 +51,7 @@ def test_doctor_passes_against_a_working_endpoint(run, tmp_path):
         assert f"PASS  {line}" in result.stdout, result.stdout
     assert "test-key" not in result.stdout
     cache = json.loads((tmp_path / ".labkit" / "doctor.json").read_text(encoding="utf-8"))
-    assert cache["capabilities"] == {"chat": True, "stream": True, "tools": True, "json": True, "embeddings": None}
+    assert cache["capabilities"] == {"chat": True, "stream": True, "tools": True, "json": True, "embeddings": True}
     listing = run([*LABKIT, "list"])
     assert "? run doctor" not in listing.stdout
 

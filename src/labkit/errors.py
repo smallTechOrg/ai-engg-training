@@ -13,6 +13,14 @@ EXIT_NOT_CONFIGURED = 2
 EXIT_SKIPPED = 3
 
 
+class ServiceUnavailable(Exception):
+    """Raise from a lesson when a service it needs (Redis, LangSmith, n8n...) is not set up."""
+
+    def __init__(self, title: str, fixes: list[str]):
+        self.title, self.fixes = title, fixes
+        super().__init__(title)
+
+
 @dataclass
 class Explained:
     kind: str  # short machine-friendly label, also used by the doctor
@@ -26,6 +34,20 @@ def explain(exc: BaseException, settings: Settings | None = None) -> Explained |
     url = settings.base_url if settings else "LLM_BASE_URL"
     model = settings.model if settings else "LLM_MODEL"
 
+    if isinstance(exc, ModuleNotFoundError) and exc.name:
+        from labkit.catalog import MODULE_TO_EXTRA, install_command
+
+        top = exc.name.split(".")[0]
+        extra = MODULE_TO_EXTRA.get(top)
+        if extra:
+            return Explained(
+                "missing_extra",
+                f"This lesson needs the optional '{extra}' packages, which are not installed.",
+                [f"Install them: {install_command(extra)}", "Then run the lesson again."],
+                EXIT_SKIPPED,
+            )
+    if isinstance(exc, ServiceUnavailable):
+        return Explained("missing_service", exc.title, exc.fixes, EXIT_SKIPPED)
     if isinstance(exc, ConfigError):
         return Explained(
             "not_configured",

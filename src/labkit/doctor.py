@@ -52,6 +52,20 @@ def check_packages() -> Check:
     return Check(PASS, "Core packages installed")
 
 
+def check_extras() -> list[Check]:
+    from labkit.catalog import EXTRAS, install_command, extra_installed
+
+    checks = []
+    for extra in EXTRAS:
+        lessons = [item.id for module in load_catalog() if extra in module.extras for item in module.lessons if item.runnable]
+        if extra_installed(extra):
+            checks.append(Check(PASS, f"Optional packages: {extra}"))
+        else:
+            used = f"needed by ready lessons {', '.join(lessons)}" if lessons else "not needed by any ready lesson yet"
+            checks.append(Check(SKIP, f"Optional packages: {extra}", f"not installed ({used})", [install_command(extra)] if lessons else []))
+    return checks
+
+
 def check_settings(settings: Settings) -> Check:
     missing = settings.missing()
     source = ".env file" if settings.env_file_exists else "environment variables (no .env file)"
@@ -144,9 +158,19 @@ def probe_json(client, settings: Settings) -> Check:
 
 
 def probe_embeddings(settings: Settings) -> Check:
+    from labkit.catalog import extra_installed, install_command
+    from labkit.embeddings import backend, embed
+
     name = "Capability: embeddings"
-    if not settings.embedding_model:
-        return Check(SKIP, name, "EMBEDDING_MODEL is not set (needed from module 03).")
+    kind, model = backend(settings)
+    if kind == "local":
+        if not extra_installed("rag"):
+            return Check(SKIP, name, f"will run on this machine ({model}) once the 'rag' packages are installed", [install_command("rag")])
+        try:
+            vectors, _, _ = embed(["hello"], settings)
+        except Exception as exc:  # noqa: BLE001
+            return Check(WARN, name, f"local model {model} failed: {type(exc).__name__}", ["The first run downloads the model (about 70 MB): check your network or proxy."])
+        return Check(PASS, name, f"on this machine with {model}: {len(vectors[0])} dimensions")
     try:
         client = get_client(settings, embeddings=True)
         result = client.embeddings.create(model=settings.embedding_model, input="hello")
@@ -175,6 +199,8 @@ def run_checks(offline: bool = False, on_check=None) -> tuple[list[Check], dict]
 
     add(check_python())
     packages = add(check_packages())
+    for check in check_extras():
+        add(check)
     settings = load_settings()
     configured = add(check_settings(settings))
 

@@ -41,6 +41,7 @@ def run(stub, tmp_path):
                 LLM_API_KEY=key,
                 LLM_MODEL=model,
                 LLM_TIMEOUT="10",
+                EMBEDDING_MODEL="stub-embedding",  # the stub's hashed-word vectors; no model download
             )
         # input="" gives the child a pipe for stdin. Without it Windows hands over the NUL
         # device, which reports itself as a terminal and would start the interactive menu.

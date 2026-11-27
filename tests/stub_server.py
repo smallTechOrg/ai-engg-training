@@ -10,6 +10,10 @@ and POST /v1/embeddings. Special inputs trigger the failures lessons must explai
     model   "no-usage"           -> omits token usage
     model   "slow"               -> waits half a second before answering (for concurrency demos)
 
+Tools: when tools are offered it asks for the first one (arguments built from its schema),
+unless the last message is a tool result, in which case it answers in text, so agent
+loops end. Embeddings are a hashed bag of words: texts sharing words are similar.
+
 Structured output follows the request, so lessons can be tested without a real model:
   - response_format json_schema -> an object built from that schema;
   - response_format json_object -> the first JSON object found in the prompt (a good prompt
@@ -55,6 +59,19 @@ def from_schema(schema: dict) -> object:
     if kind == "null":
         return None
     return "example"
+
+
+def word_vector(text: str, size: int = 64) -> list[float]:
+    """A deterministic 'embedding': hashed bag of words, normalised. Shared words -> similar vectors."""
+    import hashlib
+    import math
+    import re
+
+    vector = [0.0] * size
+    for word in re.findall(r"[a-z0-9]+", text.lower()):
+        vector[int(hashlib.md5(word.encode()).hexdigest(), 16) % size] += 1.0
+    norm = math.sqrt(sum(v * v for v in vector)) or 1.0
+    return [v / norm for v in vector]
 
 
 def first_json_object(text: str) -> dict | None:
@@ -114,7 +131,10 @@ class Handler(BaseHTTPRequestHandler):
         if model == "rate-limited":
             return self._error(429, "Rate limit reached.")
         if self.path.endswith("/embeddings"):
-            return self._send(200, {"object": "list", "model": model, "data": [{"object": "embedding", "index": 0, "embedding": [0.1, 0.2, 0.3, 0.4]}], "usage": {"prompt_tokens": 1, "total_tokens": 1}})
+            texts = request.get("input")
+            texts = [texts] if isinstance(texts, str) else list(texts or [])
+            data = [{"object": "embedding", "index": i, "embedding": word_vector(t)} for i, t in enumerate(texts)]
+            return self._send(200, {"object": "list", "model": model, "data": data, "usage": {"prompt_tokens": 3 * len(texts), "total_tokens": 3 * len(texts)}})
         if not self.path.endswith("/chat/completions"):
             return self._error(404, f"unknown path {self.path}")
 
@@ -126,9 +146,12 @@ class Handler(BaseHTTPRequestHandler):
 
         message: dict = {"role": "assistant", "content": REPLY}
         finish = "stop"
-        if request.get("tools") and model != "no-tools":
-            tool = request["tools"][0]["function"]["name"]
-            message = {"role": "assistant", "content": None, "tool_calls": [{"id": "call_1", "type": "function", "function": {"name": tool, "arguments": '{"city": "Paris"}'}}]}
+        messages = request.get("messages") or []
+        answered_tool = bool(messages) and messages[-1].get("role") == "tool"
+        if request.get("tools") and model != "no-tools" and not answered_tool:
+            function = request["tools"][0]["function"]
+            arguments = json.dumps(from_schema(function.get("parameters") or {"type": "object", "properties": {"city": {"type": "string"}}}))
+            message = {"role": "assistant", "content": None, "tool_calls": [{"id": "call_1", "type": "function", "function": {"name": function["name"], "arguments": arguments}}]}
             finish = "tool_calls"
         elif structured_reply(request) is not None:
             message["content"] = structured_reply(request)

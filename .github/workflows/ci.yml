@@ -47,3 +47,14 @@ jobs:
         if: runner.os == 'Windows'
         shell: cmd
         run: .venv\Scripts\python.exe -m pytest
+
+  # Every optional framework installed, so lessons from module 02 onwards are exercised too.
+  all-extras:
+    name: ubuntu-latest (all extras)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Bootstrap with every extra
+        run: ./setup.sh --all
+      - name: Tests
+        run: .venv/bin/python -m pytest

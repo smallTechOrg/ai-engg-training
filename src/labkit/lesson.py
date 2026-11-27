@@ -92,6 +92,16 @@ class Lesson:
             self._client = get_client(self.settings, on_wire=self._on_wire)
         return self._client
 
+    def embed(self, texts: list[str]) -> list[list[float]]:
+        """Embed texts (see labkit.embeddings): your endpoint if EMBEDDING_MODEL is set, else locally."""
+        from labkit.embeddings import embed
+
+        vectors, usage, backend = embed(texts, self.settings, on_wire=self._on_wire)
+        self._log("embeddings", backend=backend, count=len(texts))
+        if usage is not None:
+            self.record_usage({"prompt_tokens": usage, "completion_tokens": 0}, quiet=True)
+        return vectors
+
     @property
     def async_client(self):
         """The asyncio form of the client (`openai.AsyncOpenAI`), for concurrent calls."""
@@ -179,8 +189,9 @@ class Lesson:
         (pass `response.usage`). `quiet=True` counts the call without printing a line.
         """
         self._calls += 1
-        if isinstance(usage, dict):
-            tokens_in, tokens_out = usage.get("prompt_tokens"), usage.get("completion_tokens")
+        if isinstance(usage, dict):  # OpenAI style, or LangChain's usage_metadata
+            tokens_in = usage.get("prompt_tokens", usage.get("input_tokens"))
+            tokens_out = usage.get("completion_tokens", usage.get("output_tokens"))
         else:
             tokens_in = getattr(usage, "prompt_tokens", None)
             tokens_out = getattr(usage, "completion_tokens", None)
