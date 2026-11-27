@@ -1,0 +1,146 @@
+[
+ {
+  "id": "KB-001",
+  "team": "access",
+  "audience": "all",
+  "text": "Reset your password in the self-service portal: choose Forgot password and enter the code from the authenticator app."
+ },
+ {
+  "id": "KB-002",
+  "team": "access",
+  "audience": "all",
+  "text": "An account locks after five wrong password attempts. It unlocks by itself after 15 minutes, or the helpdesk can unlock it."
+ },
+ {
+  "id": "KB-003",
+  "team": "access",
+  "audience": "all",
+  "text": "Two-factor codes come from the authenticator app. After getting a new phone, re-enrol the app before wiping the old phone."
+ },
+ {
+  "id": "KB-004",
+  "team": "access",
+  "audience": "engineering",
+  "text": "Production database access is granted per project by the data owner and expires after 30 days unless renewed."
+ },
+ {
+  "id": "KB-005",
+  "team": "network",
+  "audience": "all",
+  "text": "Join the Larkspur-Staff Wi-Fi with your normal username and password. Guests use Larkspur-Visitor with the daily code from the front desk."
+ },
+ {
+  "id": "KB-006",
+  "team": "network",
+  "audience": "all",
+  "text": "Install the Larkspur VPN client from the software portal and connect before opening the wiki, ticket system or file shares from home."
+ },
+ {
+  "id": "KB-007",
+  "team": "network",
+  "audience": "all",
+  "text": "If the VPN connects but internal sites do not load, disconnect, wait ten seconds and reconnect. Report the client's error code if it persists."
+ },
+ {
+  "id": "KB-008",
+  "team": "network",
+  "audience": "office",
+  "text": "Slow Wi-Fi in a meeting room usually means too many devices. Use a wired desk or ask for the floor's access point to be checked."
+ },
+ {
+  "id": "KB-009",
+  "team": "hardware",
+  "audience": "all",
+  "text": "Laptops are replaced every four years. Your manager requests a new one through the hardware catalogue."
+ },
+ {
+  "id": "KB-010",
+  "team": "hardware",
+  "audience": "all",
+  "text": "A flickering or black laptop screen is a hardware ticket. Do not open the case yourself."
+ },
+ {
+  "id": "KB-011",
+  "team": "hardware",
+  "audience": "all",
+  "text": "Report a lost or stolen phone or laptop to IT at once so it can be locked and wiped remotely."
+ },
+ {
+  "id": "KB-012",
+  "team": "hardware",
+  "audience": "office",
+  "text": "If a printer shows offline, restart it, then remove and re-add it from the Printers page."
+ },
+ {
+  "id": "KB-013",
+  "team": "hardware",
+  "audience": "office",
+  "text": "Meeting room screens support wireless casting. If casting fails, plug in the HDMI cable at the table."
+ },
+ {
+  "id": "KB-014",
+  "team": "hardware",
+  "audience": "engineering",
+  "text": "Engineers can request a second monitor or a docking station with their manager's approval; delivery takes about a week."
+ },
+ {
+  "id": "KB-015",
+  "team": "software",
+  "audience": "all",
+  "text": "Request new software with a ticket giving the business reason and the cost centre. Approved software appears in the portal within two working days."
+ },
+ {
+  "id": "KB-016",
+  "team": "software",
+  "audience": "all",
+  "text": "Open source tools still need approval because of licence terms."
+ },
+ {
+  "id": "KB-017",
+  "team": "software",
+  "audience": "engineering",
+  "text": "Container tooling and local databases are pre-approved for engineering laptops and can be installed from the portal."
+ },
+ {
+  "id": "KB-018",
+  "team": "software",
+  "audience": "all",
+  "text": "Restart your laptop after updates when asked. Delaying more than three days locks the laptop until it is updated."
+ },
+ {
+  "id": "KB-019",
+  "team": "security",
+  "audience": "all",
+  "text": "Report phishing with the Report button in your mail client. Do not forward the message."
+ },
+ {
+  "id": "KB-020",
+  "team": "security",
+  "audience": "all",
+  "text": "If you clicked a link in a suspicious email, tell the helpdesk straight away and change your password."
+ },
+ {
+  "id": "KB-021",
+  "team": "security",
+  "audience": "all",
+  "text": "Keep disk encryption and automatic updates switched on. IT checks compliance every night."
+ },
+ {
+  "id": "KB-022",
+  "team": "access",
+  "audience": "all",
+  "text": "Shared folders and mailboxes are granted by their owner. Ask the helpdesk for the owner, who approves the request in the ticket."
+ },
+ {
+  "id": "KB-023",
+  "team": "access",
+  "audience": "all",
+  "text": "Access is reviewed every six months and unused access is removed."
+ },
+ {
+  "id": "KB-024",
+  "team": "security",
+  "audience": "finance",
+  "text": "Finance staff must use a hardware security key for the payments system; ask the helpdesk to issue one."
+ }
+]

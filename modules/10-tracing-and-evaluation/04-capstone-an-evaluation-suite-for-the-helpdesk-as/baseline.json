@@ -1,0 +1,12 @@
+{
+  "prompt": "helpdesk-v2",
+  "note": "Scores recorded from ./run 10.4/1 on a real run. Regenerate it deliberately, in a reviewed commit, when you accept a new level of quality.",
+  "metrics": {
+    "exact_match": 1.0,
+    "max_length": 1.0,
+    "keywords": 0.875,
+    "judge_no_invented_actions": 0.9,
+    "judge_actionable": 1.0,
+    "judge_tone": 1.0
+  }
+}

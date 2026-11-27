@@ -1,0 +1,8 @@
+[
+  {"question": "How much can I spend on a standing desk through the home office stipend?", "answerable": true, "any_of": ["400"], "none_of": []},
+  {"question": "How long is a VPN session before I need to sign in again?", "answerable": true, "any_of": ["8 hours", "eight hours"], "none_of": ["12 hours"]},
+  {"question": "Which Wi-Fi network should a visitor join?", "answerable": true, "any_of": ["larkspur-guest"], "none_of": []},
+  {"question": "Can I still use the Heron VPN client?", "answerable": true, "any_of": ["no longer", "retired", "not supported"], "none_of": ["yes, you can"]},
+  {"question": "Does Larkspur Labs offer pet insurance?", "answerable": false, "any_of": [], "none_of": []},
+  {"question": "How many days of parental leave do staff get?", "answerable": false, "any_of": [], "none_of": []}
+]

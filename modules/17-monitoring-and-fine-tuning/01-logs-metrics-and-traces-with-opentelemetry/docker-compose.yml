@@ -1,0 +1,26 @@
+# Observability stack for lesson 17.1. Start:  docker compose up -d     Stop:  docker compose down
+# All ports are bound to 127.0.0.1 so nothing is reachable from other machines.
+services:
+  jaeger:
+    image: jaegertracing/all-in-one:1
+    ports:
+      - "127.0.0.1:16686:16686"   # Jaeger UI
+      - "127.0.0.1:4318:4318"     # OTLP over HTTP
+    environment:
+      COLLECTOR_OTLP_ENABLED: "true"
+
+  prometheus:
+    image: prom/prometheus:v3
+    ports:
+      - "127.0.0.1:9090:9090"
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml:ro
+    extra_hosts:
+      - "host.docker.internal:host-gateway"   # needed on Linux; Docker Desktop has it already
+
+  grafana:
+    image: grafana/grafana:12
+    ports:
+      - "127.0.0.1:3000:3000"
+    depends_on:
+      - prometheus

@@ -1,0 +1,51 @@
+{
+  "name": "Larkspur error notifier",
+  "nodes": [
+    {
+      "id": "d3d0a1a0-0101-4000-8000-000000000001",
+      "name": "Error Trigger",
+      "type": "n8n-nodes-base.errorTrigger",
+      "typeVersion": 1,
+      "position": [0, 0],
+      "parameters": {}
+    },
+    {
+      "id": "d3d0a1a0-0102-4000-8000-000000000002",
+      "name": "Compose alert",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [240, 0],
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            { "id": "a3000000-0000-4000-8000-000000000001", "name": "alert", "value": "=Workflow '{{ $json.workflow.name }}' failed: {{ $json.execution.error.message }}", "type": "string" }
+          ]
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "d3d0a1a0-0103-4000-8000-000000000003",
+      "name": "Post to the ops chat",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [480, 0],
+      "parameters": {
+        "method": "POST",
+        "url": "https://your-chat.example/hooks/ops-alerts",
+        "sendBody": true,
+        "contentType": "json",
+        "specifyBody": "keypair",
+        "bodyParameters": { "parameters": [ { "name": "text", "value": "={{ $json.alert }}" } ] },
+        "options": {}
+      }
+    }
+  ],
+  "connections": {
+    "Error Trigger": { "main": [[{ "node": "Compose alert", "type": "main", "index": 0 }]] },
+    "Compose alert": { "main": [[{ "node": "Post to the ops chat", "type": "main", "index": 0 }]] }
+  },
+  "pinData": {},
+  "settings": { "executionOrder": "v1" },
+  "active": false
+}

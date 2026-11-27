@@ -1,0 +1,40 @@
+[project]
+name = "labkit"
+version = "0.1.0"
+description = "Shared plumbing for the AI engineering training lessons: client, lesson output, launcher, doctor."
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "openai>=3.0",
+    "pydantic>=2.7",
+    "python-dotenv>=1.0",
+    "rich>=13.7",
+]
+
+[project.optional-dependencies]
+# One extra per module group. `./setup.sh --all` (Windows: `setup -All`) installs them all.
+rag = ["numpy>=1.26", "fastembed>=0.4", "chromadb>=0.5", "faiss-cpu>=1.8", "rank-bm25>=0.2", "networkx>=3.2"]
+apps = ["fastapi>=0.115", "uvicorn>=0.30", "streamlit>=1.38", "gradio>=4.44", "httpx>=0.27"]
+langchain = ["langchain>=0.3", "langchain-openai>=0.2", "langchain-community>=0.3", "langchain-text-splitters>=0.3"]
+langgraph = ["langgraph>=0.2", "langgraph-checkpoint-sqlite>=2.0", "langgraph-checkpoint-redis>=0.1", "langchain-openai>=0.2"]
+mcp = ["mcp>=1.2"]
+crewai = ["crewai>=0.80"]
+observability = ["opentelemetry-sdk>=1.27", "opentelemetry-exporter-otlp-proto-http>=1.27", "prometheus-client>=0.20"]
+guardrails = ["presidio-analyzer>=2.2", "presidio-anonymizer>=2.2"]
+
+[project.scripts]
+labkit = "labkit.cli:main"
+
+[dependency-groups]
+dev = ["pytest>=8", "pyyaml>=6"]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/labkit"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"

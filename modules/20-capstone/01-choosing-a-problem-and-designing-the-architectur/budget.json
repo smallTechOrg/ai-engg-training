@@ -1,0 +1,13 @@
+{
+  "requests_per_day": 400,
+  "model_calls_per_request": 2,
+  "input_tokens_per_call": 900,
+  "output_tokens_per_call": 150,
+  "usd_per_million_input_tokens": 0.50,
+  "usd_per_million_output_tokens": 1.50,
+  "seconds_per_call": 2.5,
+  "retrieval_seconds": 0.2,
+  "latency_target_seconds": 6,
+  "daily_token_cap": 1000000,
+  "monthly_usd_ceiling": 20
+}

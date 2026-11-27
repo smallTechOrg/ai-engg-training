@@ -1,0 +1,10 @@
+[
+  {"id": "c1", "question": "How many years until my laptop is swapped for a new one?", "gold": ["laptops#1"], "must_contain": ["4"], "note": "stale archive says 3"},
+  {"id": "c2", "question": "How many characters must a password have, and how often must I change it?", "gold": ["passwords#1"], "must_contain": ["14", "180"], "note": "stale FAQ says 12 and 90"},
+  {"id": "c3", "question": "My VPN session keeps ending after half a day.", "gold": ["vpn#2"], "must_contain": ["12"]},
+  {"id": "c4", "question": "How do guests get online in the office?", "gold": ["wifi#2"], "must_contain": ["larkspurguest"]},
+  {"id": "c5", "question": "Can I print in colour on floor 4?", "gold": ["printers#3"], "must_contain": ["floor 2"]},
+  {"id": "c6", "question": "Who has to sign off on a 300 pound yearly software subscription?", "gold": ["software#2"], "must_contain": ["finance"]},
+  {"id": "c7", "question": "What is the company's parental leave policy?", "gold": [], "must_contain": []},
+  {"id": "c8", "question": "How do I book a meeting room for next Tuesday?", "gold": [], "must_contain": []}
+]

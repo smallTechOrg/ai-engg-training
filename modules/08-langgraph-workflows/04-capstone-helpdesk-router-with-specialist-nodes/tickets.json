@@ -1,0 +1,10 @@
+[
+  {"id": 5401, "text": "My laptop battery swells and the trackpad is lifting off the case.", "expected": "hardware"},
+  {"id": 5402, "text": "I changed phones and now MFA codes are rejected; I cannot sign in to anything.", "expected": "access"},
+  {"id": 5403, "text": "The VPN connects but every internal site times out since this morning.", "expected": "network"},
+  {"id": 5404, "text": "Please install the PDF editor on my work laptop; my manager approved it.", "expected": "software"},
+  {"id": 5405, "text": "Which day is the office closed for the winter break?", "expected": "other"},
+  {"id": 5406, "text": "The second-floor printer shows a paper jam but there is no paper stuck.", "expected": "hardware"},
+  {"id": 5407, "text": "I was locked out after three wrong passwords and need the account unlocked.", "expected": "access"},
+  {"id": 5408, "text": "Wi-Fi drops every few minutes in the east meeting rooms.", "expected": "network"}
+]

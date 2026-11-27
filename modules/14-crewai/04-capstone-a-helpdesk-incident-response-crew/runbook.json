@@ -1,0 +1,5 @@
+{
+  "file server": "File server outage: 1) check the status page, 2) restart the SMB service from the admin console, 3) if it does not return in 10 minutes page the on-call network engineer.",
+  "vpn": "VPN outage: 1) check the status page, 2) ask users to sign in again with their security key, 3) if the gateway is down page the on-call network engineer.",
+  "email": "Email delays: 1) check the status page, 2) tell users messages are queued not lost, 3) escalate to the messaging team after 30 minutes."
+}

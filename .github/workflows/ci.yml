@@ -1,0 +1,60 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    name: ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+    steps:
+      - uses: actions/checkout@v4
+
+      # Exercise the same bootstrap a learner runs, on a machine without uv.
+      - name: Bootstrap (macOS, Linux)
+        if: runner.os != 'Windows'
+        run: ./setup.sh
+
+      - name: Bootstrap (Windows)
+        if: runner.os == 'Windows'
+        shell: cmd
+        run: setup.cmd
+
+      - name: Launcher works (macOS, Linux)
+        if: runner.os != 'Windows'
+        run: ./run list
+
+      - name: Launcher works (Windows)
+        if: runner.os == 'Windows'
+        shell: cmd
+        run: run.cmd list
+
+      # Lessons run for real against a local stub of the model endpoint: no secrets needed.
+      - name: Tests (macOS, Linux)
+        if: runner.os != 'Windows'
+        run: .venv/bin/python -m pytest
+
+      - name: Tests (Windows)
+        if: runner.os == 'Windows'
+        shell: cmd
+        run: .venv\Scripts\python.exe -m pytest
+
+  # Every optional framework installed, so lessons from module 02 onwards are exercised too.
+  all-extras:
+    name: ubuntu-latest (all extras)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Bootstrap with every extra
+        run: ./setup.sh --all
+      - name: Tests
+        run: .venv/bin/python -m pytest

@@ -1,0 +1,15 @@
+#!/usr/bin/env sh
+# Launcher for macOS, Linux, WSL:  ./run | ./run list | ./run 01.1 | ./run doctor
+set -eu
+cd "$(dirname "$0")"
+if command -v uv >/dev/null 2>&1; then
+    exec uv run --quiet labkit "$@"
+fi
+for dir in "$HOME/.local/bin" "$HOME/.cargo/bin"; do
+    if [ -x "$dir/uv" ]; then exec "$dir/uv" run --quiet labkit "$@"; fi
+done
+if [ -x .venv/bin/python ]; then
+    exec .venv/bin/python -m labkit.cli "$@"
+fi
+echo "This repo is not set up yet. Run:  ./setup.sh" >&2
+exit 2

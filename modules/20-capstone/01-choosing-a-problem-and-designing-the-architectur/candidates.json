@@ -1,0 +1,22 @@
+{
+  "criteria": {
+    "data_ready":   {"weight": 3, "question": "Does the text or data the system needs already exist and is it allowed to be used?"},
+    "needs_language": {"weight": 2, "question": "Is the task about understanding or writing language, where a model clearly beats rules?"},
+    "checkable":    {"weight": 3, "question": "Can you write 10 test cases with known good answers?"},
+    "low_blast_radius": {"weight": 3, "question": "If it is wrong, is the harm small and reversible?"},
+    "small_scope":  {"weight": 2, "question": "Can a first version be built in a week?"},
+    "real_owner":   {"weight": 1, "question": "Does someone want it and will they give feedback?"}
+  },
+  "candidates": [
+    {"name": "Helpdesk knowledge assistant", "note": "Answers from eight policy pages, opens tickets.",
+     "scores": {"data_ready": 5, "needs_language": 4, "checkable": 5, "low_blast_radius": 4, "small_scope": 4, "real_owner": 5}},
+    {"name": "Automatic account unlocker", "note": "Unlocks accounts from chat requests.",
+     "scores": {"data_ready": 4, "needs_language": 2, "checkable": 4, "low_blast_radius": 1, "small_scope": 3, "real_owner": 4}},
+    {"name": "Company-wide chatbot for everything", "note": "HR, finance, IT, legal in one assistant.",
+     "scores": {"data_ready": 2, "needs_language": 5, "checkable": 1, "low_blast_radius": 2, "small_scope": 1, "real_owner": 3}},
+    {"name": "Ticket categoriser", "note": "Labels incoming tickets (module 01 style).",
+     "scores": {"data_ready": 5, "needs_language": 2, "checkable": 5, "low_blast_radius": 5, "small_scope": 5, "real_owner": 2}},
+    {"name": "Outage predictor", "note": "Predict outages from logs.",
+     "scores": {"data_ready": 2, "needs_language": 1, "checkable": 2, "low_blast_radius": 3, "small_scope": 2, "real_owner": 3}}
+  ]
+}

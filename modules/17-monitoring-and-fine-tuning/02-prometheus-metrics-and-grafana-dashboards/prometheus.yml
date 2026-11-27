@@ -1,0 +1,8 @@
+# Scrape config for lesson 17.2. Script 1 can serve /metrics on the port in LESSON_METRICS_PORT (use 8000).
+global:
+  scrape_interval: 5s
+scrape_configs:
+  - job_name: helpdesk-assistant
+    metrics_path: /metrics
+    static_configs:
+      - targets: ["host.docker.internal:8000"]

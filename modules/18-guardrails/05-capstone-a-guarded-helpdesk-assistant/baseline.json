@@ -1,0 +1,5 @@
+{
+  "must_block": ["A01", "A02", "A03", "A04", "A05", "A09"],
+  "known_gaps": ["A06", "A07", "A08", "A10", "A11"],
+  "known_false_positives": ["B03"]
+}
