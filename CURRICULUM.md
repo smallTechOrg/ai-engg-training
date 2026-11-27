@@ -2,7 +2,7 @@
 
 <!-- Generated from curriculum.toml by `./run map`. Do not edit by hand. -->
 
-21 modules, 99 lessons, 1 ready. Each lesson shows a concept on its own, then applies it to the running scenario: **IT helpdesk assistant**.
+21 modules, 99 lessons, 12 ready. Each lesson shows a concept on its own, then applies it to the running scenario: **IT helpdesk assistant**.
 
 | Status | Meaning |
 |---|---|
@@ -14,8 +14,8 @@
 
 | # | Module | Lessons ready |
 |---|---|---|
-| 00 | [Setup and Python for AI work](modules/00-setup/README.md) | 0 / 5 |
-| 01 | [Foundations: talking to an LLM](modules/01-foundations/README.md) | 1 / 7 |
+| 00 | [Setup and Python for AI work](modules/00-setup/README.md) | 5 / 5 |
+| 01 | [Foundations: talking to an LLM](modules/01-foundations/README.md) | 7 / 7 |
 | 02 | [Tools and agents by hand](modules/02-tools-and-agents-by-hand/README.md) | 0 / 5 |
 | 03 | [Embeddings and semantic search](modules/03-embeddings-and-search/README.md) | 0 / 5 |
 | 04 | [RAG by hand](modules/04-rag-by-hand/README.md) | 0 / 4 |
@@ -42,11 +42,11 @@ Get a reproducible environment and the Python habits AI work needs.
 
 | Lesson | Title | Status | Model needs |
 |---|---|---|---|
-| 00.1 | The AI engineering landscape and this repo | ⬜ planned | - |
-| 00.2 | Environments and dependencies: uv, venv, pip, pyenv, conda | ⬜ planned | - |
-| 00.3 | Secrets and configuration with .env | ⬜ planned | - |
-| 00.4 | Git and GitHub essentials for AI projects | ⬜ planned | - |
-| 00.5 | Async Python: concurrent LLM calls | ⬜ planned | chat |
+| 00.1 | [The AI engineering landscape and this repo](modules/00-setup/01-the-ai-engineering-landscape-and-this-repo/README.md) | ✅ ready | - |
+| 00.2 | [Environments and dependencies: uv, venv, pip, pyenv, conda](modules/00-setup/02-environments-and-dependencies/README.md) | ✅ ready | - |
+| 00.3 | [Secrets and configuration with .env](modules/00-setup/03-secrets-and-configuration-with-env/README.md) | ✅ ready | - |
+| 00.4 | [Git and GitHub essentials for AI projects](modules/00-setup/04-git-and-github-essentials-for-ai-projects/README.md) | ✅ ready | - |
+| 00.5 | [Async Python: concurrent LLM calls](modules/00-setup/05-async-python/README.md) | ✅ ready | chat |
 
 ## 01 · Foundations: talking to an LLM
 
@@ -55,12 +55,12 @@ Everything a single model call can do, before any tool or framework.
 | Lesson | Title | Status | Model needs |
 |---|---|---|---|
 | 01.1 | [Your first LLM call](modules/01-foundations/01-first-llm-call/README.md) | ✅ ready | chat, stream |
-| 01.2 | Messages, roles and multi-turn conversation | ⬜ planned | chat |
-| 01.3 | Streaming and sampling parameters | ⬜ planned | chat, stream |
-| 01.4 | Tokens, context windows and cost | ⬜ planned | chat |
-| 01.5 | Prompt engineering: zero-shot, few-shot, chain-of-thought | ⬜ planned | chat |
-| 01.6 | Structured output: JSON mode and schemas | ⬜ planned | chat, json |
-| 01.7 | Capstone: helpdesk ticket triage with one call | ⬜ planned | chat, json |
+| 01.2 | [Messages, roles and multi-turn conversation](modules/01-foundations/02-messages-roles-and-multi-turn-conversation/README.md) | ✅ ready | chat |
+| 01.3 | [Streaming and sampling parameters](modules/01-foundations/03-streaming-and-sampling-parameters/README.md) | ✅ ready | chat, stream |
+| 01.4 | [Tokens, context windows and cost](modules/01-foundations/04-tokens-context-windows-and-cost/README.md) | ✅ ready | chat |
+| 01.5 | [Prompt engineering: zero-shot, few-shot, chain-of-thought](modules/01-foundations/05-prompt-engineering/README.md) | ✅ ready | chat |
+| 01.6 | [Structured output: JSON mode and schemas](modules/01-foundations/06-structured-output/README.md) | ✅ ready | chat, json |
+| 01.7 | [Capstone: helpdesk ticket triage with one call](modules/01-foundations/07-capstone-helpdesk-ticket-triage-with-one-call/README.md) | ✅ ready | chat, json |
 
 ## 02 · Tools and agents by hand
 

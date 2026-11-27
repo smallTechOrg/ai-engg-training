@@ -9,12 +9,12 @@ Everything a single model call can do, before any tool or framework.
 | Lesson | Title | Status |
 |---|---|---|
 | 01.1 | [Your first LLM call](01-first-llm-call/README.md) | ✅ ready |
-| 01.2 | Messages, roles and multi-turn conversation | ⬜ planned |
-| 01.3 | Streaming and sampling parameters | ⬜ planned |
-| 01.4 | Tokens, context windows and cost | ⬜ planned |
-| 01.5 | Prompt engineering: zero-shot, few-shot, chain-of-thought | ⬜ planned |
-| 01.6 | Structured output: JSON mode and schemas | ⬜ planned |
-| 01.7 | Capstone: helpdesk ticket triage with one call | ⬜ planned |
+| 01.2 | [Messages, roles and multi-turn conversation](02-messages-roles-and-multi-turn-conversation/README.md) | ✅ ready |
+| 01.3 | [Streaming and sampling parameters](03-streaming-and-sampling-parameters/README.md) | ✅ ready |
+| 01.4 | [Tokens, context windows and cost](04-tokens-context-windows-and-cost/README.md) | ✅ ready |
+| 01.5 | [Prompt engineering: zero-shot, few-shot, chain-of-thought](05-prompt-engineering/README.md) | ✅ ready |
+| 01.6 | [Structured output: JSON mode and schemas](06-structured-output/README.md) | ✅ ready |
+| 01.7 | [Capstone: helpdesk ticket triage with one call](07-capstone-helpdesk-ticket-triage-with-one-call/README.md) | ✅ ready |
 
 <!-- lessons:end -->
 

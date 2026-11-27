@@ -41,3 +41,16 @@ Each entry: symptom -> what was done -> durable lesson.
    the NUL device, which Windows reports as a terminal, so the launcher opened its menu.
    -> Tests now pass an empty pipe as stdin. -> Lesson: "is this a terminal?" checks need a
    three-OS CI run; local green is not evidence for Windows.
+
+9. **Changing model mid-build stranded the running workers.** Sub-agents keep the model
+   they started with; the user switched the session model to save tokens while three
+   writers were running. -> Stopped them, audited what they had left on disk (24 scripts,
+   4 finished READMEs: all passed stub and real runs), and relaunched only the remaining
+   work on the new model. -> Lesson: workers that write durable files in disjoint folders
+   make a stop-and-restart cheap; brief replacements with "these files already exist".
+
+10. **A worker pasted edited output.** It replaced masked forms of invented example keys
+    with placeholders, so the README would not match what learners see. -> Restored the
+    real masks for invented keys; only the learner's own key stays a placeholder.
+    -> Lesson: tell writers which values are sensitive (real settings) and which are not
+    (invented demo data).

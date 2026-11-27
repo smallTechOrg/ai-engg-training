@@ -15,35 +15,35 @@ services = []
   id = "00.1"
   slug = "01-the-ai-engineering-landscape-and-this-repo"
   title = "The AI engineering landscape and this repo"
-  status = "planned"
+  status = "ready"
   needs = []
 
   [[module.lesson]]
   id = "00.2"
   slug = "02-environments-and-dependencies"
   title = "Environments and dependencies: uv, venv, pip, pyenv, conda"
-  status = "planned"
+  status = "ready"
   needs = []
 
   [[module.lesson]]
   id = "00.3"
   slug = "03-secrets-and-configuration-with-env"
   title = "Secrets and configuration with .env"
-  status = "planned"
+  status = "ready"
   needs = []
 
   [[module.lesson]]
   id = "00.4"
   slug = "04-git-and-github-essentials-for-ai-projects"
   title = "Git and GitHub essentials for AI projects"
-  status = "planned"
+  status = "ready"
   needs = []
 
   [[module.lesson]]
   id = "00.5"
   slug = "05-async-python"
   title = "Async Python: concurrent LLM calls"
-  status = "planned"
+  status = "ready"
   needs = ["chat"]
 
 [[module]]
@@ -65,42 +65,42 @@ services = []
   id = "01.2"
   slug = "02-messages-roles-and-multi-turn-conversation"
   title = "Messages, roles and multi-turn conversation"
-  status = "planned"
+  status = "ready"
   needs = ["chat"]
 
   [[module.lesson]]
   id = "01.3"
   slug = "03-streaming-and-sampling-parameters"
   title = "Streaming and sampling parameters"
-  status = "planned"
+  status = "ready"
   needs = ["chat", "stream"]
 
   [[module.lesson]]
   id = "01.4"
   slug = "04-tokens-context-windows-and-cost"
   title = "Tokens, context windows and cost"
-  status = "planned"
+  status = "ready"
   needs = ["chat"]
 
   [[module.lesson]]
   id = "01.5"
   slug = "05-prompt-engineering"
   title = "Prompt engineering: zero-shot, few-shot, chain-of-thought"
-  status = "planned"
+  status = "ready"
   needs = ["chat"]
 
   [[module.lesson]]
   id = "01.6"
   slug = "06-structured-output"
   title = "Structured output: JSON mode and schemas"
-  status = "planned"
+  status = "ready"
   needs = ["chat", "json"]
 
   [[module.lesson]]
   id = "01.7"
   slug = "07-capstone-helpdesk-ticket-triage-with-one-call"
   title = "Capstone: helpdesk ticket triage with one call"
-  status = "planned"
+  status = "ready"
   needs = ["chat", "json"]
 
 [[module]]

@@ -8,11 +8,11 @@ Get a reproducible environment and the Python habits AI work needs.
 
 | Lesson | Title | Status |
 |---|---|---|
-| 00.1 | The AI engineering landscape and this repo | ⬜ planned |
-| 00.2 | Environments and dependencies: uv, venv, pip, pyenv, conda | ⬜ planned |
-| 00.3 | Secrets and configuration with .env | ⬜ planned |
-| 00.4 | Git and GitHub essentials for AI projects | ⬜ planned |
-| 00.5 | Async Python: concurrent LLM calls | ⬜ planned |
+| 00.1 | [The AI engineering landscape and this repo](01-the-ai-engineering-landscape-and-this-repo/README.md) | ✅ ready |
+| 00.2 | [Environments and dependencies: uv, venv, pip, pyenv, conda](02-environments-and-dependencies/README.md) | ✅ ready |
+| 00.3 | [Secrets and configuration with .env](03-secrets-and-configuration-with-env/README.md) | ✅ ready |
+| 00.4 | [Git and GitHub essentials for AI projects](04-git-and-github-essentials-for-ai-projects/README.md) | ✅ ready |
+| 00.5 | [Async Python: concurrent LLM calls](05-async-python/README.md) | ✅ ready |
 
 <!-- lessons:end -->
 

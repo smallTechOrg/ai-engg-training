@@ -1,0 +1,50 @@
+[
+  {
+    "id": "LL-1001",
+    "from": "Priya (Finance)",
+    "text": "The Wi-Fi in meeting room 3B drops every few minutes. It is not just my laptop, everyone in the room loses the connection. We have the quarterly review in there at 3pm.",
+    "expected_category": "network"
+  },
+  {
+    "id": "LL-1002",
+    "from": "Omar (Sales)",
+    "text": "I dropped my laptop at the airport. It still turns on but there is a crack across the screen and the bottom half flickers. I can work with an external monitor for now.",
+    "expected_category": "hardware"
+  },
+  {
+    "id": "LL-1003",
+    "from": "Mei (Reception)",
+    "text": "Outlook keeps telling me my password is wrong. I changed it yesterday when the reminder came up and now I can't get into email or the visitor system. I think my account is locked.",
+    "expected_category": "access"
+  },
+  {
+    "id": "LL-1004",
+    "from": "Jonas (Engineering)",
+    "text": "Since this week's update the spreadsheet app crashes whenever I open a file that has macros. Files without macros open fine. I've already restarted twice.",
+    "expected_category": "software"
+  },
+  {
+    "id": "LL-1005",
+    "from": "Aisha (People team)",
+    "text": "I've moved to the recruiting team and need to see the shared Recruiting folder. My new manager, Ben, has approved it by email. No rush, sometime this week is fine.",
+    "expected_category": "access"
+  },
+  {
+    "id": "LL-1006",
+    "from": "Tomas (Logistics)",
+    "text": "Working from home today. The VPN says connected, but the internal wiki and the stock system both time out. Normal websites load fine.",
+    "expected_category": "network"
+  },
+  {
+    "id": "LL-1007",
+    "from": "Lena (Marketing)",
+    "text": "The coffee machine in the second-floor kitchen shows error E17 and won't make anything. Who should I tell?",
+    "expected_category": "other"
+  },
+  {
+    "id": "LL-1008",
+    "from": "Ravi (Customer Support)",
+    "text": "The printer by the fourth-floor lifts prints completely blank pages. I reinstalled the driver like the wiki says and it made no difference. Other people's jobs come out blank too.",
+    "expected_category": "hardware"
+  }
+]
