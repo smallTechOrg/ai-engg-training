@@ -6,13 +6,14 @@ directly so that what you read is the real API.
 """
 
 from labkit.config import ConfigError, Settings, load_settings, repo_root
-from labkit.client import get_client
+from labkit.client import get_async_client, get_client
 from labkit.lesson import Lesson, lesson
 
 __all__ = [
     "ConfigError",
     "Lesson",
     "Settings",
+    "get_async_client",
     "get_client",
     "lesson",
     "load_settings",

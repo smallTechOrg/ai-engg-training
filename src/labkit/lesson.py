@@ -18,7 +18,9 @@ Flags every lesson accepts:  --raw  (print the HTTP request and response bodies)
 
 from __future__ import annotations
 
+import asyncio
 import functools
+import inspect
 import json
 import sys
 import time
@@ -32,7 +34,7 @@ from rich.markup import escape
 from rich.panel import Panel
 from rich.rule import Rule
 
-from labkit.client import get_client
+from labkit.client import get_async_client, get_client
 from labkit.config import Settings, load_settings, repo_root, state_dir, use_utf8_output
 from labkit.errors import EXIT_FAILED, explain
 
@@ -60,6 +62,7 @@ class Lesson:
         self.console = console or Console(highlight=False, soft_wrap=True)
         self._settings: Settings | None = None
         self._client = None
+        self._async_client = None
         self._step = 0
         self._calls = 0
         self._tokens_in = 0
@@ -88,6 +91,13 @@ class Lesson:
         if self._client is None:
             self._client = get_client(self.settings, on_wire=self._on_wire)
         return self._client
+
+    @property
+    def async_client(self):
+        """The asyncio form of the client (`openai.AsyncOpenAI`), for concurrent calls."""
+        if self._async_client is None:
+            self._async_client = get_async_client(self.settings, on_wire=self._on_wire)
+        return self._async_client
 
     # --- output -------------------------------------------------------------------
 
@@ -162,19 +172,28 @@ class Lesson:
         self.console.print(f"[bold]{escape(label)}[/bold]")
         self.console.print(escape(json.dumps(_plain(data), indent=2, ensure_ascii=False, default=str)))
 
-    def record_usage(self, usage: Any) -> None:
-        """Add one model call to the totals and print its token counts."""
+    def record_usage(self, usage: Any, *, quiet: bool = False) -> None:
+        """Add one model call to the totals and print its token counts.
+
+        Call this yourself when you handle a response without `show_response` / `show_stream`
+        (pass `response.usage`). `quiet=True` counts the call without printing a line.
+        """
         self._calls += 1
-        tokens_in = getattr(usage, "prompt_tokens", None)
-        tokens_out = getattr(usage, "completion_tokens", None)
+        if isinstance(usage, dict):
+            tokens_in, tokens_out = usage.get("prompt_tokens"), usage.get("completion_tokens")
+        else:
+            tokens_in = getattr(usage, "prompt_tokens", None)
+            tokens_out = getattr(usage, "completion_tokens", None)
         if tokens_in is None or tokens_out is None:
             self._unreported += 1
-            self.console.print("[dim]tokens: not reported by this endpoint[/dim]")
+            if not quiet:
+                self.console.print("[dim]tokens: not reported by this endpoint[/dim]")
             self._log("usage", reported=False)
             return
         self._tokens_in += tokens_in
         self._tokens_out += tokens_out
-        self.console.print(f"[dim]tokens: {tokens_in} in + {tokens_out} out = {tokens_in + tokens_out}[/dim]")
+        if not quiet:
+            self.console.print(f"[dim]tokens: {tokens_in} in + {tokens_out} out = {tokens_in + tokens_out}[/dim]")
         self._log("usage", reported=True, tokens_in=tokens_in, tokens_out=tokens_out)
 
     # --- internals ----------------------------------------------------------------
@@ -244,7 +263,10 @@ class Lesson:
         self._log("start", lesson=self.id, title=self.title, raw=self.raw)
         code = 0
         try:
-            fn(self)
+            if inspect.iscoroutinefunction(fn):
+                asyncio.run(fn(self))  # lessons may be written as `async def main(ctx)`
+            else:
+                fn(self)
         except KeyboardInterrupt:
             self.console.print("\n[yellow]Stopped.[/yellow]")
             code = 130

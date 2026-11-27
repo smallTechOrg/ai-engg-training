@@ -10,7 +10,7 @@ from __future__ import annotations
 import json
 from typing import Callable
 
-from openai import DefaultHttpxClient, OpenAI
+from openai import AsyncOpenAI, DefaultAsyncHttpxClient, DefaultHttpxClient, OpenAI
 
 from labkit.config import Settings, load_settings
 
@@ -54,4 +54,32 @@ def get_client(
         timeout=settings.timeout,
         max_retries=1,
         http_client=DefaultHttpxClient(event_hooks=hooks, timeout=settings.timeout),
+    )
+
+
+def get_async_client(settings: Settings | None = None, *, on_wire: WireListener | None = None) -> AsyncOpenAI:
+    """The same client in its asyncio form, for lessons that make calls concurrently."""
+    settings = (settings or load_settings()).require()
+    hooks: dict[str, list] = {}
+
+    if on_wire is not None:
+
+        async def on_request(request) -> None:
+            on_wire("request", f"{request.method} {request.url}", _body(request.read()))
+
+        async def on_response(response) -> None:
+            summary = f"{response.status_code} {response.reason_phrase}"
+            if "text/event-stream" in response.headers.get("content-type", ""):
+                on_wire("response", summary, "(streamed: the chunks are shown as they arrive)")
+            else:
+                on_wire("response", summary, _body(await response.aread()))
+
+        hooks = {"request": [on_request], "response": [on_response]}
+
+    return AsyncOpenAI(
+        base_url=settings.base_url,
+        api_key=settings.api_key,
+        timeout=settings.timeout,
+        max_retries=1,
+        http_client=DefaultAsyncHttpxClient(event_hooks=hooks, timeout=settings.timeout),
     )

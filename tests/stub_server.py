@@ -8,6 +8,12 @@ and POST /v1/embeddings. Special inputs trigger the failures lessons must explai
     model   "rate-limited"       -> 429
     model   "no-tools"           -> answers in text when tools are offered
     model   "no-usage"           -> omits token usage
+    model   "slow"               -> waits half a second before answering (for concurrency demos)
+
+Structured output follows the request, so lessons can be tested without a real model:
+  - response_format json_schema -> an object built from that schema;
+  - response_format json_object -> the first JSON object found in the prompt (a good prompt
+    shows the shape it wants), else {"ok": true}.
 
 Run it by hand:  python tests/stub_server.py --port 8089
 """
@@ -17,10 +23,62 @@ from __future__ import annotations
 import argparse
 import json
 import threading
+import time
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 
 REPLY = "A large language model is a program trained on text to predict what comes next."
 USAGE = {"prompt_tokens": 21, "completion_tokens": 17, "total_tokens": 38}
+
+
+def from_schema(schema: dict) -> object:
+    """Build the simplest value that satisfies a JSON schema."""
+    if "enum" in schema:
+        return schema["enum"][0]
+    if "const" in schema:
+        return schema["const"]
+    for key in ("anyOf", "oneOf"):
+        if key in schema:
+            return from_schema(schema[key][0])
+    kind = schema.get("type")
+    if isinstance(kind, list):
+        kind = kind[0]
+    if kind == "object" or "properties" in schema:
+        return {name: from_schema(sub) for name, sub in schema.get("properties", {}).items()}
+    if kind == "array":
+        return [from_schema(schema.get("items", {"type": "string"}))]
+    if kind == "integer":
+        return 1
+    if kind == "number":
+        return 0.5
+    if kind == "boolean":
+        return True
+    if kind == "null":
+        return None
+    return "example"
+
+
+def first_json_object(text: str) -> dict | None:
+    """Find the first {...} in the text that parses as a JSON object."""
+    decoder = json.JSONDecoder()
+    for index, char in enumerate(text):
+        if char == "{":
+            try:
+                value, _ = decoder.raw_decode(text[index:])
+            except ValueError:
+                continue
+            if isinstance(value, dict):
+                return value
+    return None
+
+
+def structured_reply(request: dict) -> str | None:
+    fmt = request.get("response_format") or {}
+    if fmt.get("type") == "json_schema":
+        return json.dumps(from_schema((fmt.get("json_schema") or {}).get("schema", {})))
+    if fmt.get("type") == "json_object":
+        prompt = "\n".join(str(m.get("content") or "") for m in request.get("messages", []))
+        return json.dumps(first_json_object(prompt) or {"ok": True})
+    return None
 
 
 class Handler(BaseHTTPRequestHandler):
@@ -60,6 +118,8 @@ class Handler(BaseHTTPRequestHandler):
         if not self.path.endswith("/chat/completions"):
             return self._error(404, f"unknown path {self.path}")
 
+        if model == "slow":
+            time.sleep(0.5)
         usage = None if model == "no-usage" else USAGE
         if request.get("stream"):
             return self._stream(model, usage, request)
@@ -70,8 +130,8 @@ class Handler(BaseHTTPRequestHandler):
             tool = request["tools"][0]["function"]["name"]
             message = {"role": "assistant", "content": None, "tool_calls": [{"id": "call_1", "type": "function", "function": {"name": tool, "arguments": '{"city": "Paris"}'}}]}
             finish = "tool_calls"
-        elif (request.get("response_format") or {}).get("type") == "json_object":
-            message["content"] = '{"ok": true}'
+        elif structured_reply(request) is not None:
+            message["content"] = structured_reply(request)
         payload = {"id": "chatcmpl-stub", "object": "chat.completion", "created": 0, "model": model, "choices": [{"index": 0, "message": message, "finish_reason": finish}]}
         if usage:
             payload["usage"] = usage
@@ -90,7 +150,7 @@ class Handler(BaseHTTPRequestHandler):
 
         base = {"id": "chatcmpl-stub", "object": "chat.completion.chunk", "created": 0, "model": model}
         event({**base, "choices": [{"index": 0, "delta": {"role": "assistant", "content": ""}, "finish_reason": None}]})
-        for word in REPLY.split(" "):
+        for word in (structured_reply(request) or REPLY).split(" "):
             event({**base, "choices": [{"index": 0, "delta": {"content": word + " "}, "finish_reason": None}]})
         event({**base, "choices": [{"index": 0, "delta": {}, "finish_reason": "stop"}]})
         if usage and (request.get("stream_options") or {}).get("include_usage"):
